@@ -1,4 +1,7 @@
+package de.htwg.se.durak
+
 import scala.io.StdIn._
+import de.htwg.se.durak.model._
 
 object Durak {
 

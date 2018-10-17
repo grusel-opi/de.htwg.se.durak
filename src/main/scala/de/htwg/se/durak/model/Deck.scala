@@ -1,3 +1,5 @@
+package de.htwg.se.durak.model
+
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 

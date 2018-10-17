@@ -1,3 +1,5 @@
+package de.htwg.se.durak.model
+
 import CardColor._
 import CardValue._
 
