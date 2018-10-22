@@ -1,2 +1,4 @@
-val schbebsi: (String, Int) = ("Schbebsi", 1)
-println(schbebsi._1)
+import de.htwg.se.durak._
+
+val
+

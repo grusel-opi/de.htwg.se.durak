@@ -1,6 +1,6 @@
-import scala.collection.mutable.ListBuffer
-import scala.util.Random
+package de.htwg.se.durak.model
 
+import scala.util.Random
 
 case class Deck(var cards: List[Card]) {
 
