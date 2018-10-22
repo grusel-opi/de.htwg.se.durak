@@ -1,12 +1,8 @@
 package de.htwg.se.durak.model
 
-case class Player(name: String, var next: Option[Player], var prev: Option[Player]) {
-  var won: Boolean = false
-  var handCards: List[Card] = List()
-
-  def pickCard(deck: Deck): Unit = handCards = deck.popTopCard() :: handCards
-
-  def removeCard(idx: Int): Unit = handCards = handCards.filterNot(elem => elem == handCards(idx))
-
+case class Player(name: String, next: Player, prev: Player, handCards: List[Card]) {
+  def this(name: String, next: Player, prev: Player) = this(name: String, next: Player, prev: Player, Nil)
+  def pickCard(card: Card): Player = Player(name, next, prev, card::handCards)
+  def removeCard(card: Card): Player = Player(name, next, prev, handCards.filterNot(elem => elem.equals(card)))
   override def toString: String = name + ", handCards: " + handCards
 }

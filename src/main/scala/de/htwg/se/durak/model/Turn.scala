@@ -1,18 +1,32 @@
 package de.htwg.se.durak.model
 
-case class Turn(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card]) {
+case class Turn(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card], blockCards: Set[Card]) {
 
-  var blockCards: Set[Card] = Set()
+  def this(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card])
+  = this(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card], Nil)
 
-  def addBlockCard(card: Card): Unit = {
-    blockCards += card
+  def addCard(player: Player, card: Card): Turn = {
+    player match {
+      case victim =>
+    }
+
+    if (player.equals(victim)) {
+      addBlockCard(card)
+    } else if (player.equals(attacker)) {
+      addAttackCard(card)
+    } else {
+      this
+    }
+
   }
 
-  def addAttackCard(card: Card): Option[Turn] = {
+  def addBlockCard(card: Card): Turn = this(victim, attacker, neighbor0, neighbor1, attackCards, blockCards + card)
+
+  def addAttackCard(card: Card): Turn = {
     if (checkCard(card)) {
-      Some(Turn(victim, attacker, neighbor0, neighbor1, attackCards + card))
+      this(victim, attacker, neighbor0, neighbor1, attackCards + card, blockCards)
     } else {
-      None
+      this
     }
   }
 
