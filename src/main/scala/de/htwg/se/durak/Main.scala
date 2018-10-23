@@ -11,6 +11,9 @@ object Main {
   var playerList: List[Player] = List()
 
   def main(args: Array[String]): Unit = {
+    val v = CardValue.Ace
+    val c = CardValue.Eight
 
+    print(v.compare(c))
   }
 }

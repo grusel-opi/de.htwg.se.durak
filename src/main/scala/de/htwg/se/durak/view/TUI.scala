@@ -1,6 +1,5 @@
 package de.htwg.se.durak.view
 
-import de.htwg.se.durak.Main.{newPlayer, playerList}
 import de.htwg.se.durak.model.Player
 
 object TUI {
@@ -15,7 +14,7 @@ object TUI {
         }
       case 2 =>
         tokens(0) match {
-          case "newPlayer" => playerList = newPlayer(tokens(1))
+          case "newPlayer" =>
           case "card" =>
           case _      =>
         }
