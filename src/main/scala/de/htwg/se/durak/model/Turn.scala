@@ -5,29 +5,18 @@ case class Turn(victim: Player, attacker: Player, neighbor0: Player, neighbor1: 
   def this(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card])
   = this(victim: Player, attacker: Player, neighbor0: Player, neighbor1: Player, attackCards: Set[Card], Set[Card]())
 
-  def addCard(player: Player, card: Card): Turn = {
-    player match {
-      case victim =>
-    }
-
-    if (player.equals(victim)) {
-      addBlockCard(card)
-    } else if (player.equals(attacker)) {
-      addAttackCard(card)
-    } else {
-      this
-    }
-
+  def addCard(player: Player, card: Card): Turn = player match {
+    case `victim`   => addBlockCard(card)
+    case `attacker` => addAttackCard(card)
+    case _          => this
   }
 
   def addBlockCard(card: Card): Turn = Turn(victim, attacker, neighbor0, neighbor1, attackCards, blockCards + card)
 
-  def addAttackCard(card: Card): Turn = {
-    if (checkCard(card)) {
-      Turn(victim, attacker, neighbor0, neighbor1, attackCards + card, blockCards)
-    } else {
-      this
-    }
+  def addAttackCard(card: Card): Turn = if (checkCard(card)) {
+    Turn(victim, attacker, neighbor0, neighbor1, attackCards + card, blockCards)
+  } else {
+    this
   }
 
   def checkCard(card: Card) : Boolean = {
