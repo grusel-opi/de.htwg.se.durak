@@ -1,5 +1,5 @@
-name          := "htwg-scala-durak"
-organization  := "de.htwg.se"
+name          := "de.htwg.se.durak"
+organization  := "htwg"
 version       := "0.0.1"
 scalaVersion  := "2.12.4"
 
