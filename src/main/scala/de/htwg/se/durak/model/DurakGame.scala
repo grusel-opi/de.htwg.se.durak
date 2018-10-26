@@ -1,18 +1,15 @@
 package de.htwg.se.durak.model
 
-import de.htwg.se.durak.Main.playerList
-
 case class DurakGame(players: List[Player], deck: Deck, trump: Card) {
-
   def this(players: List[Player], deck: Deck) = this(players, deck.tail, deck.head)
+  def this(players: List[Player]) = this(players, new Deck)
 
-//  def newPlayer(name: String) = Player(name, None, None)::playerList
+  def attack(attacker: Player, victim: Player, attackCards: Set[Card]): Turn = {
+    val neighbors = getNeighbors(victim)
+    new Turn(victim, attacker, neighbors._1, neighbors._2, attackCards)
+  }
 
-
-    def this(players: List[Player]) = this(players, new Deck)
-
-
-  def getNeighbors(player: Player) : (Player, Player) = {
+  private def getNeighbors(player: Player) : (Player, Player) = {
     val size = players.length
       players.indexOf(player) match {
       case x if x > 0 && x < players.length -1 => (players(players.indexOf(player) - 1), players(players.indexOf(player) + 1))
