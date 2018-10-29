@@ -19,5 +19,13 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card) {
 
   }
 
+  override def toString: String = {
+    var s: String = ""
 
+    players.foreach(p => s = s + p + "\n")
+
+    s = s + "\nTRUMP card: " + trump
+
+    s
+  }
 }
