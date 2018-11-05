@@ -9,8 +9,9 @@ class DeckSpec extends WordSpec with Matchers {
   "A Deck" when {
     "created" should {
       val deck: Deck = new Deck()
+      println("deck: " + deck)
       "have 52 cards" in {
-        deck.cards.length should be(52)
+        deck.cards.size should be(52)
       }
     }
   }

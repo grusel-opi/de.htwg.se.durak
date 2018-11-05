@@ -4,9 +4,9 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card) {
   def this(players: List[Player], deck: Deck) = this(players, deck.tail, deck.head)
   def this(players: List[Player]) = this(players, new Deck)
 
-  def attack(attacker: Player, victim: Player, attackCards: Set[Card]): Turn = {
+  def attack(attacker: Player, victim: Player, attackCards: List[Card]): Turn = {
     val neighbors = getNeighbors(victim)
-    new Turn(victim, attacker, neighbors._1, neighbors._2, attackCards)
+    new Turn(attacker, victim, neighbors._1, neighbors._2, attackCards)
   }
 
   private def getNeighbors(player: Player) : (Player, Player) = {
@@ -17,15 +17,5 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card) {
       case 0                                   => (players(1), players.last)
     }
 
-  }
-
-  override def toString: String = {
-    var s: String = ""
-
-    players.foreach(p => s = s + p + "\n")
-
-    s = s + "\nTRUMP card: " + trump
-
-    s
   }
 }
