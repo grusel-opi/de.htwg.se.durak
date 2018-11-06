@@ -43,7 +43,7 @@ object TUI {
   def newPlayer(name: String): Unit = {
     val newDeck = deck.popNCards(amountHandCards)
     deck = newDeck._2
-    players = Player(name, newDeck._1)::players
+    players = Player(name, newDeck._1.toList)::players
   }
 
 

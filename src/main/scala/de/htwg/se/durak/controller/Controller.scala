@@ -53,7 +53,7 @@ class Controller() extends Observable {
       players = new Player(playerNames(i), handCards) :: players
     }
 
-    wrappedDurakGame = Some(DurakGame(players, deck, trump))
+    wrappedDurakGame = Some(DurakGame(players, deck, trump, None))
     wrappedAttacker = Some(players(0))
     wrappedVictim = Some(players(1))
   }
@@ -86,7 +86,7 @@ class Controller() extends Observable {
     val blockCard: Card = victim.handCards(blockCardIdx)
     val attackCard: Card = attackCards(attackCardIdx)
 
-    if (blockCard.compare(attackCard) > 0) {
+    if (blockCard.value.compare(attackCard.value) > 0) {
       blockCards = blockCard :: blockCards
       true
     }
@@ -99,7 +99,7 @@ class Controller() extends Observable {
 
     for (attackCard <- attackCards) {
       for (possibleBlockingCard <- wrappedVictim.get.handCards) {
-        if (possibleBlockingCard.compare(attackCard) > 0 && !possibleBlockingCards.contains(possibleBlockingCard)) {
+        if (possibleBlockingCard.value.compare(attackCard.value) > 0 && !possibleBlockingCards.contains(possibleBlockingCard)) {
           possibleBlockingCards = possibleBlockingCard :: possibleBlockingCards
         } else if (possibleBlockingCard.color == wrappedDurakGame.get.trump.color) {
           possibleBlockingCards = possibleBlockingCard :: possibleBlockingCards
