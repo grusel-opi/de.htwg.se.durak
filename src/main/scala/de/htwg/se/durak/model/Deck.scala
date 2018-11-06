@@ -11,8 +11,6 @@ case class Deck(cards: Set[Card]) {
 
   def shuffle: Deck = Deck(Random.shuffle(cards))
 
-  def schbebsi: Unit = print("schbebsii")
-
   def popTopCard(): (Card, Deck) = (cards.head, Deck(cards.tail))
 
   def popNCards(n: Int): (Set[Card], Deck) = (cards.slice(0, n - 1).toSet, Deck(cards.slice(n - 1, cards.size - 1)))
