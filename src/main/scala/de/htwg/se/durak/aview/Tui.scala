@@ -165,7 +165,7 @@ class Tui(controller: Controller) extends Observer {
     }
 
     catch {
-      case nfe: NumberFormatException => -1
+      case _: NumberFormatException => -1
     }
   }
 
