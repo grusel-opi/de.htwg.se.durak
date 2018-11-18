@@ -13,24 +13,19 @@ case class Turn(attacker: Player, victim: Player, neighbor0: Player, neighbor1: 
 
   def addBlockCard(card: Card): Turn = Turn(attacker, victim, neighbor0, neighbor1, attackCards, card :: blockCards)
 
-  def addAttackCard(card: Card): Turn = if (checkCard(card)) {
+  def addAttackCard(card: Card): Turn = if (checkAttackCard(card)) {
     Turn(attacker, victim, neighbor0, neighbor1, card :: attackCards, blockCards)
   } else {
     this
   }
 
-  def checkCard(card: Card): Boolean = {
+  def checkAttackCard(card: Card): Boolean = {
     var res = false
     attackCards.foreach(c => if (c.value.equals(card.value)) res = true)
     res
   }
 
   override def toString: String = {
-    //    val attackerString: String = "attacker: " + attacker + "\n"
-    //    val victimString: String = "victim " + victim + "\n"
-    //    val attackCardsString: String = "attackCards: " + attackCards + "\n"
-    //    val blockCardsString: String = "blockCards: " + blockCards   + "\n"
-    //    attackerString.concat(victimString).concat(attackCardsString).concat(blockCardsString)
     val attackingCardsOnTableString: String = "Cards on table: " + attackCards + "\n"
     val blockingCardsString: String = "Blocking cards: " + blockCards + "\n"
     attackingCardsOnTableString.concat(blockingCardsString)
