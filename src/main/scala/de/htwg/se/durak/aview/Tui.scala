@@ -282,5 +282,5 @@ class Tui(controller: Controller) extends Observer {
     return commandParametersTuple
   }
 
-  override def update: Unit = print(controller.turnToString)
+  override def update: Unit = print("")
 }

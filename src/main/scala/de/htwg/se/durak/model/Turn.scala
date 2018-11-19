@@ -2,9 +2,6 @@ package de.htwg.se.durak.model
 
 case class Turn(attacker: Player, victim: Player, neighbor0: Player, neighbor1: Player, attackCards: List[Card], blockCards: List[Card], trumpCard: Card) {
 
-//  def this(attacker: Player, victim: Player, neighbor0: Player, neighbor1: Player, attackCards: List[Card], trumpCard: Card)
-//  = this(attacker: Player, victim: Player, neighbor0: Player, neighbor1: Player, attackCards: List[Card], List[Card](), trumpCard: Card)
-
   def addCard(player: Player, card: Card): Turn = player match {
     case `victim` => addBlockCard(card)
     case `attacker` => addAttackCard(card)

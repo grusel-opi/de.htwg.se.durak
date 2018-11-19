@@ -1,13 +1,13 @@
 package de.htwg.se.durak.view
 
-import de.htwg.se.durak.model.{Deck, DurakGame, Player}
+import de.htwg.se.durak.model.{Deck, Desk, Player}
 
 object TUI {
 
   val commands = Set("newPlayer", "card", "exit", "play")
   val amountHandCards = 5
   var players: List[Player] = List[Player]()
-  var game: DurakGame = new DurakGame(Nil)
+  var game: Desk = new Desk(Nil)
   var deck: Deck = new Deck()
 
   def parseInput(input: String): Boolean = {
@@ -38,7 +38,7 @@ object TUI {
     true
   }
 
-  def newGame(players: List[Player]): Unit = game = new DurakGame(players)
+  def newGame(players: List[Player]): Unit = game = new Desk(players)
 
   def newPlayer(name: String): Unit = {
     val newDeck = deck.popNCards(amountHandCards)

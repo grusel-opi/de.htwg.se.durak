@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class DurakGameSpec extends WordSpec with Matchers {
+class DeskSpec extends WordSpec with Matchers {
 
   val player1: Player = new Player("Hannes")
   val player2: Player = new Player("Abdul")
@@ -19,9 +19,9 @@ class DurakGameSpec extends WordSpec with Matchers {
 
   val currentTurn: Option[Turn] = None
 
-  val durakGame: DurakGame = DurakGame(playerList, deck, trump, currentTurn)
+  val durakGame: Desk = Desk(playerList, deck, trump, currentTurn)
 
-  "A DurakGame" when {
+  "A Desk" when {
     "created" should {
       "have a player list." in {
         durakGame.players should be(playerList)
@@ -53,9 +53,9 @@ class DurakGameSpec extends WordSpec with Matchers {
 
         val newPlayerList: List[Player] = List(player1, player2)
         val newNeighborsOfPlayer1: (Player, Player) = (player2, player2)
-        val newDurakGameWithOnlyTwoPlayers: DurakGame = new DurakGame(newPlayerList, deck, trump, currentTurn)
+        val newDurakGameWithOnlyTwoPlayers: Desk = new Desk(newPlayerList, deck, trump, currentTurn)
 
-        newDurakGameWithOnlyTwoPlayers.getNeighbors(player1) should be (newNeighborsOfPlayer1)
+        newDurakGameWithOnlyTwoPlayers.getNeighbors(player1) should be(newNeighborsOfPlayer1)
       }
     }
   }

@@ -12,7 +12,7 @@ class Controller() extends Observable {
   var attackCards: List[Card] = Nil
   var blockCards: List[Card] = Nil
 
-  var wrappedDurakGame: Option[DurakGame] = None
+  var wrappedDurakGame: Option[Desk] = None
   var gameFinished: Boolean = false
 
   var wrappedTurn: Option[Turn] = None
@@ -53,7 +53,7 @@ class Controller() extends Observable {
       players = new Player(playerNames(i), handCards) :: players
     }
 
-    wrappedDurakGame = Some(DurakGame(players, deck, trump, None))
+    wrappedDurakGame = Some(Desk(players, deck, trump, None))
     wrappedAttacker = Some(players(0))
     wrappedVictim = Some(players(1))
   }
@@ -138,27 +138,5 @@ class Controller() extends Observable {
     println("HIER cards after: " + newAttacker.handCards.mkString(", "))
 
     wrappedAttacker = Some(newAttacker)
-  }
-
-  def turn: Unit = {
-
-    if (wrappedAttacker != None && wrappedVictim != None) {
-      val attacker: Player = wrappedAttacker.get
-
-      val victim: Player = wrappedVictim match {
-        case None => throw new MatchError("wrappedVictim is None!!!")
-        case _ => wrappedVictim.get
-      }
-
-//      if (!attackCards.isEmpty) {
-//        wrappedTurn = Some(wrappedDurakGame.get.attack(attacker, victim, attackCards))
-//        notifyObservers
-//      }
-    }
-  }
-
-  def turnToString: String = wrappedTurn match {
-    case None => ""
-    case _ => wrappedTurn.get.toString
   }
 }
