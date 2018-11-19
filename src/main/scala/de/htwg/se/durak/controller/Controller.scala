@@ -150,10 +150,10 @@ class Controller() extends Observable {
         case _ => wrappedVictim.get
       }
 
-      if (!attackCards.isEmpty) {
-        wrappedTurn = Some(wrappedDurakGame.get.attack(attacker, victim, attackCards))
-        notifyObservers
-      }
+//      if (!attackCards.isEmpty) {
+//        wrappedTurn = Some(wrappedDurakGame.get.attack(attacker, victim, attackCards))
+//        notifyObservers
+//      }
     }
   }
 
