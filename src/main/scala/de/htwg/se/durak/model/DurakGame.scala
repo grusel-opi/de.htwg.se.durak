@@ -12,7 +12,9 @@ case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var 
   var ok: List[Player] = Nil
 
   def addPlayer(player: Player): DurakGame = copy(player::players)
+
   def win(): DurakGame = copy(players.filterNot(p => p.equals(active)))
+
   def initHandCards(): Unit = {
     var newPlayers: List[Player] = Nil
     players.foreach(p => {
@@ -48,7 +50,8 @@ case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var 
         active match {
           case x if x.equals(currentTurn.victim) =>
             defend(c, cardToBlock)
-          case y if y.equals(currentTurn.attacker) || y.equals(currentTurn.neighbor) =>
+          case y if y.equals(currentTurn.attacker)
+            || y.equals(currentTurn.neighbor) =>
             attack(c)
         }
       } else {
@@ -62,6 +65,7 @@ case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var 
       case Some(value) =>
         if (checkBlockCard(value, card)) {
           currentTurn = currentTurn.addBlockCard(value, card)
+          active = active.dropCards(card::Nil)
           if (currentTurn.attackCards.isEmpty
             && (ok.contains(currentTurn.attacker)
             &&  ok.contains(currentTurn.neighbor))) {
@@ -80,6 +84,7 @@ case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var 
   def attack(card: Card): Boolean = {
     if (checkAttackCard(card)) {
       currentTurn = currentTurn.addAttackCard(card)
+      active.dropCards(card::Nil)
       ok = Nil
       true
     } else {

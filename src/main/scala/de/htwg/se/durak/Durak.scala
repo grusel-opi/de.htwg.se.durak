@@ -11,9 +11,10 @@ object Durak {
 
   val controller = new Controller(new DurakGame())
   val tui = new Tui(controller)
-  controller.notifyObservers()
+  //controller.notifyObservers()
 
   def main(args: Array[String]): Unit = {
+    println("hElno to durak")
     var input: String = ""
     do {
       println("Please enter a command (or help for help): ")

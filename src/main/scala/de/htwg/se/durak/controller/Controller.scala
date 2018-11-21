@@ -17,15 +17,8 @@ class Controller(var game: DurakGame) extends Observable {
     case _          => {
       println("Ok: new game")
       game = new DurakGame(players)
-    }
-  }
-
-  def start(): Unit = {
-    if (game.players.size > 2) {
       game.start()
       notifyObservers()
-    } else {
-      println("Please first type in [new]")
     }
   }
 
