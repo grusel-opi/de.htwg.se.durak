@@ -89,7 +89,7 @@ case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var 
 
   def start(): Unit = {
     initHandCards()
-    val beginner = players(Random.nextInt() % players.size)
+    val beginner = players(math.abs(Random.nextInt()) % players.size)
     active = beginner
     currentTurn = Turn(beginner, getNeighbor(beginner), getNeighbor(getNeighbor(beginner)), Nil, Map[Card, Card]())
   }
