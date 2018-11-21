@@ -7,16 +7,39 @@ class Controller(var game: DurakGame) extends Observable {
 
   var players: List[Player] = Nil
 
-  def newPlayer(name: String): Unit = players = Player(name, Nil)::players
-
-  def newGame(): Unit = players.size match {
-    case x if x < 2 => // logging later
-    case _          => game = new DurakGame(players)
+  def newPlayer(name: String): Unit = {
+    players = Player(name, Nil)::players
+    println("Added player " + name)
   }
 
-  def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = game.playCard(firstCard, secondCard)
+  def newGame(): Unit = players.size match {
+    case x if x < 2 => println("More players first!")
+    case _          => {
+      println("Ok: new game")
+      game = new DurakGame(players)
+    }
+  }
 
-  def playOK(): Unit = game.nextMove()
-  def takeCards(): Unit = game.takeCards()
+  def start(): Unit = {
+    if (game.players.size > 2) {
+      game.start()
+      notifyObservers()
+    } else {
+      println("Please first type in [new]")
+    }
+  }
+
+  def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
+    game.playCard(firstCard, secondCard)
+    notifyObservers()
+  }
+  def playOK(): Unit = {
+    game.nextMove()
+    notifyObservers()
+  }
+  def takeCards(): Unit = {
+    game.takeCards()
+    notifyObservers()
+  }
 
 }

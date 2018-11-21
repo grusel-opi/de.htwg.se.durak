@@ -2,28 +2,36 @@ package de.htwg.se.durak.aview
 
 import de.htwg.se.durak.controller.Controller
 import de.htwg.se.durak.model.{Card, CardColor, CardValue}
-import de.htwg.se.durak.util.Observer
+import de.htwg.se.durak.util.{CardStringConverter, Observer}
 
 class Tui(controller: Controller) extends Observer {
 
   controller.add(this)
+  val converter = CardStringConverter
 
   def processInputLine(input: String): Unit = {
     val tokens = input.split(" ")
     tokens.head match {
-      case "help"   =>
+      case "help"|"h" => printHelp()
       case "new"    => controller.newGame()
       case "player" => controller.newPlayer(tokens.last)
       case "play"   => controller.playCard(parseCards(tokens.tail.toList)._1, parseCards(tokens.tail.toList)._2)
       case "take"   => controller.takeCards()
       case "ok"     => controller.playOK()
+      case "q"      => System.exit(0)
+      case "start"  => controller.start()
+      case "players" => println(controller.players.mkString(" "))
+      case _        => println("Bitte was?")
     }
   }
 
   def printHelp(): Unit = {
-    println("fist add players, then start game!")
+    println()
+    println("Hello, this is help text!")
+    println("Fist add players, then start game!")
     println("type [player <name>] for new player")
     println("type [new] for new game")
+    println("type [start] to begin")
     println("type [play <AttackCard>] or [play <DefendCard> <CardToDefend>] for attack / defense")
     println("type [play] for check (do nothing)")
     println("type [ok] for indicating you are done with the current turn")
@@ -32,20 +40,19 @@ class Tui(controller: Controller) extends Observer {
 
   def parseCards(input: List[String]): (Option[Card], Option[Card]) = {
     input.size match {
-      case 0 =>
-      case 2 =>
-      case 4 =>
-      case _ =>
+      case 0 => (None, None)
+      case 2 => (Some(Card(converter.parseColor(input.head), converter.parseValue(input.last))), None)
+      case 4 => (Some(Card(converter.parseColor(input.head), converter.parseValue(input(1)))),
+          Some(Card(converter.parseColor(input(2)), converter.parseValue(input(3)))))
+      case _ => (None, None)// TODO: cannot play more than two cards at once; exception?
     }
 
   }
 
-  def printCard(card: Card): String = {
-    // TODO: use cardConverter
-    "card"
-  }
-
   override def update(): Unit = {
-    println()
+    println("Current Turn:")
+    println(controller.game.currentTurn.toString)
+    println("players turn: " + controller.game.active.toString)
+    println("cards: " + controller.game.active.handCards.mkString)
   }
 }

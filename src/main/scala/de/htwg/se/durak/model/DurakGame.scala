@@ -2,7 +2,7 @@ package de.htwg.se.durak.model
 
 import scala.util.Random
 
-case class DurakGame(players: List[Player], deck: Deck, trump: Card, var currentTurn: Turn) {
+case class DurakGame(players: List[Player],var deck: Deck, trump: Card, var currentTurn: Turn) {
   def this(players: List[Player], deck: Deck)
   = this(players, deck.tail, deck.head, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]()))
   def this(players: List[Player]) = this(players, new Deck)
@@ -13,6 +13,13 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, var current
 
   def addPlayer(player: Player): DurakGame = copy(player::players)
   def win(): DurakGame = copy(players.filterNot(p => p.equals(active)))
+  def initHandCards(): Unit = {
+    players.foreach(p => {
+      val pop = deck.popNCards(5)
+      deck = pop._2
+      p.pickCards(pop._1)
+    })
+  }
 
   def closeTurn(success: Boolean): Unit = {
     if (success) {
@@ -79,6 +86,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, var current
   }
 
   def start(): Unit = {
+    initHandCards()
     val beginner = players(Random.nextInt() % players.size)
     active = beginner
     currentTurn = Turn(beginner, getNeighbor(beginner), getNeighbor(getNeighbor(beginner)), Nil, Map[Card, Card]())

@@ -12,8 +12,11 @@ case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards:
   def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, card::attackCards)
 
   override def toString: String = {
-    //TODO: pretty print
-    "turn"
+    ("Attacker: " + attacker.toString + "\n"
+      + "Defender: " + victim.toString + "\n"
+      + "Neighbor: " + neighbor.toString + "\n"
+      + "Cards to block: \n" + attackCards.mkString("; ") + "\n"
+      + "Blocked Cards: " ) + blockedBy.mkString("; ") + "\n"
   }
 
 }
