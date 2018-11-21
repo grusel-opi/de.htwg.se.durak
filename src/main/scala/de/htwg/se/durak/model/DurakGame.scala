@@ -2,7 +2,7 @@ package de.htwg.se.durak.model
 
 import scala.util.Random
 
-case class DurakGame(players: List[Player],var deck: Deck, trump: Card, var currentTurn: Turn) {
+case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var currentTurn: Turn) {
   def this(players: List[Player], deck: Deck)
   = this(players, deck.tail, deck.head, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]()))
   def this(players: List[Player]) = this(players, new Deck)
@@ -14,11 +14,13 @@ case class DurakGame(players: List[Player],var deck: Deck, trump: Card, var curr
   def addPlayer(player: Player): DurakGame = copy(player::players)
   def win(): DurakGame = copy(players.filterNot(p => p.equals(active)))
   def initHandCards(): Unit = {
+    var newPlayers: List[Player] = Nil
     players.foreach(p => {
       val pop = deck.popNCards(5)
       deck = pop._2
-      p.pickCards(pop._1)
+      newPlayers = p.pickCards(pop._1)::newPlayers // TODO: players need to be replaced after pick up cards
     })
+    players = newPlayers
   }
 
   def closeTurn(success: Boolean): Unit = {
@@ -31,9 +33,9 @@ case class DurakGame(players: List[Player],var deck: Deck, trump: Card, var curr
 
   def takeCards(): Unit = active match {
     case x if x.equals(currentTurn.victim) => {
-      active.pickCards(currentTurn.attackCards)
-      active.pickCards(currentTurn.blockedBy.values.toList)
-      active.pickCards(currentTurn.blockedBy.keys.toList)
+      active = active.pickCards(currentTurn.attackCards)
+      active = active.pickCards(currentTurn.blockedBy.values.toList)
+      active = active.pickCards(currentTurn.blockedBy.keys.toList)
       closeTurn(false)
     }
     case _ => // TODO: nonsense action; what do?

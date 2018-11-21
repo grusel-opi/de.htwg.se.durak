@@ -16,7 +16,7 @@ object Durak {
   def main(args: Array[String]): Unit = {
     var input: String = ""
     do {
-      println("Please enter a command: ")
+      println("Please enter a command (or help for help): ")
       input = readLine
       tui.processInputLine(input)
     } while (input != "q")
