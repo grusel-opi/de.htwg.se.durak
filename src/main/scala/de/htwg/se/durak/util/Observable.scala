@@ -1,7 +1,7 @@
 package de.htwg.se.durak.util
 
 trait Observer {
-  def update: Unit
+  def update(): Unit
 }
 
 trait Observable {
