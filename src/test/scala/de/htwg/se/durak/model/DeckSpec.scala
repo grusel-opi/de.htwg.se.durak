@@ -41,9 +41,9 @@ class DeckSpec extends WordSpec with Matchers {
       }
     }
 
-    "trying to get trump card" should {
-      "return last card of deck." in {
-        deck.getLastCard should be(deck.cards.last)
+    "getting last card" should {
+      "return the last card of the deck" in {
+        deck.lastCard should be(deck.cards(deck.cards.size - 1))
       }
     }
 

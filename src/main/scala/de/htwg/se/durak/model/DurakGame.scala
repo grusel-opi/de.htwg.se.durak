@@ -4,7 +4,7 @@ import scala.util.Random
 
 case class DurakGame(var players: List[Player],var deck: Deck, trump: Card, var currentTurn: Turn) {
   def this(players: List[Player], deck: Deck)
-  = this(players, deck.tail, deck.head, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]()))
+  = this(players, deck, deck.lastCard, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]()))
   def this(players: List[Player]) = this(players, new Deck)
   def this() = this(new Player("default")::Nil)
 
