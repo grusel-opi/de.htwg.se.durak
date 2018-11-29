@@ -10,10 +10,10 @@ object CardStringConverter {
   val list: List[String] = (0x1F0A1 to 0x1F0DE).filterNot(i => excluded.contains(i)).map(Character.toChars(_).mkString).toList
 
   def parseColorString(input: String): CardColor = input match {
-    case "Herz" | "herz"  => CardColor.Hearts
-    case "Karo" | "karo"  => CardColor.Diamond
-    case "Kreuz"| "kreuz" => CardColor.Clubs
-    case "Pik"  | "pik"   => CardColor.Spades
+    case "Herz" | "herz"  => CardColor.Herz
+    case "Karo" | "karo"  => CardColor.Karo
+    case "Kreuz"| "kreuz" => CardColor.Kreuz
+    case "Pik"  | "pik"   => CardColor.Pik
   }
 
   def parseValueString(input: String): CardValue = input match {
@@ -32,10 +32,10 @@ object CardStringConverter {
   }
 
   def parseColorObject(color: CardColor): String = color match {
-    case CardColor.Clubs => "Kreuz"
-    case CardColor.Diamond => "Karo"
-    case CardColor.Hearts => "Herz"
-    case CardColor.Spades => "Pik"
+    case CardColor.Kreuz => "Kreuz"
+    case CardColor.Karo => "Karo"
+    case CardColor.Herz => "Herz"
+    case CardColor.Pik => "Pik"
   }
 
   def parseCardObject(card: Card): String = parseColorObject(card.color) + " " + parseValueObject(card.value)

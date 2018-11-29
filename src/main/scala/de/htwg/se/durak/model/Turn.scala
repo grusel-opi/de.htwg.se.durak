@@ -9,14 +9,16 @@ case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards:
     copy(attacker, victim, neighbor, attackCards.filterNot(c => c.equals(attackCard)), blockedBy + (attackCard -> blockCard))
   }
 
-  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, card::attackCards)
+  def getAllCards: List[Card] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
+  
+  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, card :: attackCards)
 
   override def toString: String = {
     ("Attacker: " + attacker.toString + "\n"
       + "Defender: " + victim.toString + "\n"
       + "Neighbor: " + neighbor.toString + "\n"
       + "Cards to block: \n" + attackCards.mkString("; ") + "\n"
-      + "Blocked Cards: " ) + blockedBy.mkString("; ") + "\n"
+      + "Blocked Cards: ") + blockedBy.mkString("; ") + "\n"
   }
 
 }

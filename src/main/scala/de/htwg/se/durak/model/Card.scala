@@ -4,5 +4,5 @@ import de.htwg.se.durak.model.CardColor.CardColor
 import de.htwg.se.durak.model.CardValue.CardValue
 
 case class Card(color: CardColor, value: CardValue) {
-  override def toString(): String = value + " of " + color
+  override def toString(): String =  color + " " + value
 }

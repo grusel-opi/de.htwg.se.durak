@@ -17,21 +17,23 @@ class Controller(var game: DurakGame) extends Observable {
     case _          => {
       println("Ok: new game")
       game = new DurakGame(players)
-      game.start()
+      game = game.start()
       notifyObservers()
     }
   }
 
   def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
-    game.playCard(firstCard, secondCard)
+    val res = game.playCard(firstCard, secondCard)
+    game = res._2
+    println("[CONTROLLER] res = " + res._1 + " :" + " play card: " + firstCard.toString)
     notifyObservers()
   }
   def playOK(): Unit = {
-    game.nextMove()
+    game = game.continue
     notifyObservers()
   }
   def takeCards(): Unit = {
-    game.takeCards()
+    game = game.takeCards()
     notifyObservers()
   }
 

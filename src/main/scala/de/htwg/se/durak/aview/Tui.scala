@@ -14,7 +14,7 @@ class Tui(controller: Controller) extends Observer {
     tokens.head match {
       case "help"|"h" => printHelp()
       case "new"    => controller.newGame()
-      case "player" => controller.newPlayer(tokens.last)
+      case "player" => controller.newPlayer(tokens.last) // TODO: prevent empty name player
       case "play"   => controller.playCard(parseCards(tokens.tail.toList)._1, parseCards(tokens.tail.toList)._2)
       case "take"   => controller.takeCards()
       case "ok"     => controller.playOK()
@@ -50,9 +50,10 @@ class Tui(controller: Controller) extends Observer {
   override def update(): Unit = {
     println("Current Turn:")
     println(controller.game.currentTurn.toString)
+    println("Trump: " + controller.game.trump)
     println("players turn: " + controller.game.active.toString)
     print("cards: \n")
-    controller.game.active.handCards.foreach(c => print(" " + converter.parseCardObject(c)+ ", "))
+    print(controller.game.active.handCards.mkString(", ") + "\n")
     println()
   }
 }
