@@ -11,7 +11,7 @@ object Durak {
 
   val controller = new Controller(new DurakGame())
   val tui = new Tui(controller)
-  //controller.notifyObservers()
+  //controller.notifyObservers() //TODO: Why?
 
   def main(args: Array[String]): Unit = {
     println("hElno to durak")
