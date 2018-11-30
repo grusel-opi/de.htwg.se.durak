@@ -12,17 +12,20 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def this() = this(new Player("default") :: Nil)
 
   def start(): DurakGame = {
-    var newPlayers = List[Player]()
+    //var newPlayers = List[Player]()
     var newCards = deck.popNCards(5)
     players.foreach(p => {
-      newPlayers = p.pickCards(newCards._1) :: newPlayers
+      //newPlayers = p.pickCards(newCards._1) :: newPlayers
+      p.pickCards(newCards._1)
       newCards = newCards._2.popNCards(5)
     })
-    val beginner = newPlayers(Random.nextInt() % players.size)
+//    val beginner = newPlayers(Random.nextInt() % players.size)
+    val beginner = players(math.abs(Random.nextInt()) % players.size)
+
     val firstVictim = getNeighbor(beginner)
     val fistNeighbor = getNeighbor(firstVictim)
     val newTurn = Turn(beginner, firstVictim, fistNeighbor, Nil, Map[Card, Card]())
-    copy(players = newPlayers, deck = newCards._2, currentTurn = newTurn, active = beginner, ok = Nil)
+    copy(players, deck = newCards._2, currentTurn = newTurn, active = beginner, ok = Nil)
   }
 
   def addPlayer(player: Player): DurakGame = copy(players = player :: players)
@@ -47,7 +50,8 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
 
   def takeCards(): DurakGame = active match {
     case x if x.equals(currentTurn.victim) =>
-      copy(active = active.pickCards(currentTurn.getAllCards), currentTurn = closeTurn(false))
+      active.pickCards(currentTurn.getAllCards)
+      copy(currentTurn = closeTurn(false))
     case _ => this // TODO: nonsense action; what do?
   }
 
@@ -69,18 +73,25 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     case Some(value) =>
       if (checkBlockCard(value, card)) {
         val newTurn = currentTurn.addBlockCard(value, card)
-        val newActive = active.dropCards(card :: Nil)
+        //val newActive = active.dropCards(card :: Nil)
+        active.dropCards(card::Nil)
         if (currentTurn.attackCards.isEmpty && ok.size > 1) {
-          (true, copy(active = newActive, currentTurn = closeTurn(true)))
+//          (true, copy(active = newActive, currentTurn = closeTurn(true)))
+
+          (true, copy(currentTurn = closeTurn(true)))
         } else {
-          (true, copy(active = newActive, currentTurn = newTurn))
+//          (true, copy(active = newActive, currentTurn = newTurn))
+
+          (true, copy(currentTurn = newTurn))
         }
       } else (false, this) // TODO: cannot use this card to defend => notify
     case None => (false, this) // TODO: must specify which card to block => exception?
   }
 
   def attack(card: Card): (Boolean, DurakGame) = if (checkAttackCard(card)) {
-    (true, copy(active = active.dropCards(card :: Nil), ok = Nil, currentTurn = currentTurn.addAttackCard(card)))
+//    (true, copy(active = active.dropCards(card :: Nil), ok = Nil, currentTurn = currentTurn.addAttackCard(card)))
+    active.dropCards(card :: Nil)
+    (true, copy(ok = Nil, currentTurn = currentTurn.addAttackCard(card)))
   } else {
     (false, this)
   }
