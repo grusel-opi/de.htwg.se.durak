@@ -1,7 +1,7 @@
 package de.htwg.se.durak.aview
 
 import de.htwg.se.durak.controller.Controller
-import de.htwg.se.durak.model.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.{CardStringConverter, Observer}
 
 class Tui(controller: Controller) extends Observer {

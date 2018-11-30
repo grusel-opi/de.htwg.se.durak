@@ -8,13 +8,13 @@ class Controller(var game: DurakGame) extends Observable {
   var players: List[Player] = Nil
 
   def newPlayer(name: String): Unit = {
-    players = Player(name, Nil)::players
+    players = Player(name, Nil) :: players
     println("Added player " + name)
   }
 
   def newGame(): Unit = players.size match {
     case x if x < 2 => println("More players first!")
-    case _          => {
+    case _ => {
       println("Ok: new game")
       game = new DurakGame(players)
       game = game.start()
@@ -28,10 +28,12 @@ class Controller(var game: DurakGame) extends Observable {
     println("[CONTROLLER] res = " + res._1 + " :" + " play card: " + firstCard.toString)
     notifyObservers()
   }
+
   def playOK(): Unit = {
     game = game.continue
     notifyObservers()
   }
+
   def takeCards(): Unit = {
     game = game.takeCards()
     notifyObservers()
