@@ -3,7 +3,7 @@ package de.htwg.se.durak.model
 case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards: List[Card], blockedBy: Map[Card, Card]) {
 
   def this(attacker: Player, victim: Player, neighbor: Player)
-  = this(attacker: Player, victim: Player, neighbor: Player, List[Card](), Map[Card, Card]())
+  = this(attacker: Player, victim: Player, neighbor: Player, Nil, Map())
 
   def addBlockCard(attackCard: Card, blockCard: Card): Turn = copy(attacker, victim, neighbor,
     attackCards.filterNot(c => c.equals(attackCard)), blockedBy + (attackCard -> blockCard))
