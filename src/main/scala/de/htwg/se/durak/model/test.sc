@@ -1,5 +1,0 @@
-val l = List(1, 2, 3, 4)
-val n = l.drop(2)
-val n0 = l.slice(0, 2)
-println(n)
-println(n0)

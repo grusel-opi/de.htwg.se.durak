@@ -1,15 +1,13 @@
 package de.htwg.se.durak.model
 
-case class Player(name: String, handCards: List[Card]) {
+case class Player(name: String, var handCards: List[Card]) {
   def this(name: String) = this(name: String, Nil)
 
-  def pickCard(card: Card): Player = copy(handCards=card::handCards)
+  def pickCards(cards: List[Card]): Unit = handCards = cards:::handCards
 
-  def pickCards(cards: List[Card]): Player = Player(name, cards ::: handCards)
+  def dropCards(cards: List[Card]): Unit = handCards = handCards.filterNot(elem => cards.contains(elem))
 
-  def removeCard(card: Card): Player = Player(name, handCards.filterNot(elem => elem.equals(card)))
-
-  def removeCards(cards: List[Card]): Player = Player(name, handCards.filter(!cards.contains(_)))
+  def hasCard(card: Card) : Boolean = handCards.contains(card)
 
   override def toString: String = name
 }

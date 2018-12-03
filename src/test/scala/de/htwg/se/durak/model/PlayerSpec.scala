@@ -6,76 +6,134 @@ import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class PlayerSpec extends WordSpec with Matchers {
-  val handCards: List[Card] = List(Card(CardColor.Diamond, CardValue.Two), Card(CardColor.Diamond, CardValue.Three),
-    Card(CardColor.Diamond, CardValue.Four), Card(CardColor.Diamond, CardValue.Five))
-  val playerWithFourHandCards: Player = Player("Hans", handCards)
   "A Player" when {
     "created with hand cards" should {
-      "have a name." in {
-        playerWithFourHandCards.name should be("Hans")
-      }
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Pik, CardValue.Zehn)
+      val handCards: List[Card] = List(card1, card2)
 
-      "have a nice string representation." in {
-        playerWithFourHandCards.toString should be("Hans")
+      val player: Player = Player("Hans", handCards)
+
+      "have a name." in {
+        player.name should be("Hans")
       }
 
       "have hand cards." in {
-        playerWithFourHandCards.handCards.size should be(handCards.size)
-        playerWithFourHandCards.handCards.equals(handCards)
-      }
-    }
-
-    val playerWithoutHandCards: Player = new Player("Peter")
-
-    "created without hand cards" should {
-      "have a name." in {
-        playerWithoutHandCards.name should be("Peter")
+        player.handCards.size should be(handCards.size)
+        player.handCards should be(handCards)
       }
 
       "have a nice string representation." in {
-        playerWithoutHandCards.toString should be("Peter")
+        player.toString should be("Hans")
+      }
+    }
+
+    "created without hand cards" should {
+      val player: Player = new Player("Peter")
+
+      "have a name." in {
+        player.name should be("Peter")
       }
 
       "have empty hand cards." in {
-        playerWithoutHandCards.handCards.size should be(0)
+        player.handCards.size should be(0)
+        player.handCards should be(Nil)
       }
     }
 
-    "picking one card" should {
-      "have one hand card." in {
-        val cardToPick: Card = Card(CardColor.Hearts, CardValue.Ace)
-        val playerWithOneHandCard: Player = playerWithoutHandCards.pickCard(cardToPick)
+    "pick a card" should {
+      val player: Player = new Player("Abduhl")
 
-        playerWithOneHandCard.handCards.size should be(1)
+      "have one card more as before." in {
+        val cardToPick: List[Card] = List(Card(CardColor.Karo, CardValue.Vier))
+
+        player.handCards.size should be(0)
+        player.handCards should be(Nil)
+
+        val oldSize: Int = player.handCards.size
+
+        player.pickCards(cardToPick)
+
+        player.handCards.size should be(oldSize + 1)
+        player.handCards should be(cardToPick)
       }
     }
 
-    "picking four cards" should {
-      "have four hand cards." in {
-        val cardsToPick: List[Card] = List(Card(CardColor.Diamond, CardValue.Ace), Card(CardColor.Hearts, CardValue.Ace),
-          Card(CardColor.Clubs, CardValue.Ace), Card(CardColor.Spades, CardValue.Ace))
-        val playerWithFourHandCards: Player = playerWithoutHandCards.pickCards(cardsToPick)
+    "pick two cards" should {
+      val player: Player = new Player("Fred")
 
-        playerWithFourHandCards.handCards.size should be(cardsToPick.size)
+      "have two cards more as before." in {
+        val cardsToPick: List[Card] = List(Card(CardColor.Kreuz, CardValue.Bube), Card(CardColor.Herz, CardValue.Acht))
+
+        player.handCards.size should be(0)
+        player.handCards should be(Nil)
+
+        val oldSize: Int = player.handCards.size
+
+        player.pickCards(cardsToPick)
+
+        player.handCards.size should be(oldSize + 2)
+        player.handCards should be(cardsToPick)
       }
     }
 
-    "playing one card" should {
-      "have one card less than before." in {
-        val cardToPlay: Card = Card(CardColor.Diamond, CardValue.Four)
-        val playerWithThreeHandCards: Player = playerWithFourHandCards.removeCard(cardToPlay)
+    "drop a card" should {
+      val card1: Card = Card(CardColor.Herz, CardValue.Sieben)
+      val card2: Card = Card(CardColor.Karo, CardValue.Bube)
+      val handCards: List[Card] = List(card1, card2)
 
-        playerWithThreeHandCards.handCards.size should be(playerWithFourHandCards.handCards.size - 1)
+      val player: Player = Player("Gabriel", handCards)
+
+      "have one card less as before." in {
+        player.handCards.size should be(handCards.size)
+        player.handCards should be(handCards)
+
+        val cardToDrop: List[Card] = List(card1)
+        val oldSize: Int = player.handCards.size
+
+        player.dropCards(cardToDrop)
+
+        player.handCards.size should be(oldSize - 1)
+        player.handCards should be(List(card2))
       }
     }
 
-    "playing three cards" should {
-      "have three cards less than before." in {
-        val cardsToPlay: List[Card] = List(Card(CardColor.Diamond, CardValue.Two), Card(CardColor.Diamond, CardValue.Three),
-          Card(CardColor.Diamond, CardValue.Four))
-        val playerWithOneHandCard = playerWithFourHandCards.removeCards(cardsToPlay)
+    "drop two cards" should {
+      val card1: Card = Card(CardColor.Herz, CardValue.Zehn)
+      val card2: Card = Card(CardColor.Karo, CardValue.König)
+      val handCards: List[Card] = List(card1, card2)
 
-        playerWithOneHandCard.handCards.size should be(playerWithFourHandCards.handCards.size - 3)
+      val player: Player = Player("Hannes", handCards)
+
+      "have two cards less as before." in {
+        player.handCards.size should be(handCards.size)
+        player.handCards should be(handCards)
+
+        val cardsToDrop: List[Card] = List(card1, card2)
+        val oldSize: Int = player.handCards.size
+        player.dropCards(cardsToDrop)
+
+        player.handCards.size should be(oldSize - 2)
+        player.handCards should be(Nil)
+      }
+    }
+
+    "try to determine if he has a specific card" should {
+      val cardThatPlayerOwns: Card = Card(CardColor.Herz, CardValue.Ass)
+      val cardThatPlayerDoesntOwn: Card = Card(CardColor.Karo, CardValue.Ass)
+      val handCards: List[Card] = List(cardThatPlayerOwns)
+      val player: Player = Player("Martin", handCards)
+
+      "be true if he owns the card." in {
+        player.handCards.size should be(handCards.size)
+        player.handCards should be(handCards)
+        player.hasCard(cardThatPlayerOwns) should be(true)
+      }
+
+      "be false if he doesn't own the card." in {
+        player.handCards.size should be(handCards.size)
+        player.handCards should be (handCards)
+        player.hasCard(cardThatPlayerDoesntOwn) should be(false)
       }
     }
   }

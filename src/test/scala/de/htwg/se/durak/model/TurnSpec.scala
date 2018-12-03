@@ -1,207 +1,223 @@
 package de.htwg.se.durak.model
 
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class TurnSpec extends WordSpec with Matchers {
-  val attacker: Player = new Player("Fred")
-  val victim: Player = new Player("Gertrud")
+  "A Turn" when {
 
-  val neighborOneOfVictim = attacker
-  val neigborTwoOfVictim = new Player("Wolfgang")
+    val attacker: Player = new Player("Kai")
+    val victim: Player = new Player("Lutscho")
+    val neighbor: Player = new Player("Lukas")
 
-  val trumpCard: Card = Card(CardColor.Hearts, CardValue.Eight)
-
-  val turnWithEmptyCards: Turn = Turn(attacker, victim, neighborOneOfVictim, neigborTwoOfVictim, Nil, Nil, trumpCard)
-
-  val attackCards: List[Card] = List(Card(CardColor.Hearts, CardValue.Five), Card(CardColor.Spades, CardValue.Five))
-  val turnWithDefinedAttackCards: Turn = Turn(attacker, victim, neighborOneOfVictim, neigborTwoOfVictim, attackCards, Nil, trumpCard)
-
-  "A turn" when {
     "created" should {
+      val attackCard1: Card = Card(CardColor.Herz, CardValue.König)
+      val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
+      val attackCard3: Card = Card(CardColor.Kreuz, CardValue.König)
+      val attackCard4: Card = Card(CardColor.Karo, CardValue.König)
+
+      val blockingCard1: Card = Card(CardColor.Herz, CardValue.König)
+      val blockingCard2: Card = Card(CardColor.Pik, CardValue.König)
+      val blockingCard3: Card = Card(CardColor.Kreuz, CardValue.König)
+      val blockingCard4: Card = Card(CardColor.Karo, CardValue.König)
+
+      val attackCards: List[Card] = List(attackCard1, attackCard2, attackCard3, attackCard4)
+      val blockingCards: List[Card] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
+      val blockedBy: Map[Card, Card] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
+        (attackCard3, blockingCard3), (attackCard4, blockingCard4))
+
+      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, blockedBy)
+
       "have a attacker." in {
-        turnWithDefinedAttackCards.attacker should be(attacker)
+        turn.attacker should be(attacker)
+        turn.attacker.name should be(attacker.name)
+        turn.attacker.handCards should be(Nil)
       }
 
-      "have a victim." in {
-        turnWithDefinedAttackCards.victim should be(victim)
+      "have a vicitm." in {
+        turn.victim should be(victim)
+        turn.victim.name should be(victim.name)
+        turn.victim.handCards should be(Nil)
       }
 
-      "have neighbors." in {
-        turnWithDefinedAttackCards.neighbor0 should be(neighborOneOfVictim)
-        turnWithDefinedAttackCards.neighbor1 should be(neigborTwoOfVictim)
+      "have a neighbor." in {
+        turn.victim should be(victim)
+        turn.victim.name should be(victim.name)
+        turn.victim.handCards should be(Nil)
       }
 
       "have attack cards." in {
-        turnWithDefinedAttackCards.attackCards should be(attackCards)
+        turn.attackCards.size should be(attackCards.size)
+        turn.attackCards should be(attackCards)
       }
 
-      "have block cards." in {
-        turnWithDefinedAttackCards.blockCards should be(Nil)
-      }
-
-      "have a trump card." in {
-        turnWithDefinedAttackCards.trumpCard should be(trumpCard)
+      "have cards, wich block the attack cards." in {
+        turn.blockedBy.size should be(blockingCards.size)
+        turn.blockedBy should be(blockedBy)
       }
 
       "have a nice string representation." in {
-        val attackCardsOnTableAsString: String = "Cards on table: " + attackCards + "\n"
-        val blockCardsAsString: String = "Blocking cards: " + Nil + "\n"
-        val turnStringRepresenation: String = attackCardsOnTableAsString.concat(blockCardsAsString)
+        val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
+        val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
+        val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
+        val attackCardsStringRepresentation: String = "Cards to block: \n" + attackCards.mkString("; ") + "\n"
+        val blockingCardsStringRepresentation: String = "Blocked Cards: " + blockedBy.mkString("; ") + "\n"
 
-        turnWithDefinedAttackCards.toString should be(turnStringRepresenation)
+        val turnStringRepresentation: String = attackerStringRepresentation + victimStringRepresentation +
+          neighborStringRepresentation + attackCardsStringRepresentation + blockingCardsStringRepresentation
+
+        turn.toString should be(turnStringRepresentation)
       }
     }
 
-    "created by attacker"
+    "created without attack cards and without cards which block attack cards" should {
 
-    "trying to add block card" should {
-      "have more block cards as before if blocking card beat one of the attack cards." in {
+      val turn: Turn = new Turn(attacker, victim, neighbor)
 
-        val blockingCardOne: Card = Card(CardColor.Hearts, CardValue.Six)
-        val blockingCardTwo: Card = Card(CardColor.Spades, CardValue.Six)
-
-        val newTurnOne: Turn = turnWithDefinedAttackCards.addBlockCard(blockingCardOne)
-        val newTurnTwo: Turn = newTurnOne.addBlockCard(blockingCardTwo)
-
-        newTurnOne.blockCards.size should be(1)
-        newTurnOne.blockCards(0) should be(blockingCardOne)
-
-        newTurnTwo.blockCards.size should be(2)
-        newTurnTwo.blockCards(0) should be(blockingCardTwo)
-        newTurnTwo.blockCards(1) should be(blockingCardOne)
+      "have a attacker." in {
+        turn.attacker should be(attacker)
+        turn.attacker.name should be(attacker.name)
+        turn.attacker.handCards should be(Nil)
       }
 
-      "have the same amount of block cards if no attack card can be beaten." in {
-        val loosingBlockingCard: Card = Card(CardColor.Clubs, CardValue.Two)
-
-        val turn: Turn = turnWithDefinedAttackCards.addBlockCard(loosingBlockingCard)
-
-        turn.blockCards.size should be(turnWithDefinedAttackCards.blockCards.size)
-      }
-    }
-
-    "trying to check if attack card is a valid card to lay" should {
-      "return false when attack card have not the same card value than the others." in {
-        val attackCardWithHigherValue: Card = Card(CardColor.Hearts, CardValue.Jack)
-
-        turnWithDefinedAttackCards.checkAttackCard(attackCardWithHigherValue) should be(false)
+      "have a victim." in {
+        turn.victim should be(victim)
+        turn.victim.name should be(victim.name)
+        turn.victim.handCards should be(Nil)
       }
 
-      "return true when no attack card exists so far." in {
-        val attackCard: Card = Card(CardColor.Hearts, CardValue.Two)
-
-        turnWithEmptyCards.checkAttackCard(attackCard) should be(true)
+      "have a neighbor." in {
+        turn.victim should be(victim)
+        turn.victim.name should be(victim.name)
+        turn.victim.handCards should be(Nil)
       }
 
-      "return true when attack card have the same value than the others." in {
-        val attackCardWithSameValue: Card = Card(CardColor.Clubs, CardValue.Five)
+      "have empty attack cards." in {
+        turn.attackCards.size should be(0)
+        turn.attackCards should be(Nil)
+      }
 
-        turnWithDefinedAttackCards.checkAttackCard(attackCardWithSameValue) should be(true)
+      "have emtpy cards which block attack cards." in {
+        turn.blockedBy.size should be(0)
+        turn.blockedBy.isEmpty should be(true)
+      }
+
+      "have a nice string representation." in {
+        val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
+        val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
+        val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
+        val attackCardsStringRepresentation: String = "Cards to block: \n\n"
+        val blockingCardsStringRepresentation: String = "Blocked Cards: \n"
+
+        val turnStringRepresentation: String = attackerStringRepresentation + victimStringRepresentation +
+          neighborStringRepresentation + attackCardsStringRepresentation + blockingCardsStringRepresentation
+
+        turn.toString should be(turnStringRepresentation)
       }
     }
 
-    "trying to add attack card" should {
-      val attackCardOne: Card = Card(CardColor.Diamond, CardValue.Ace)
-      val attackCardTwo: Card = Card(CardColor.Spades, CardValue.Ace)
-      val invadlidAttackCard: Card = Card(CardColor.Hearts, CardValue.Queen)
+    "add a attack card to empty attack cards" should {
+      val cardToAdd: Card = Card(CardColor.Herz, CardValue.Fünf)
 
-      val turnWithOneAttackCard: Turn = turnWithEmptyCards.addAttackCard(attackCardOne)
-      val turnWithTwoAttackCards: Turn = turnWithOneAttackCard.addAttackCard(attackCardTwo)
-      val turnWithTwoAttackCardsAndOneInvalidCard: Turn = turnWithTwoAttackCards.addAttackCard(invadlidAttackCard)
+      val turn: Turn = Turn(attacker, victim, neighbor, Nil, Map())
 
-      "add a card if attack cards are empty" in {
-        turnWithEmptyCards.attackCards.size should be(0)
-        turnWithOneAttackCard.attackCards.size should be(1)
-      }
+      "have one attack card." in {
+        turn.attackCards.size should be(0)
+        turn.attackCards should be(Nil)
 
-      "add another attack card, if it has the same value than the other attack cards." in {
-        turnWithTwoAttackCards.attackCards.size should be(2)
-      }
+        val newTurn = turn.addAttackCard(cardToAdd)
 
-      "not add another attack card, if it has not the same value than the other attack cards." in {
-        turnWithTwoAttackCardsAndOneInvalidCard.attackCards.size should be(2)
+        newTurn.attackCards.size should be(1)
+        newTurn.attackCards should be(List(cardToAdd))
       }
     }
 
-    "trying to add block card" should {
-      "add a card when the blocking card beats one of the attack cards." in {
+    "add a attack card to other attack cards" should {
+      val cardToAdd: Card = Card(CardColor.Kreuz, CardValue.Acht)
+      val existingAttackCard: Card = Card(CardColor.Karo, CardValue.Acht)
+      val attackCards: List[Card] = List(existingAttackCard)
 
+      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
+      "have one attack card more as before" in {
+        turn.attackCards.size should be(attackCards.size)
+        turn.attackCards should be(attackCards)
+
+        val newTurn: Turn = turn.addAttackCard(cardToAdd)
+
+        newTurn.attackCards.size should be(attackCards.size + 1)
+        newTurn.attackCards should be(cardToAdd :: attackCards)
       }
     }
 
-    "trying to check if a block card beats any of the attack cards" should {
-      val turnWithOneAttackCard: Turn = turnWithEmptyCards.addAttackCard(Card(CardColor.Diamond, CardValue.Five))
+    "add a blocking card, which beat one of the attack cards" should {
 
-      "return true when the block card have the same color as one of the attack cards and higher value." in {
-        val blockCard: Card = Card(CardColor.Diamond, CardValue.Six)
+      val attackCard: Card = Card(CardColor.Herz, CardValue.Fünf)
+      val attackCards: List[Card] = List(attackCard)
 
-        turnWithOneAttackCard.checkBlockCard(blockCard) should be(true)
-      }
+      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
 
-      "return false when the block card have the same color as one of the attack cards and lower value." in {
-        val blockCard: Card = Card(CardColor.Diamond, CardValue.Four)
+      "have one card, blocking one of the attack cards." in {
+        turn.attackCards.size should be(attackCards.size)
+        turn.attackCards should be(attackCards)
+        turn.blockedBy.size should be(0)
+        turn.blockedBy.isEmpty should be(true)
 
-        turnWithOneAttackCard.checkBlockCard(blockCard) should be(false)
-      }
+        val blockingCard: Card = Card(CardColor.Herz, CardValue.Sechs)
+        val newTurn: Turn = turn.addBlockCard(attackCard, blockingCard)
 
-      "return false when the block card have other color as one of the attack cards and have different color from trump " +
-        "card." in {
-        val blockCard: Card = Card(CardColor.Clubs, CardValue.Ace)
-
-        turnWithOneAttackCard.checkBlockCard(blockCard) should be(false)
-      }
-
-      "return true if block card have same color than trump card and diffrent color from attackig cards." in {
-        val blockCard: Card = Card(CardColor.Hearts, CardValue.Three)
-
-        turnWithOneAttackCard.checkBlockCard(blockCard) should be(true)
-      }
-
-      "return true when the block card and one of the attacking cards have same color as trump card, but the blocking " +
-        "card have a higher value then the attacking cards." in {
-        val attackCard: Card = Card(CardColor.Hearts, CardValue.Seven)
-        val blockCard: Card = Card(CardColor.Hearts, CardValue.Ace)
-
-        val trunWithOneTrumpAttackCard: Turn = turnWithEmptyCards.addAttackCard(attackCard)
-
-        trunWithOneTrumpAttackCard.checkBlockCard(blockCard) should be(true)
+        newTurn.attackCards.size should be(attackCards.size - 1)
+        newTurn.attackCards should be(Nil)
+        newTurn.blockedBy.size should be(1)
+        newTurn.blockedBy.isEmpty should be(false)
       }
     }
 
-    "a player trying to add a card" should {
-      "add a block card (if valid) when the player is victim." in {
-        val validBlockCard: Card = Card(CardColor.Hearts, CardValue.Ace)
-        val turn: Turn = turnWithDefinedAttackCards.addCard(victim, validBlockCard)
+    "trying to get all cards" should {
 
-        turn.blockCards.size should be(turnWithDefinedAttackCards.blockCards.size + 1)
+      "return no cards, if attack cards and blocking cards are empty." in {
+        val turn: Turn = new Turn(attacker, victim, neighbor)
+
+        turn.getAllCards.size should be(0)
+        turn.getAllCards should be(Nil)
       }
 
-      "add a attack card (if valid) when the player is attacker." in {
-        val validAttackCard: Card = Card(CardColor.Diamond, CardValue.Four)
+      "return only attack cards if blocking cards are empty." in {
+        val attackCard1: Card = Card(CardColor.Kreuz, CardValue.König)
+        val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
 
-        val turn: Turn = turnWithEmptyCards.addCard(attacker, validAttackCard)
+        val attackCards: List[Card] = List(attackCard1, attackCard2)
+        val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
 
-        turn.attackCards.size should be(turnWithEmptyCards.attackCards.size + 1)
+        turn.getAllCards.size should be(2)
+        turn.getAllCards should be(attackCards)
       }
 
-      "add no card if the blocking card is not valid." in {
-        val invalidAttackCard: Card = Card(CardColor.Clubs, CardValue.Three)
-        val invalidBlockCard: Card = Card(CardColor.Spades, CardValue.Six)
+      "return attack cards and blocking cards, if they're not empty." in {
+        val attackCard1: Card = Card(CardColor.Herz, CardValue.König)
+        val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
+        val attackCard3: Card = Card(CardColor.Kreuz, CardValue.König)
+        val attackCard4: Card = Card(CardColor.Karo, CardValue.König)
 
-        val turnWithOneAttackCard: Turn = turnWithEmptyCards.addAttackCard(Card(CardColor.Clubs, CardValue.Ten))
-        val attackerTurn: Turn = turnWithOneAttackCard.addCard(attacker, invalidAttackCard)
+        val blockingCard1: Card = Card(CardColor.Herz, CardValue.König)
+        val blockingCard2: Card = Card(CardColor.Pik, CardValue.König)
+        val blockingCard3: Card = Card(CardColor.Kreuz, CardValue.König)
+        val blockingCard4: Card = Card(CardColor.Kreuz, CardValue.König)
 
-        val victimTurn: Turn = turnWithOneAttackCard.addCard(victim, invalidBlockCard)
+        val attackCards: List[Card] = List(attackCard1, attackCard2, attackCard3, attackCard4)
+        val blockingCards: List[Card] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
+        val blockedBy: Map[Card, Card] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
+          (attackCard3, blockingCard3), (attackCard4, blockingCard4))
 
-        turnWithOneAttackCard.attackCards.size should be(1)
-        turnWithOneAttackCard.attackCards(0) should be (Card(CardColor.Clubs, CardValue.Ten))
+        val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
+        var newTurn: Turn = turn.addBlockCard(attackCard1, blockingCard1)
+        newTurn = newTurn.addBlockCard(attackCard2, blockingCard2)
+        newTurn = newTurn.addBlockCard(attackCard3, blockingCard3)
+        newTurn = newTurn.addBlockCard(attackCard4, blockingCard4)
 
-        attackerTurn.attackCards.size should be(1)
-
-        victimTurn.blockCards.size should be(0)
+        newTurn.getAllCards.size should be(attackCards.size + blockingCards.size)
+        newTurn.getAllCards should be(Nil ::: blockedBy.values.toList ::: blockedBy.keys.toList)
       }
     }
   }

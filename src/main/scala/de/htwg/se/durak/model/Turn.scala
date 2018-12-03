@@ -1,56 +1,23 @@
 package de.htwg.se.durak.model
 
-case class Turn(attacker: Player, victim: Player, neighbor0: Player, neighbor1: Player, attackCards: List[Card], blockCards: List[Card], trumpCard: Card) {
+case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards: List[Card], blockedBy: Map[Card, Card]) {
 
-  def addCard(player: Player, card: Card): Turn = player match {
-    case `victim` => addBlockCard(card)
-    case `attacker` => addAttackCard(card)
-  }
+  def this(attacker: Player, victim: Player, neighbor: Player)
+  = this(attacker: Player, victim: Player, neighbor: Player, Nil, Map())
 
-  def addBlockCard(card: Card): Turn = {
-    if (checkBlockCard(card)) {
-      return Turn(attacker, victim, neighbor0, neighbor1, attackCards, card :: blockCards, trumpCard)
-    }
+  def addBlockCard(attackCard: Card, blockCard: Card): Turn = copy(attacker, victim, neighbor,
+    attackCards.filterNot(c => c.equals(attackCard)), blockedBy + (attackCard -> blockCard))
 
-    this
-  }
+  def getAllCards: List[Card] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
 
-  def addAttackCard(card: Card): Turn = {
-    if (checkAttackCard(card)) {
-      return Turn(attacker, victim, neighbor0, neighbor1, card :: attackCards, blockCards, trumpCard)
-    }
-
-    this
-  }
-
-  def checkAttackCard(card: Card): Boolean = {
-    attackCards.size match {
-      case 0 => return true
-      case _ => attackCards.foreach(c => {
-        if (c.value.compare(card.value) == 0) {
-          return true
-        }
-      })
-    }
-
-    false
-  }
-
-  def checkBlockCard(card: Card): Boolean = {
-    attackCards.foreach(c => {
-      if (c.color == card.color && c.value.compare(card.value) == -1) {
-        return true
-      } else if (this.trumpCard.color != c.color && this.trumpCard.color == card.color) {
-        return true
-      }
-    })
-    false
-  }
+  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, card :: attackCards)
 
   override def toString: String = {
-    val attackingCardsOnTableString: String = "Cards on table: " + attackCards + "\n"
-    val blockingCardsString: String = "Blocking cards: " + blockCards + "\n"
-    attackingCardsOnTableString.concat(blockingCardsString)
+    ("Attacker: " + attacker.toString + "\n"
+      + "Defender: " + victim.toString + "\n"
+      + "Neighbor: " + neighbor.toString + "\n"
+      + "Cards to block: \n" + attackCards.mkString("; ") + "\n"
+      + "Blocked Cards: " + blockedBy.mkString("; ") + "\n")
   }
 
 }
