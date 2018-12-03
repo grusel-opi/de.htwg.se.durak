@@ -17,18 +17,19 @@ object CardStringConverter {
   }
 
   def parseValueString(input: String): CardValue = input match {
-    case "2" => CardValue.Two
-    case "3" => CardValue.Three
-    case "4" => CardValue.Four
-    case "5" => CardValue.Five
-    case "6" => CardValue.Six
-    case "7" => CardValue.Seven
-    case "8" => CardValue.Eight
-    case "9" => CardValue.Nine
-    case "B" => CardValue.Jack
-    case "D" => CardValue.Queen
-    case "K" => CardValue.King
-    case "A" => CardValue.Ace
+    case "2" => CardValue.Zwei
+    case "3" => CardValue.Drei
+    case "4" => CardValue.Vier
+    case "5" => CardValue.Fünf
+    case "6" => CardValue.Sechs
+    case "7" => CardValue.Sieben
+    case "8" => CardValue.Acht
+    case "9" => CardValue.Neun
+    case "10" => CardValue.Zehn
+    case "B" => CardValue.Bube
+    case "D" => CardValue.Dame
+    case "K" => CardValue.König
+    case "A" => CardValue.Ass
   }
 
   def parseColorObject(color: CardColor): String = color match {
@@ -42,18 +43,19 @@ object CardStringConverter {
 
 
   def parseValueObject(value: CardValue) : String = value match {
-    case CardValue.Two => "2"
-    case CardValue.Three => "3"
-    case CardValue.Four => "4"
-    case CardValue.Five => "5"
-    case CardValue.Six => "6"
-    case CardValue.Seven => "7"
-    case CardValue.Eight => "8"
-    case CardValue.Nine => "9"
-    case CardValue.Jack => "B"
-    case CardValue.Queen => "D"
-    case CardValue.King => "K"
-    case CardValue.Ace =>"A"
+    case CardValue.Zwei => "2"
+    case CardValue.Drei => "3"
+    case CardValue.Vier => "4"
+    case CardValue.Fünf => "5"
+    case CardValue.Sechs => "6"
+    case CardValue.Sieben => "7"
+    case CardValue.Acht => "8"
+    case CardValue.Neun => "9"
+    case CardValue.Zehn => "10"
+    case CardValue.Bube => "B"
+    case CardValue.Dame => "D"
+    case CardValue.König => "K"
+    case CardValue.Ass =>"A"
   }
 
 }

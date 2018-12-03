@@ -7,18 +7,18 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class CardValueSpec extends WordSpec with Matchers {
   "A card value" when {
-    val jackCardValue: CardValue.Value = CardValue.Jack
+    val jackCardValue: CardValue.Value = CardValue.Bube
 
     "compared to a lower card value" should {
       "return compare value 1" in {
-        val nineCardValue: CardValue.Value = CardValue.Nine
+        val nineCardValue: CardValue.Value = CardValue.Neun
         jackCardValue.compare(nineCardValue) should be(1)
       }
     }
 
     "compared to a higher card value" should {
       "return compare value -1" in {
-        val aceCardValue: CardValue.Value = CardValue.Ace
+        val aceCardValue: CardValue.Value = CardValue.Ass
         jackCardValue.compare(aceCardValue) should be (-1)
       }
     }

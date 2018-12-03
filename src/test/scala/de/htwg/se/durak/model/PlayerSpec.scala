@@ -8,8 +8,8 @@ import org.scalatest.{Matchers, WordSpec}
 class PlayerSpec extends WordSpec with Matchers {
   "A Player" when {
     "created with hand cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Two)
-      val card2: Card = Card(CardColor.Pik, CardValue.Ten)
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Pik, CardValue.Zehn)
       val handCards: List[Card] = List(card1, card2)
 
       val player: Player = Player("Hans", handCards)
@@ -45,7 +45,7 @@ class PlayerSpec extends WordSpec with Matchers {
       val player: Player = new Player("Abduhl")
 
       "have one card more as before." in {
-        val cardToPick: List[Card] = List(Card(CardColor.Karo, CardValue.Four))
+        val cardToPick: List[Card] = List(Card(CardColor.Karo, CardValue.Vier))
 
         player.handCards.size should be(0)
         player.handCards should be(Nil)
@@ -63,7 +63,7 @@ class PlayerSpec extends WordSpec with Matchers {
       val player: Player = new Player("Fred")
 
       "have two cards more as before." in {
-        val cardsToPick: List[Card] = List(Card(CardColor.Kreuz, CardValue.Jack), Card(CardColor.Herz, CardValue.Eight))
+        val cardsToPick: List[Card] = List(Card(CardColor.Kreuz, CardValue.Bube), Card(CardColor.Herz, CardValue.Acht))
 
         player.handCards.size should be(0)
         player.handCards should be(Nil)
@@ -78,8 +78,8 @@ class PlayerSpec extends WordSpec with Matchers {
     }
 
     "drop a card" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Seven)
-      val card2: Card = Card(CardColor.Karo, CardValue.Jack)
+      val card1: Card = Card(CardColor.Herz, CardValue.Sieben)
+      val card2: Card = Card(CardColor.Karo, CardValue.Bube)
       val handCards: List[Card] = List(card1, card2)
 
       val player: Player = Player("Gabriel", handCards)
@@ -99,8 +99,8 @@ class PlayerSpec extends WordSpec with Matchers {
     }
 
     "drop two cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Ten)
-      val card2: Card = Card(CardColor.Karo, CardValue.King)
+      val card1: Card = Card(CardColor.Herz, CardValue.Zehn)
+      val card2: Card = Card(CardColor.Karo, CardValue.König)
       val handCards: List[Card] = List(card1, card2)
 
       val player: Player = Player("Hannes", handCards)
@@ -119,8 +119,8 @@ class PlayerSpec extends WordSpec with Matchers {
     }
 
     "try to determine if he has a specific card" should {
-      val cardThatPlayerOwns: Card = Card(CardColor.Herz, CardValue.Ace)
-      val cardThatPlayerDoesntOwn: Card = Card(CardColor.Karo, CardValue.Ace)
+      val cardThatPlayerOwns: Card = Card(CardColor.Herz, CardValue.Ass)
+      val cardThatPlayerDoesntOwn: Card = Card(CardColor.Karo, CardValue.Ass)
       val handCards: List[Card] = List(cardThatPlayerOwns)
       val player: Player = Player("Martin", handCards)
 

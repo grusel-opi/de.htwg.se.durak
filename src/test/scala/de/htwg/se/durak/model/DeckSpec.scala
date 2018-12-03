@@ -9,11 +9,11 @@ class DeckSpec extends WordSpec with Matchers {
   "A Deck" when {
 
     "created with predefined cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Two)
-      val card2: Card = Card(CardColor.Herz, CardValue.Three)
-      val card3: Card = Card(CardColor.Herz, CardValue.Four)
-      val card4: Card = Card(CardColor.Herz, CardValue.Six)
-      val card5: Card = Card(CardColor.Herz, CardValue.Seven)
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Herz, CardValue.Drei)
+      val card3: Card = Card(CardColor.Herz, CardValue.Vier)
+      val card4: Card = Card(CardColor.Herz, CardValue.Sechs)
+      val card5: Card = Card(CardColor.Herz, CardValue.Sieben)
 
       val cards: List[Card] = List(card1, card2, card3, card4, card5)
       val deck: Deck = Deck(cards)
@@ -51,8 +51,8 @@ class DeckSpec extends WordSpec with Matchers {
 
     "getting the head card" should {
       "return the top card of the deck." in {
-        val card1: Card = Card(CardColor.Kreuz, CardValue.Ten)
-        val card2: Card = Card(CardColor.Herz, CardValue.Ace)
+        val card1: Card = Card(CardColor.Kreuz, CardValue.Zehn)
+        val card2: Card = Card(CardColor.Herz, CardValue.Ass)
         val cardsInDeck: List[Card] = List(card1, card2)
 
         val deck: Deck = Deck(cardsInDeck)
@@ -78,9 +78,9 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "pop the top card" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Two)
-      val card2: Card = Card(CardColor.Karo, CardValue.Ace)
-      val card3: Card = Card(CardColor.Kreuz, CardValue.Five)
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
+      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
 
       val cardsInDeck: List[Card] = List(card1, card2, card3)
       val deck: Deck = Deck(cardsInDeck)
@@ -101,9 +101,9 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "pop two cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Two)
-      val card2: Card = Card(CardColor.Karo, CardValue.Ace)
-      val card3: Card = Card(CardColor.Kreuz, CardValue.Five)
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
+      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
 
       val cardsInDeck: List[Card] = List(card1, card2, card3)
       val deck: Deck = Deck(cardsInDeck)
