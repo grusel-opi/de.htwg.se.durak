@@ -7,7 +7,7 @@ import de.htwg.se.durak.util.{CardStringConverter, Observer}
 class Tui(controller: Controller) extends Observer {
 
   controller.add(this)
-  val converter = CardStringConverter
+  private val converter = CardStringConverter
 
   def processInputLine(input: String): Unit = {
     val tokens = input.split(" ")
