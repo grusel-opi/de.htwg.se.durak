@@ -76,5 +76,52 @@ class DeckSpec extends WordSpec with Matchers {
         newDeck.cards.size should be(cardsShouldBeInDeck.size -1)
       }
     }
+
+    "pop the top card" should {
+      val card1: Card = Card(CardColor.Herz, CardValue.Two)
+      val card2: Card = Card(CardColor.Karo, CardValue.Ace)
+      val card3: Card = Card(CardColor.Kreuz, CardValue.Five)
+
+      val cardsInDeck: List[Card] = List(card1, card2, card3)
+      val deck: Deck = Deck(cardsInDeck)
+
+      "have one card less as before." in {
+        deck.cards.size should be(cardsInDeck.size)
+        deck.cards should be(cardsInDeck)
+
+        val cardDeckTuple: (Card, Deck) = deck.popTopCard()
+        val returnedCard: Card = cardDeckTuple._1
+        val newDeck: Deck = cardDeckTuple._2
+
+        returnedCard should be(card1)
+
+        newDeck.cards.size should be(deck.cards.size - 1)
+        newDeck.cards should be(List(card2, card3))
+      }
+    }
+
+    "pop two cards" should {
+      val card1: Card = Card(CardColor.Herz, CardValue.Two)
+      val card2: Card = Card(CardColor.Karo, CardValue.Ace)
+      val card3: Card = Card(CardColor.Kreuz, CardValue.Five)
+
+      val cardsInDeck: List[Card] = List(card1, card2, card3)
+      val deck: Deck = Deck(cardsInDeck)
+
+      "have two cards less as before" in {
+        deck.cards.size should be(cardsInDeck.size)
+        deck.cards should be(cardsInDeck)
+
+        val cardsDeckTuple: (List[Card], Deck) = deck.popNCards(2)
+        val returnedCards: List[Card] = cardsDeckTuple._1
+        val newDeck: Deck = cardsDeckTuple._2
+
+        returnedCards.size should be (2)
+        returnedCards should be (List(card1, card2))
+
+        newDeck.cards.size should be(deck.cards.size - 2)
+        newDeck.cards should be(List(card3))
+      }
+    }
   }
 }
