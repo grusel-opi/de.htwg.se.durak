@@ -2,7 +2,7 @@ package de.htwg.se.durak
 
 import de.htwg.se.durak.aview.Tui
 import de.htwg.se.durak.controller.Controller
-import de.htwg.se.durak.model.{Deck, DurakGame}
+import de.htwg.se.durak.model.{Card, Deck, DurakGame, Player}
 import de.htwg.se.durak.util.CardStringConverter
 
 import scala.io.StdIn._
