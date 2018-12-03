@@ -17,7 +17,7 @@ case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards:
       + "Defender: " + victim.toString + "\n"
       + "Neighbor: " + neighbor.toString + "\n"
       + "Cards to block: \n" + attackCards.mkString("; ") + "\n"
-      + "Blocked Cards: ") + blockedBy.mkString("; ") + "\n"
+      + "Blocked Cards: " + blockedBy.mkString("; ") + "\n")
   }
 
 }
