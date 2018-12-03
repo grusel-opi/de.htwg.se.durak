@@ -3,13 +3,13 @@ package de.htwg.se.durak.model
 import scala.util.Random
 
 case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player]) {
-  def this(players: List[Player], deck: Deck)
-  = this(players, deck, deck.cards.last, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]())
-    , active = players.head, ok = Nil)
 
-  def this(players: List[Player]) = this(players, new Deck)
+  def this(players: List[Player], deck: Deck) = this(players, deck, deck.cards.last,
+    new Turn(players.head, players.head, players.head), players.head, Nil)
 
-  def this() = this(new Player("default") :: Nil)
+  def this(players: List[Player]) = this(players, new Deck().shuffle)
+
+  def this() = this(List(new Player("default")))
 
   def start(): DurakGame = {
     var newCards = deck.popNCards(5)
