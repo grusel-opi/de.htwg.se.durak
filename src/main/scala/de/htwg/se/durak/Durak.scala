@@ -14,7 +14,7 @@ object Durak {
   //controller.notifyObservers() //TODO: Why?
 
   def main(args: Array[String]): Unit = {
-    println("hElno to durak")
+    println("Hello to durak")
     var input: String = ""
     do {
       println("Please enter a command (or help for help): ")
