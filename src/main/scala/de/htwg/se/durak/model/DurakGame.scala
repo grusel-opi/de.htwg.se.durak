@@ -3,25 +3,30 @@ package de.htwg.se.durak.model
 import scala.util.Random
 
 case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player]) {
-  def this(players: List[Player], deck: Deck)
-  = this(players, deck.tail, deck.head, Turn(players.head, players.head, players.head, List[Card](), Map[Card, Card]())
-    , active = players.head, ok = Nil)
 
-  def this(players: List[Player]) = this(players, new Deck)
+  def this(players: List[Player], deck: Deck) = this(players, deck, deck.cards.last,
+    new Turn(players.head, players.head, players.head), players.head, Nil)
 
-  def this() = this(new Player("default") :: Nil)
+  def this(players: List[Player]) = this(players, new Deck().shuffle)
+
+  def this() = this(List(new Player("default")))
 
   def start(): DurakGame = {
-    var newCards = deck.popNCards(5)
-    players.foreach(p => {
-      p.pickCards(newCards._1)
-      newCards = newCards._2.popNCards(5)
-    })
-    val beginner = players(math.abs(Random.nextInt()) % players.size)
-    val firstVictim = getNeighbor(beginner)
-    val fistNeighbor = getNeighbor(firstVictim)
+    var cardsDeckTuple: (List[Card], Deck) = deck.popNCards(5)
+
+    for (i <- 0 until players.size) {
+        players(i).pickCards(cardsDeckTuple._1)
+        if (i < players.size - 1) {
+          cardsDeckTuple = cardsDeckTuple._2.popNCards(5)
+        }
+    }
+
+    val beginner: Player = players(math.abs(Random.nextInt()) % players.size)
+    val firstVictim: Player = getNeighbor(beginner)
+    val fistNeighbor: Player = getNeighbor(firstVictim)
     val newTurn = Turn(beginner, firstVictim, fistNeighbor, Nil, Map[Card, Card]())
-    copy(players, deck = newCards._2, currentTurn = newTurn, active = beginner, ok = Nil)
+
+    copy(deck = cardsDeckTuple._2, currentTurn = newTurn, active = beginner, ok = Nil)
   }
 
   def addPlayer(player: Player): DurakGame = copy(players = player :: players)
@@ -69,7 +74,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     case Some(value) =>
       if (checkBlockCard(value, card)) {
         val newTurn = currentTurn.addBlockCard(value, card)
-        active.dropCards(card::Nil)
+        active.dropCards(card :: Nil)
         if (currentTurn.attackCards.isEmpty && ok.size > 1) {
           (true, copy(currentTurn = closeTurn(true)))
         } else {
