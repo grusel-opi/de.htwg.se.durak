@@ -99,7 +99,7 @@ class DurakGameSpec extends WordSpec with Matchers {
         val unshuffledDeck: Deck = new Deck()
 
         durakGame.deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size)
-        durakGame.deck.cards should not be (unshuffledDeck)
+        durakGame.deck.cards should not be unshuffledDeck
       }
 
       "have the last card of the shuffled deck as trump card." in {
@@ -138,7 +138,7 @@ class DurakGameSpec extends WordSpec with Matchers {
         val unshuffledDeck: Deck = new Deck()
 
         durakGame.deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size)
-        durakGame.deck.cards should not be (unshuffledDeck)
+        durakGame.deck.cards should not be unshuffledDeck
       }
 
       "have the last card of the shuffled deck as trump card." in {
@@ -171,7 +171,7 @@ class DurakGameSpec extends WordSpec with Matchers {
 
       val durakGame: DurakGame = new DurakGame(players)
 
-      val newDurakGame: DurakGame = durakGame.start
+      val newDurakGame: DurakGame = durakGame.start()
 
       "give each player of the players list hand cards." in {
         newDurakGame.players.foreach(player => player.handCards.size should be(5))
@@ -232,14 +232,14 @@ class DurakGameSpec extends WordSpec with Matchers {
 
       val turn: Turn = Turn(player1, player2, player3, attackCards, Map())
 
-      val durakGame: DurakGame = new DurakGame(players, shuffledDeck, shuffledDeck.cards.last, turn, player1, Nil)
+      val durakGame: DurakGame = DurakGame(players, shuffledDeck, shuffledDeck.cards.last, turn, player1, Nil)
 
       "add the player to the satisfied players list." in {
-//        val newDurakGame: DurakGame = durakGame.playOk
-//
-//        newDurakGame.active should be(player2)
-//        newDurakGame.ok.size should be(1)
-//        newDurakGame.ok should be(player1)
+        val newDurakGame: DurakGame = durakGame.playOk
+
+        newDurakGame.active should be(player2)
+        newDurakGame.ok.size should be(1)
+        newDurakGame.ok should be(player1)
       }
 
       "should set the next player active." in {

@@ -13,14 +13,12 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
 
   def start(): DurakGame = {
     var cardsDeckTuple: (List[Card], Deck) = deck.popNCards(5)
-
-    for (i <- 0 until players.size) {
+    for (i <- players.indices) {
         players(i).pickCards(cardsDeckTuple._1)
         if (i < players.size - 1) {
           cardsDeckTuple = cardsDeckTuple._2.popNCards(5)
         }
     }
-
     val beginner: Player = players(math.abs(Random.nextInt()) % players.size)
     val firstVictim: Player = getNeighbor(beginner)
     val fistNeighbor: Player = getNeighbor(firstVictim)
@@ -33,7 +31,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
 
   def win: DurakGame = copy(players = players.filterNot(p => p.equals(active)))
 
-  def playOk: DurakGame = copy(ok = active :: ok, active = nextPlayersMove())
+  def playOk: DurakGame = copy(ok = active :: ok, active = nextPlayersMove()) // TODO: check HERE if everyone is okay, not (? only) in defend!
 
   def continue: DurakGame = copy(active = nextPlayersMove())
 
@@ -52,7 +50,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def takeCards(): DurakGame = active match {
     case x if x.equals(currentTurn.victim) =>
       active.pickCards(currentTurn.getAllCards)
-      copy(currentTurn = closeTurn(false))
+      copy(currentTurn = closeTurn(false), active = currentTurn.neighbor)
     case _ => this // TODO: nonsense action; what do?
   }
 
@@ -75,8 +73,10 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       if (checkBlockCard(value, card)) {
         val newTurn = currentTurn.addBlockCard(value, card)
         active.dropCards(card :: Nil)
-        if (currentTurn.attackCards.isEmpty && ok.size > 1) {
+        if (newTurn.attackCards.isEmpty && ok.size > 1) {
           (true, copy(currentTurn = closeTurn(true)))
+        } else if (newTurn.attackCards.isEmpty) {
+          (true, copy(currentTurn = newTurn, active = nextPlayersMove()))
         } else {
           (true, copy(currentTurn = newTurn))
         }
@@ -110,7 +110,8 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     val defended = currentTurn.blockedBy.keys.toList
     val defendedBy = currentTurn.blockedBy.values.toList
     val notDefended = currentTurn.attackCards
-    (notDefended ::: defended ::: defendedBy).foreach(c => if (c.value.equals(card.value)) {
+    (notDefended ::: defended ::: defendedBy).foreach(c =>
+      if (c.value.equals(card.value)) {
       return true
     })
     false

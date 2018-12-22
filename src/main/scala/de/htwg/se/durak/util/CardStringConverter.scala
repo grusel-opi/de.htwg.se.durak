@@ -26,10 +26,10 @@ object CardStringConverter {
     case "8" => CardValue.Acht
     case "9" => CardValue.Neun
     case "10" => CardValue.Zehn
-    case "B" => CardValue.Bube
-    case "D" => CardValue.Dame
-    case "K" => CardValue.König
-    case "A" => CardValue.Ass
+    case "B" | "b" | "bube" | "Bube"   => CardValue.Bube
+    case "D" | "d" | "dame" | "Dame"   => CardValue.Dame
+    case "K" | "k" | "könig" | "König" => CardValue.König
+    case "A" | "a" | "ass" | "Ass"     => CardValue.Ass
   }
 
   def parseColorObject(color: CardColor): String = color match {

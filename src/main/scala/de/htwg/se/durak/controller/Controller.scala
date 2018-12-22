@@ -29,7 +29,7 @@ class Controller(var game: DurakGame) extends Observable {
     notifyObservers()
   }
   def playOK(): Unit = {
-    game = game.continue
+    game = game.playOk
     notifyObservers()
   }
   def takeCards(): Unit = {

@@ -52,6 +52,7 @@ class Tui(controller: Controller) extends Observer {
     println(controller.game.currentTurn.toString)
     println("Trump: " + controller.game.trump)
     println("players turn: " + controller.game.active.toString)
+    println("players who are \"ok\": " + controller.game.ok.mkString(", "))
     print("cards: \n")
     print(controller.game.active.handCards.mkString(", ") + "\n")
     println()
