@@ -7,25 +7,28 @@ class Controller(var game: DurakGame) extends Observable {
 
   var players: List[Player] = Nil
 
-  def newPlayer(name: String): Unit = {
-    players = Player(name, Nil)::players
-    println("Added player " + name)
+  def newPlayer(name: String): Boolean = { // TODO: give ret val back to user (eg. when name is already in use or empty)
+    if (!players.toStream.collect({case p => p.name}).contains(name) && name.nonEmpty) {
+      players = Player(name, Nil)::players
+      true
+    } else {
+      false
+    }
   }
 
-  def newGame(): Unit = players.size match {
-    case x if x < 2 => println("More players first!")
+  def newGame(): Boolean = players.size match {
+    case x if x < 2 => false
     case _          => {
-      println("Ok: new game")
       game = new DurakGame(players)
       game = game.start()
       notifyObservers()
+      true
     }
   }
 
   def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
     val res = game.playCard(firstCard, secondCard)
     game = res._2
-    println("[CONTROLLER] res = " + res._1 + " :" + " play card: " + firstCard.toString)
     notifyObservers()
   }
   def playOK(): Unit = {

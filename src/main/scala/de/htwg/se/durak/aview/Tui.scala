@@ -1,8 +1,10 @@
 package de.htwg.se.durak.aview
 
 import de.htwg.se.durak.controller.Controller
-import de.htwg.se.durak.model.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.{CardStringConverter, Observer}
+
+import scala.util.{Success, Try, Failure}
 
 class Tui(controller: Controller) extends Observer {
 
@@ -10,17 +12,29 @@ class Tui(controller: Controller) extends Observer {
   private val converter = CardStringConverter
 
   def processInputLine(input: String): Unit = {
+
     val tokens = input.split(" ")
+
     tokens.head match {
-      case "help"|"h" => printHelp()
-      case "new"    => controller.newGame()
-      case "player" => controller.newPlayer(tokens.last) // TODO: prevent empty name player
-      case "play"   => controller.playCard(parseCards(tokens.tail.toList)._1, parseCards(tokens.tail.toList)._2)
-      case "take"   => controller.takeCards()
-      case "ok"     => controller.playOK()
-      case "q"      => System.exit(0)
-      case "players" => println(controller.players.mkString(" "))
-      case _        => println("Bitte was?")
+
+      case "play" =>
+        parseCards(tokens.tail.toList) match {
+          case Success(cards) => controller.playCard(cards._1, cards._2)
+          case Failure(ex)    => System.err.println("Error while parsing cards: " + ex.getMessage)
+        }
+
+      case "player" | "p" =>
+        if (tokens.size > 1) {
+          controller.newPlayer(tokens.last)
+        }
+
+      case "help" | "h" => printHelp()
+      case "new"        => controller.newGame()
+      case "take"       => controller.takeCards()
+      case "ok"         => controller.playOK()
+      case "q" | "exit" => System.exit(0)
+      case "players"    => println(controller.players.mkString(" "))
+      case _            => println("Bitte was?")
     }
   }
 
@@ -36,25 +50,27 @@ class Tui(controller: Controller) extends Observer {
     println("type [take] to take all cards if you are the victim of the current turn")
   }
 
-  def parseCards(input: List[String]): (Option[Card], Option[Card]) = {
+  def parseCards(input: List[String]): Try[(Option[Card], Option[Card])] = {
     input.size match {
-      case 0 => (None, None)
-      case 2 => (Some(Card(converter.parseColorString(input.head), converter.parseValueString(input.last))), None)
-      case 4 => (Some(Card(converter.parseColorString(input.head), converter.parseValueString(input(1)))),
-          Some(Card(converter.parseColorString(input(2)), converter.parseValueString(input(3)))))
-      case _ => (None, None)// TODO: cannot play more than two cards at once; exception?
+      case 0 => Try(None,None)
+      case 2 => Try(Some(Card(converter.parseColorString(input.head), converter.parseValueString(input.last))), None)
+      case 4 => Try((Some(Card(converter.parseColorString(input.head), converter.parseValueString(input(1)))),
+                     Some(Card(converter.parseColorString(input(2)), converter.parseValueString(input(3))))))
+      case _ => Try(None, None) // TODO: cannot use more than two cards at once; exception?
     }
 
   }
 
   override def update(): Unit = {
-    println("Current Turn:")
-    println(controller.game.currentTurn.toString)
-    println("Trump: " + controller.game.trump)
+    println()
+    println("=============================================")
     println("players turn: " + controller.game.active.toString)
+    println("Trump: [" + controller.game.trump.color + "] " + controller.game.trump.value)
+    println(controller.game.currentTurn.toString)
     println("players who are \"ok\": " + controller.game.ok.mkString(", "))
-    print("cards: \n")
+    print("cards: ")
     print(controller.game.active.handCards.mkString(", ") + "\n")
+    println("=============================================")
     println()
   }
 }

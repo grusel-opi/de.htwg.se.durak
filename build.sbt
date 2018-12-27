@@ -1,4 +1,4 @@
-name          := "de.htwg.se.durak"
+name          := "Durak in Scala"
 organization  := "htwg"
 version       := "0.0.1"
 scalaVersion  := "2.12.7"
