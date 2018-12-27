@@ -179,8 +179,8 @@ class TurnSpec extends WordSpec with Matchers {
       "return no cards, if attack cards and blocking cards are empty." in {
         val turn: Turn = new Turn(attacker, victim, neighbor)
 
-        turn.getAllCards.size should be(0)
-        turn.getAllCards should be(Nil)
+        turn.getCards.size should be(0)
+        turn.getCards should be(Nil)
       }
 
       "return only attack cards if blocking cards are empty." in {
@@ -190,8 +190,8 @@ class TurnSpec extends WordSpec with Matchers {
         val attackCards: List[Card] = List(attackCard1, attackCard2)
         val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
 
-        turn.getAllCards.size should be(2)
-        turn.getAllCards should be(attackCards)
+        turn.getCards.size should be(2)
+        turn.getCards should be(attackCards)
       }
 
       "return attack cards and blocking cards, if they're not empty." in {
@@ -216,8 +216,8 @@ class TurnSpec extends WordSpec with Matchers {
         newTurn = newTurn.addBlockCard(attackCard3, blockingCard3)
         newTurn = newTurn.addBlockCard(attackCard4, blockingCard4)
 
-        newTurn.getAllCards.size should be(attackCards.size + blockingCards.size)
-        newTurn.getAllCards should be(Nil ::: blockedBy.values.toList ::: blockedBy.keys.toList)
+        newTurn.getCards.size should be(attackCards.size + blockingCards.size)
+        newTurn.getCards should be(Nil ::: blockedBy.values.toList ::: blockedBy.keys.toList)
       }
     }
   }

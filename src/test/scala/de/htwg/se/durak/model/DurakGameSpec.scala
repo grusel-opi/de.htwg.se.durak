@@ -189,24 +189,7 @@ class DurakGameSpec extends WordSpec with Matchers {
         newDurakGame.ok should be(Nil)
       }
     }
-
-    "add a player" should {
-
-      val durakGame: DurakGame = new DurakGame(players)
-
-      "have one player more in the players list." in {
-        val playerToAdd: Player = new Player("Schmuserkatzer")
-        val newPlayers: List[Player] = playerToAdd :: players
-        val newDurakGame: DurakGame = durakGame.addPlayer(playerToAdd)
-
-        durakGame.players.size should be(players.size)
-        durakGame.players should be(players)
-
-        newDurakGame.players.size should be(players.size + 1)
-        newDurakGame.players should be(newPlayers)
-      }
-    }
-
+    
     "a player wins" should {
 
       val shufledDeck: Deck = new Deck().shuffle
