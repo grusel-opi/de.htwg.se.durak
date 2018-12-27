@@ -71,7 +71,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       active.pickCards(currentTurn.getCards)
       val (nextTurn, newDeck) = closeTurn(false)
       copy(currentTurn = nextTurn, active = currentTurn.neighbor, deck = newDeck)
-    case _ => this // TODO: nonsense action; what do?
+    case _ => this // nonsense action; what do?
   }
 
   def playCard(card: Option[Card], cardToBlock: Option[Card]): (Boolean, DurakGame) = card match {
@@ -84,22 +84,22 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
             || y.equals(currentTurn.neighbor) =>
             attack(c)
         }
-      } else (false, this) // TODO: player does not have card.. punish him!
+      } else (false, this) // player does not have card.. punish him!
     case None => (false, continue)
   }
 
   def defend(card: Card, cardToBlock: Option[Card]): (Boolean, DurakGame) = cardToBlock match {
-    case Some(value) =>
-      if (checkBlockCard(value, card)) { // TODO: ordering of params for checking intuitive?
-        val newTurn = currentTurn.addBlockCard(value, card)
+    case Some(enemy) =>
+      if (checkBlockCard(card, enemy)) {
+        val newTurn = currentTurn.addBlockCard(enemy, card) // TODO: check if victim has enough cards to block!
         active.dropCards(card :: Nil)
         if (newTurn.attackCards.isEmpty) {
           (true, copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil))
         } else {
           (true, copy(currentTurn = newTurn, ok = Nil))
         }
-      } else (false, this) // TODO: cannot use this card to defend => notify
-    case None => (false, this) // TODO: must specify which card to block => exception?
+      } else (false, this) // cannot use this card to defend => notify
+    case None => (false, this) // must specify which card to block => exception?
   }
 
   def attack(card: Card): (Boolean, DurakGame) = if (checkAttackCard(card)) {
@@ -109,37 +109,15 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     (false, this)
   }
 
-  // true if second card is greater
-  def checkBlockCard(against: Card, use: Card): Boolean = {
-    use.color match {
-      case trump.color =>
-        against.color match {
-          case trump.color => use.value.compare(against.value) > 0
-          case _ => true
-        }
-      case _ =>
-        against.color match {
-          case trump.color => false
-          case _ => use.value.compare(against.value) > 0
-        }
+  def checkBlockCard(use: Card, against: Card): Boolean = {
+    if (use.color.equals(against.color)) {
+      use.value.compare(against.value) > 0
+    } else if (use.color.equals(trump.color)) {
+      true
+    } else {
+      false
     }
   }
-
-//  // true if first card is greater
-//  def compareCards(first: Card, second: Card): Int = {
-//    first.color match {
-//      case trump.color =>
-//        second.color match {
-//          case trump.color => first.value.compare(second.value)
-//          case _           => 1
-//        }
-//      case _ =>
-//        second.color match {
-//          case trump.color => -1
-//          case _           => first.value.compare(second.value)
-//        }
-//    }
-//  }
 
   def checkAttackCard(card: Card): Boolean = if (currentTurn.attackCards.isEmpty) {
     true
@@ -169,7 +147,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     if (active.equals(currentTurn.attacker) || active.equals(currentTurn.neighbor)) {
       Left(computeAttackerPossibilities())
     } else {
-      Right(computeDefenderPossibilities())
+      Right(computeDefenderPossibilities(None))
     }
   }
 
@@ -177,12 +155,25 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     if (currentTurn.attackCards.isEmpty) {
       active.handCards
     } else {
-      active.handCards.filter(c => checkAttackCard(c))
+      active.handCards.filter(c => checkAttackCard(c)).sortWith((c0, c1) => checkBlockCard(c0, c1))
     }
   }
 
-  def computeDefenderPossibilities(): Map[Card, Card] = {
-
+  def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card] = {
+    val cardsToBlock = currentTurn.attackCards.sortWith((c0, c1) => checkBlockCard(c0, c1))
+    val availableCards = (player match {
+      case Some(p) => p.handCards
+      case None    => active.handCards
+    }).sortWith((c0, c1) => checkBlockCard(c0, c1)).reverse
+    var result: Map[Card, Card] = Map[Card, Card]()
+    cardsToBlock.foreach(c => {
+      availableCards.foreach(a => {
+        if (checkBlockCard(a, c)) {
+          result = result ++ Map(c -> a)
+        }
+      })
+    })
+    result
   }
 
 }

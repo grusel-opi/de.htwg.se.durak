@@ -13,7 +13,13 @@ case class Deck(cards: List[Card]) {
 
   def popTopCard(): (Card, Deck) = (cards.head, Deck(cards.tail))
 
-  def popNCards(n: Int): (List[Card], Deck) = (cards.slice(0, n).toList, Deck(cards.slice(n, cards.size)))
+  def popNCards(n: Int): (List[Card], Deck) = {
+    if (n >= cards.size) {
+      (cards, Deck(Nil))
+    } else {
+      (cards.slice(0, n), Deck(cards.slice(n, cards.size)))
+    }
+  }
 
   override def toString: String = "Deck: " + cards.mkString(", ")
 
