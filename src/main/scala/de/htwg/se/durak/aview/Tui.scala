@@ -25,9 +25,10 @@ class Tui(controller: Controller) extends Observer {
 
       case "player" | "p" =>
         if (tokens.size > 1) {
-          controller.newPlayer(tokens.last)
+          controller.newPlayer(tokens.tail.mkString(" "))
         }
-
+      case "undo"       => controller.undo()
+      case "redo"       => controller.redo()
       case "help" | "h" => printHelp()
       case "new"        => controller.newGame()
       case "take"       => controller.takeCards()

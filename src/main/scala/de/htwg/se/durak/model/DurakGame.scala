@@ -40,7 +40,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     copy(deck = cardsDeckTuple._2, currentTurn = newTurn, active = beginner, ok = Nil)
   }
 
-  def win: DurakGame = copy(players = players.filterNot(p => p.equals(active)))
+  def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: USE THIS METHOD!!
 
   def playOk: DurakGame = {
     if (active.ne(currentTurn.victim) && currentTurn.attackCards.isEmpty){
@@ -57,7 +57,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
 
   def continue: DurakGame = copy(active = nextPlayersMove())
 
-  def closeTurn(success: Boolean): (Turn, Deck) = { // TODO: dont forget to set new active on every usage!
+  def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!
     var tmpDeck = (List[Card](), deck)
     currentTurn.getPlayers.foreach(p => {
       val missingAmount = 5 - p.handCards.size
@@ -89,7 +89,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     case _ => this // nonsense action; what do?
   }
 
-  def playCard(card: Option[Card], cardToBlock: Option[Card]): (Boolean, DurakGame) = card match {
+  def playCard(card: Option[Card], cardToBlock: Option[Card]): DurakGame = card match {
     case Some(c) =>
       if (active.hasCard(c)) {
         active match {
@@ -99,29 +99,29 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
             || y.equals(currentTurn.neighbor) =>
             attack(c)
         }
-      } else (false, this) // player does not have card.. punish him!
-    case None => (false, continue)
+      } else this // player does not have card.. punish him!
+    case None => continue
   }
 
-  def defend(card: Card, cardToBlock: Option[Card]): (Boolean, DurakGame) = cardToBlock match {
+  def defend(card: Card, cardToBlock: Option[Card]): DurakGame = cardToBlock match {
     case Some(enemy) =>
       if (checkBlockCard(card, enemy)) {
         val newTurn = currentTurn.addBlockCard(enemy, card) // TODO: check if victim has enough cards to block!
         active.dropCards(card :: Nil)
         if (newTurn.attackCards.isEmpty) {
-          (true, copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil))
+          copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil)
         } else {
-          (true, copy(currentTurn = newTurn, ok = Nil))
+          copy(currentTurn = newTurn, ok = Nil)
         }
-      } else (false, this) // cannot use this card to defend => notify
-    case None => (false, this) // must specify which card to block => exception?
+      } else this // cannot use this card to defend => notify
+    case None => this // must specify which card to block => exception?
   }
 
-  def attack(card: Card): (Boolean, DurakGame) = if (checkAttackCard(card)) {
+  def attack(card: Card): DurakGame = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
-    (true, copy(ok = Nil, currentTurn = currentTurn.addAttackCard(card)))
+    copy(ok = Nil, currentTurn = currentTurn.addAttackCard(card))
   } else {
-    (false, this)
+    this
   }
 
   def checkBlockCard(use: Card, against: Card): Boolean = {
@@ -170,16 +170,16 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     if (currentTurn.attackCards.isEmpty) {
       active.handCards
     } else {
-      active.handCards.filter(c => checkAttackCard(c)).sortWith((c0, c1) => checkBlockCard(c0, c1))
+      active.handCards.filter(c => checkAttackCard(c)).sorted
     }
   }
 
   def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card] = {
-    val cardsToBlock = currentTurn.attackCards.sortWith((c0, c1) => checkBlockCard(c0, c1))
+    val cardsToBlock = currentTurn.attackCards.sorted
     val availableCards = (player match {
       case Some(p) => p.handCards
       case None    => active.handCards
-    }).sortWith((c0, c1) => checkBlockCard(c0, c1)).reverse
+    }).sorted.reverse
     var result: Map[Card, Card] = Map[Card, Card]()
     cardsToBlock.foreach(c => {
       availableCards.foreach(a => {

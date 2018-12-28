@@ -5,6 +5,7 @@ import de.htwg.se.durak.model._
 
 object TestBcWorksheetsAreShit {
 
+
   def main(args: Array[String]): Unit = {
     var game = new DurakGame(List(new Player("1"), new Player("2"), new Player("3")))
     game = game.start()
@@ -15,14 +16,14 @@ object TestBcWorksheetsAreShit {
     val ret = game.computePossibilities().left.get.head
     println(ret.toString())
 
-    var r = game.playCard(Some(ret), None)
-    r = r._2.playCard(None, None)
-    println("active: " + r._2.active.toString)
-    println(r._2.active.handCards.sortWith((c0, c1) => r._2.checkBlockCard(c0, c1)).reverse.mkString(", "))
+    game = game.playCard(Some(ret), None)
+    game = game.playCard(None, None)
+    println("active: " + game.active.toString)
+    println(game.active.handCards.sorted(game.CardOrdering).mkString(", "))
 
 
 
-    println(r._2.computePossibilities())
+    println(game.computePossibilities())
 
 
 

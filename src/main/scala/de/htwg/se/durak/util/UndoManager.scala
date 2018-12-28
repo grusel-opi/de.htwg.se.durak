@@ -1,39 +1,37 @@
 package de.htwg.se.durak.util
 
-import de.htwg.se.durak.model.DurakGame
 
 class UndoManager {
+
   private var undoStack: List[Command]= Nil
   private var redoStack: List[Command]= Nil
-//
-//  def produceGameState(game: DurakGame): DurakGameState = {
-//    val savedPlayers = game.players.clone()
-//
-//
-//  }
 
-  def doStep(command: Command) = {
-    undoStack = command::undoStack
-    command.doStep
+  def purgeMemento(): Unit  = {
+    undoStack = Nil
+    redoStack = Nil
   }
-  def undoStep  = {
+
+  def doStep(command: Command): Unit = {
+    undoStack = command::undoStack
+    command.doStep()
+  }
+
+  def undoStep(): Unit  = {
     undoStack match {
       case  Nil =>
-      case head::stack => {
-        head.undoStep
+      case head::stack =>
+        head.undoStep()
         undoStack=stack
         redoStack= head::redoStack
-      }
     }
   }
-  def redoStep = {
+  def redoStep(): Unit= {
     redoStack match {
       case Nil =>
-      case head::stack => {
-        head.redoStep
+      case head::stack =>
+        head.redoStep()
         redoStack=stack
         undoStack=head::undoStack
-      }
     }
   }
 }

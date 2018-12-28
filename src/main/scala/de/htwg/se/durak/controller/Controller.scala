@@ -1,41 +1,59 @@
 package de.htwg.se.durak.controller
 
 import de.htwg.se.durak.model._
-import de.htwg.se.durak.util.Observable
+import de.htwg.se.durak.util.{Observable, UndoManager}
 
 class Controller(var game: DurakGame) extends Observable {
 
-  var players: List[Player] = Nil
+  //TODO: give feedback to user about success of commands
 
-  def newPlayer(name: String): Boolean = { // TODO: give ret val back to user (eg. when name is already in use or empty)
+  var players: List[Player] = Nil
+  private val undoManager = new UndoManager()
+
+  def newPlayer(name: String): Unit = {
     if (!players.toStream.collect({case p => p.name}).contains(name) && name.nonEmpty) {
       players = Player(name, Nil)::players
-      true
     } else {
-      false
+      System.err.println("Player name already present!\n")
     }
   }
 
-  def newGame(): Boolean = players.size match {
-    case x if x < 2 => false
-    case _          => {
-      game = new DurakGame(players)
-      game = game.start()
+  def newGame(): Unit = {
+    if (players.size > 1) {
+      game = new DurakGame(players).start()
       notifyObservers()
-      true
+    } else {
+      System.err.println("More than one player needed!\n")
     }
   }
 
   def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
-    val res = game.playCard(firstCard, secondCard)
-    game = res._2
+    if (firstCard.nonEmpty) {
+      undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+    } else {
+      undoManager.purgeMemento()
+      game = game.playCard(firstCard, secondCard)
+    }
     notifyObservers()
   }
+
+  def undo(): Unit = {
+    undoManager.undoStep()
+    notifyObservers()
+  }
+
+  def redo(): Unit = {
+    undoManager.redoStep()
+    notifyObservers()
+  }
+
   def playOK(): Unit = {
+    undoManager.purgeMemento()
     game = game.playOk
     notifyObservers()
   }
   def takeCards(): Unit = {
+    undoManager.purgeMemento()
     game = game.takeCards()
     notifyObservers()
   }
