@@ -17,6 +17,10 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
+libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.144-R12"
+
+libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.4"
+
 //*******************************************************************************//
 //Libraries that we will use in later lectures compatible with this scala version
 // uncomment to use!!

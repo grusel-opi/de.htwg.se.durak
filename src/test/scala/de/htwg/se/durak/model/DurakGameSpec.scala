@@ -122,7 +122,7 @@ class DurakGameSpec extends WordSpec with Matchers {
       }
     }
 
-    "created without paremeters" should {
+    "created without parameters" should {
 
       val durakGame: DurakGame = new DurakGame()
 
@@ -205,7 +205,7 @@ class DurakGameSpec extends WordSpec with Matchers {
       }
     }
 
-    "a player is satified with his turn" should {
+    "a player is satisfied with his turn" should {
 
       val shuffledDeck: Deck = new Deck().shuffle
 
