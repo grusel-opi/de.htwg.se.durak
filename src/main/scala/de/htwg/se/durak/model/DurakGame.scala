@@ -11,10 +11,23 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
 
   def this() = this(List(new Player("default")))
 
+  implicit val CardOrdering: Ordering[Card] = (x: Card, y: Card) => {
+    if (x.color.equals(y.color)) {
+      x.value.compare(y.value)
+    } else if (x.color.equals(trump.color)) {
+      1
+    } else if (y.color.equals(trump.color)) {
+      -1
+    } else {
+      0
+    }
+  }
+
   def start(): DurakGame = {
     var cardsDeckTuple: (List[Card], Deck) = deck.popNCards(5)
     for (i <- players.indices) {
       players(i).pickCards(cardsDeckTuple._1)
+      players(i).sortHandCards
         if (i < players.size - 1) {
           cardsDeckTuple = cardsDeckTuple._2.popNCards(5)
         }
@@ -38,7 +51,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
         copy(ok = active :: ok, active = nextPlayersMove())
       }
     } else {
-      this
+      continue
     }
   }
 
@@ -51,6 +64,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       if (missingAmount > 0) {
         tmpDeck = tmpDeck._2.popNCards(missingAmount)
         p.pickCards(tmpDeck._1)
+        p.sortHandCards
       }
     })
     if (success) {
@@ -69,6 +83,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def takeCards(): DurakGame = active match {
     case x if x.equals(currentTurn.victim) =>
       active.pickCards(currentTurn.getCards)
+      active.sortHandCards
       val (nextTurn, newDeck) = closeTurn(false)
       copy(currentTurn = nextTurn, active = currentTurn.neighbor, deck = newDeck)
     case _ => this // nonsense action; what do?

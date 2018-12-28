@@ -9,5 +9,7 @@ case class Player(name: String, var handCards: List[Card]) {
 
   def hasCard(card: Card) : Boolean = handCards.contains(card)
 
+  def sortHandCards(implicit ordering: Ordering[Card]): Unit = handCards = handCards.sorted
+
   override def toString: String = name
 }
