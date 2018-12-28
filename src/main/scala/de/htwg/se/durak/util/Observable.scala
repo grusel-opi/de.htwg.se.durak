@@ -1,9 +1,5 @@
 package de.htwg.se.durak.util
 
-trait Observer {
-  def update(): Unit
-}
-
 trait Observable {
   var subscribers: Vector[Observer] = Vector()
 
