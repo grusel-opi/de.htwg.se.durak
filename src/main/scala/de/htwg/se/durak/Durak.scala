@@ -1,6 +1,6 @@
 package de.htwg.se.durak
 
-import de.htwg.se.durak.aview.Tui
+import de.htwg.se.durak.view.Tui
 import de.htwg.se.durak.controller.Controller
 import de.htwg.se.durak.model.{Card, Deck, DurakGame, Player}
 

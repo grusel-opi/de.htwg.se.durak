@@ -1,4 +1,4 @@
-package de.htwg.se.durak.aview.gui
+package de.htwg.se.durak.view.gui
 
 import javafx.scene.layout.HBox
 import scalafx.application.JFXApp

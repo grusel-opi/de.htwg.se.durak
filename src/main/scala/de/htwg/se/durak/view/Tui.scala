@@ -1,4 +1,4 @@
-package de.htwg.se.durak.aview
+package de.htwg.se.durak.view
 
 import de.htwg.se.durak.controller.Controller
 import de.htwg.se.durak.model.Card
