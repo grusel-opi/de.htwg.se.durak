@@ -40,7 +40,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     copy(deck = cardsDeckTuple._2, currentTurn = newTurn, active = beginner, ok = Nil)
   }
 
-  def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: USE THIS METHOD!!
+  def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: FUCKING USE THIS METHOD!!
 
   def playOk: DurakGame = {
     if (active.ne(currentTurn.victim) && currentTurn.attackCards.isEmpty){
@@ -86,7 +86,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       active.sortHandCards
       val (nextTurn, newDeck) = closeTurn(false)
       copy(currentTurn = nextTurn, active = currentTurn.neighbor, deck = newDeck)
-    case _ => this // nonsense action; what do?
+    case _ => this // nonsense action; ignored in tui, blocked in gui
   }
 
   def playCard(card: Option[Card], cardToBlock: Option[Card]): DurakGame = card match {

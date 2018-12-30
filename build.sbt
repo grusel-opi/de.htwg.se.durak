@@ -21,6 +21,10 @@ libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.144-R12"
 
 libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.4"
 
+//libraryDependencies += "org.scalamacros" %% "paradise" % "3.0.0-M4"
+
+//addCompilerPlugin("org.scalamacros" %% "paradise" % "3.0.0-M4")
+
 //*******************************************************************************//
 //Libraries that we will use in later lectures compatible with this scala version
 // uncomment to use!!

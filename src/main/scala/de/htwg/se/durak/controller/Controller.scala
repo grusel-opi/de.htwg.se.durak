@@ -1,9 +1,12 @@
 package de.htwg.se.durak.controller
 
+import de.htwg.se.durak.controller.events.{CardsChanged, NewGameEvent, NewPlayerEvent, Notification}
 import de.htwg.se.durak.model._
 import de.htwg.se.durak.util.{Observable, UndoManager}
 
-class Controller(var game: DurakGame) extends Observable {
+import scala.swing.Publisher
+
+class Controller(var game: DurakGame) extends Publisher {
 
   //TODO: give feedback to user about success of commands
 
@@ -13,17 +16,18 @@ class Controller(var game: DurakGame) extends Observable {
   def newPlayer(name: String): Unit = {
     if (!players.toStream.collect({case p => p.name}).contains(name) && name.nonEmpty) {
       players = Player(name, Nil)::players
+      publish(new NewPlayerEvent())
     } else {
-      System.err.println("Player name already present!\n")
+      notifyUI("Player name already present!")
     }
   }
 
   def newGame(): Unit = {
     if (players.size > 1) {
       game = new DurakGame(players).start()
-      notifyObservers()
+      publish(new NewGameEvent)
     } else {
-      System.err.println("More than one player needed!\n")
+      notifyUI("More than one player needed!")
     }
   }
 
@@ -34,28 +38,33 @@ class Controller(var game: DurakGame) extends Observable {
       undoManager.purgeMemento()
       game = game.playCard(firstCard, secondCard)
     }
-    notifyObservers()
+    publish(new CardsChanged)
   }
 
   def undo(): Unit = {
     undoManager.undoStep()
-    notifyObservers()
+    publish(new CardsChanged)
   }
 
   def redo(): Unit = {
     undoManager.redoStep()
-    notifyObservers()
+    publish(new CardsChanged)
   }
 
   def playOK(): Unit = {
     undoManager.purgeMemento()
     game = game.playOk
-    notifyObservers()
+    publish(new CardsChanged)
   }
   def takeCards(): Unit = {
     undoManager.purgeMemento()
     game = game.takeCards()
-    notifyObservers()
+    publish(new CardsChanged)
+  }
+
+  def notifyUI(message: String): Unit = {
+    publish(new Notification(message))
+    System.err.println(message)
   }
 
 }

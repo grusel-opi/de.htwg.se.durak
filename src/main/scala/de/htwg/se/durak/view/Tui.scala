@@ -4,11 +4,13 @@ import de.htwg.se.durak.controller.Controller
 import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.{CardStringConverter, Observer}
 
-import scala.util.{Success, Try, Failure}
+import scala.swing.Reactor
+import scala.util.{Failure, Success, Try}
 
-class Tui(controller: Controller) extends Observer {
+class Tui(controller: Controller) extends Reactor {
 
-  controller.add(this)
+  listenTo(controller)
+
   private val converter = CardStringConverter
 
   def processInputLine(input: String): Unit = {
@@ -62,7 +64,11 @@ class Tui(controller: Controller) extends Observer {
 
   }
 
-  override def update(): Unit = {
+  reactions += {
+    case _ => updateTui()
+  }
+
+  def updateTui(): Unit = {
     println()
     println("=============================================")
     println("players turn: " + controller.game.active.toString)
