@@ -1,7 +1,22 @@
+import sbt.CrossVersion
+
 name          := "Durak in Scala"
 organization  := "htwg"
 version       := "0.0.1"
 scalaVersion  := "2.12.7"
+
+scalacOptions ++= Seq(
+  "-encoding", "utf8", // Option and arguments on same line
+  "-Xfatal-warnings",  // New lines for each options
+  "-deprecation",
+  "-unchecked",
+  "-Xcheckinit",
+  "-language:implicitConversions",
+  "-language:higherKinds",
+  "-language:existentials",
+  "-language:postfixOps",
+)
+
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 
@@ -17,13 +32,17 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
-libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.144-R12"
+resourceDirectory in Compile := (scalaSource in Compile).value
+libraryDependencies ++= Seq(
+  "org.scalafx" %% "scalafx" % "8.0.102-R11",
+  "org.scalafx" %% "scalafxml-core-sfx8" % "0.3"
+)
 
-libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.4"
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 
-//libraryDependencies += "org.scalamacros" %% "paradise" % "3.0.0-M4"
+// Fork a new JVM for 'run' and 'test:run', to avoid JavaFX double initialization problems
+fork := true
 
-//addCompilerPlugin("org.scalamacros" %% "paradise" % "3.0.0-M4")
 
 //*******************************************************************************//
 //Libraries that we will use in later lectures compatible with this scala version

@@ -4,7 +4,6 @@ import de.htwg.se.durak.view.Tui
 import de.htwg.se.durak.controller.Controller
 import de.htwg.se.durak.model.{Card, Deck, DurakGame, Player}
 import de.htwg.se.durak.view.gui.SFXGui
-import scalafxml.core.{FXMLView, NoDependencyResolver}
 
 import scala.io.StdIn._
 
@@ -16,8 +15,9 @@ object Durak {
 
   def main(args: Array[String]): Unit = {
 
-    //gui.setController(controller)
-    //gui.main(args)
+    gui.setController(controller)
+    gui.main(args)
+
 
     println("Hello to durak")
     var input: String = ""
