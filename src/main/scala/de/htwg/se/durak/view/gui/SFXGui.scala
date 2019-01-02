@@ -8,7 +8,6 @@ import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.Includes._
-import scalafx.event.ActionEvent
 import scalafxml.core.{FXMLView, NoDependencyResolver}
 
 import scala.swing.Reactor
@@ -39,6 +38,14 @@ object SFXGui extends JFXApp with Reactor {
 
   def displayGameScene(): Unit = {
     stage.scene = new Scene(FXMLView(getClass.getResource("/game.fxml"), NoDependencyResolver))
+  }
+
+  reactions += {
+    case _ => updateGui()
+  }
+
+  def updateGui(): Unit = {
+    println("UPDATE!")
   }
 
 }
