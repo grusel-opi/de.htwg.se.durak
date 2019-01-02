@@ -1,14 +1,18 @@
 package de.htwg.se.durak.view
 
-import javafx.scene.control.Button
-import javafx.scene.layout.{BorderPane, HBox}
+import de.htwg.se.durak.view.gui.SFXGui
+import scalafx.scene.control.Button
+import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.image.{Image, ImageView}
 import scalafxml.core.macros.sfxml
 
+import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.{Alert, TextField}
+
+
 @sfxml
 class DurakGui(private val rootPane: BorderPane,
-               private val handCardBox: HBox,
-               private val button: Button) {
+               private val newGameButton: Button) {
 
 
   val card = new Image("/cards/spade_1.png")
@@ -19,12 +23,16 @@ class DurakGui(private val rootPane: BorderPane,
   val imgView2 = new ImageView(card2)
 
 
-  def schbebsi(): Unit = {
-    if (handCardBox.getChildren.size() > 0) {
-      handCardBox.getChildren.clear()
-    } else {
-      handCardBox.getChildren.addAll(imgView, imgView1, imgView2)
-    }
+//  def schbebsi(): Unit = {
+//    if (handCardBox.getChildren.size() > 0) {
+//      handCardBox.getChildren.clear()
+//    } else {
+//      handCardBox.getChildren.addAll(imgView, imgView1, imgView2)
+//    }
+//  }
+
+  def newGameButtonPressed(): Unit = {
+    SFXGui.displayNewGameScene()
   }
 
 }

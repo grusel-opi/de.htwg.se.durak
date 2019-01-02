@@ -12,12 +12,10 @@ object Durak {
   val controller = new Controller(new DurakGame())
   val tui = new Tui(controller)
   val gui: SFXGui.type = SFXGui
-
   def main(args: Array[String]): Unit = {
 
     gui.setController(controller)
     gui.main(args)
-
 
     println("Hello to durak")
     var input: String = ""
