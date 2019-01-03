@@ -58,7 +58,12 @@ class Controller(var game: DurakGame) extends Publisher {
   }
   def takeCards(): Unit = {
     undoManager.purgeMemento()
-    game = game.takeCards()
+    val newGame = game.takeCards()
+    if (newGame == game) {
+      notifyUI("There are no cards to take.")
+    } else {
+      game = newGame
+    }
     publish(new CardsChanged)
   }
 
