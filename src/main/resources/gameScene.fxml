@@ -29,7 +29,9 @@
       </ScrollPane>
       <Button fx:id="undoButton" layoutX="14.0" layoutY="586.0" mnemonicParsing="false" onAction="#undoButtonPressed" prefHeight="26.0" prefWidth="66.0" text="Undo" />
       <Button fx:id="takeButton" layoutX="14.0" layoutY="551.0" mnemonicParsing="false" onAction="#takeButtonPressed" text="TAKE :(" />
-      <Text fx:id="neighborOneText" layoutX="13.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Neighbor:" />
-      <Text fx:id="neighborOneTextContent" layoutX="81.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <Text fx:id="neighborText" layoutX="13.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Neighbor:" />
+      <Text fx:id="neighborTextContent" layoutX="81.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <Text layoutX="608.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cards in Deck:" />
+      <Text fx:id="cardsInDeckText" layoutX="709.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
    </children>
 </AnchorPane>

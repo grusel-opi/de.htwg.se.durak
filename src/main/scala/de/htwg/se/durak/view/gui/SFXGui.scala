@@ -40,6 +40,14 @@ object SFXGui extends JFXApp with Reactor {
     stage.scene = new Scene(FXMLView(getClass.getResource("/gameScene.fxml"), NoDependencyResolver))
   }
 
+  def displayWinningGameScene(): Unit = {
+    stage.scene = new Scene(FXMLView(getClass.getResource("/winningGameScene.fxml"), NoDependencyResolver))
+  }
+
+  def displayMainMenuScene(): Unit = {
+    stage.scene = new Scene(FXMLView(getClass.getResource("/mainMenuScene.fxml"), NoDependencyResolver))
+  }
+
   reactions += {
     case notification: Notification => notifyUser(notification)
     case _ => updateGui()
@@ -47,7 +55,6 @@ object SFXGui extends JFXApp with Reactor {
   }
 
   def notifyUser(notification: Notification): Unit = {
-
     notification.getMessage() match {
       case "Player name already present!" => {
         new Alert(AlertType.Warning) {

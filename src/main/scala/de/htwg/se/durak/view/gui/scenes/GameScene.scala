@@ -17,8 +17,9 @@ class GameScene(private val rootPane: AnchorPane,
                 private val attackerPlayerText: Text,
                 private val victimPlayerText: Text,
                 private val activePlayerText: Text,
-                private val neighborOneText: Text,
-                private val neighborOneTextContent: Text,
+                private val neighborText: Text,
+                private val neighborTextContent: Text,
+                private val cardsInDeckText: Text,
                 private val trumpCardBox: HBox,
                 private val handCardBox: HBox,
                 private val handCardScrollPane: ScrollPane,
@@ -38,6 +39,8 @@ class GameScene(private val rootPane: AnchorPane,
   showHandCards()
   showAttackCards()
   showBlockingCards()
+  checkIfPlayerHasFinished()
+  checkIfGameIsFinished()
 
   def hideOkayButtonForVictim(): Unit = {
     if (SFXGui.controller.game.active.equals(SFXGui.controller.game.currentTurn.victim)) {
@@ -132,11 +135,30 @@ class GameScene(private val rootPane: AnchorPane,
     attackerPlayerText.setText(SFXGui.controller.game.currentTurn.attacker.name)
     victimPlayerText.setText(SFXGui.controller.game.currentTurn.victim.name)
     activePlayerText.setText(SFXGui.controller.game.active.name)
+    cardsInDeckText.setText(SFXGui.controller.game.deck.cards.size.toString)
+
     if (SFXGui.controller.players.size > 2) {
-      neighborOneTextContent.setText(SFXGui.controller.game.currentTurn.neighbor.name)
+      neighborTextContent.setText(SFXGui.controller.game.currentTurn.neighbor.name)
     } else {
-      neighborOneText.setVisible(false)
-      neighborOneTextContent.setVisible(false)
+      neighborText.setVisible(false)
+      neighborTextContent.setVisible(false)
     }
+  }
+
+  // TODO: Add winningPlayer to Durak Game
+  def checkIfPlayerHasFinished(): Unit = {
+    if (SFXGui.controller.game.active.handCards.isEmpty) {
+      SFXGui.controller.game.win
+    }
+  }
+
+  def checkIfGameIsFinished(): Unit = {
+    if (SFXGui.controller.game.players.size == 1) {
+      endGame()
+    }
+  }
+
+  def endGame(): Unit = {
+    SFXGui.displayWinningGameScene()
   }
 }
