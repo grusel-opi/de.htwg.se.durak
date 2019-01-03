@@ -11,7 +11,7 @@ object Durak {
 
   val controller = new Controller(new DurakGame())
   val tui = new Tui(controller)
-  val gui: SFXGui.type = SFXGui
+  val gui = SFXGui
   def main(args: Array[String]): Unit = {
 
     gui.setController(controller)

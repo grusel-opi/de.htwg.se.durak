@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1250.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.view.gui.scenes.GameScene">
    <children>
-      <HBox fx:id="handCardBox" layoutX="340.0" layoutY="516.0" onMouseClicked="#test" prefHeight="108.0" prefWidth="571.0" />
+      <HBox fx:id="handCardBox" layoutX="340.0" layoutY="516.0" prefHeight="108.0" prefWidth="571.0" />
       <Text layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Attacker:" />
       <Text layoutX="14.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Victim:" />
       <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active:" />
@@ -15,9 +15,10 @@
       <Text fx:id="attackerPlayerText" layoutX="78.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Text fx:id="activePlayerText" layoutX="78.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <HBox fx:id="trumpCardBox" layoutX="1120.0" layoutY="42.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="100.0" />
-      <Text layoutX="1129.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trump Card:" />
+      <Text layoutX="1125.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trump Card:" />
       <Button fx:id="okayButton" layoutX="29.0" layoutY="598.0" mnemonicParsing="false" onAction="#okayButtonPressed" text="OKAY!" />
       <HBox fx:id="attackCardBox" layoutX="526.0" layoutY="196.0" prefHeight="100.0" prefWidth="200.0" />
-      <Button fx:id="undoButton" layoutX="110.0" layoutY="598.0" mnemonicParsing="false" text="Undo" />
+      <Button fx:id="undoButton" layoutX="110.0" layoutY="598.0" mnemonicParsing="false" onAction="#undoButtonPressed" text="Undo" />
+      <HBox fx:id="blockCardBox" layoutX="526.0" layoutY="215.0" prefHeight="100.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

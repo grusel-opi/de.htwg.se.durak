@@ -14,7 +14,7 @@ import scala.swing.Reactor
 
 object SFXGui extends JFXApp with Reactor {
 
-
+  var gameStarted: Boolean = false
   var controller: Controller = _
 
   def setController(controller: Controller): Unit = {
@@ -22,22 +22,17 @@ object SFXGui extends JFXApp with Reactor {
     listenTo(controller)
   }
 
-  var resource = getClass.getResource("/gui.fxml")
-  if (resource == null) {
-    throw new IOException("resource not found!")
-  }
-
   stage = new PrimaryStage() {
     title = "Durak"
-    scene = new Scene(FXMLView(resource, NoDependencyResolver))
+    scene = new Scene(FXMLView(getClass.getResource("/mainMenuScene.fxml"), NoDependencyResolver))
   }
 
   def displayNewGameScene(): Unit = {
-    stage.scene = new Scene(FXMLView(getClass.getResource("/newGame.fxml"), NoDependencyResolver))
+    stage.scene = new Scene(FXMLView(getClass.getResource("/createNewGameScene.fxml"), NoDependencyResolver))
   }
 
   def displayGameScene(): Unit = {
-    stage.scene = new Scene(FXMLView(getClass.getResource("/game.fxml"), NoDependencyResolver))
+    stage.scene = new Scene(FXMLView(getClass.getResource("/gameScene.fxml"), NoDependencyResolver))
   }
 
   reactions += {
@@ -45,7 +40,10 @@ object SFXGui extends JFXApp with Reactor {
   }
 
   def updateGui(): Unit = {
-    println("UPDATE!")
+    if (gameStarted) {
+      println("Update GUI...")
+      displayGameScene()
+    }
   }
 
 }

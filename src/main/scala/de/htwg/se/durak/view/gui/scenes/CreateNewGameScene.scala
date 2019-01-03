@@ -7,8 +7,8 @@ import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class NewGameScene(private val numberOfPlayersText: Text,
-                   private val playerNameTextField: TextField) {
+class CreateNewGameScene(private val numberOfPlayersText: Text,
+                         private val playerNameTextField: TextField) {
 
   numberOfPlayersText.setText(SFXGui.controller.players.size.toString)
 
@@ -23,6 +23,7 @@ class NewGameScene(private val numberOfPlayersText: Text,
       }.showAndWait()
     } else {
       SFXGui.controller.newGame()
+      SFXGui.gameStarted = true
       SFXGui.displayGameScene()
     }
   }
