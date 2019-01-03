@@ -1,6 +1,6 @@
 package de.htwg.se.durak.view.gui.scenes
 
-import de.htwg.se.durak.view.gui.SFXGui
+import de.htwg.se.durak.view.gui.Gui
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.{Alert, TextField}
 import scalafx.scene.text.Text
@@ -10,10 +10,10 @@ import scalafxml.core.macros.sfxml
 class CreateNewGameScene(private val numberOfPlayersText: Text,
                          private val playerNameTextField: TextField) {
 
-  numberOfPlayersText.setText(SFXGui.controller.players.size.toString)
+  numberOfPlayersText.setText(Gui.controller.players.size.toString)
 
   def startGameButtonPressed(): Unit = {
-    val numberOfPlayers: Int = SFXGui.controller.players.size
+    val numberOfPlayers: Int = Gui.controller.players.size
 
     if (numberOfPlayers < 2) {
       new Alert(AlertType.Warning) {
@@ -22,9 +22,9 @@ class CreateNewGameScene(private val numberOfPlayersText: Text,
         contentText = "Please add another player first."
       }.showAndWait()
     } else {
-      SFXGui.controller.newGame()
-      SFXGui.gameStarted = true
-      SFXGui.displayGameScene()
+      Gui.controller.newGame()
+      Gui.gameStarted = true
+      Gui.displayGameScene()
     }
   }
 
@@ -32,8 +32,8 @@ class CreateNewGameScene(private val numberOfPlayersText: Text,
     val playerName: String = playerNameTextField.getText
 
     if (!playerName.equals("")) {
-      SFXGui.controller.newPlayer(playerName);
-      numberOfPlayersText.setText(SFXGui.controller.players.size.toString)
+      Gui.controller.newPlayer(playerName);
+      numberOfPlayersText.setText(Gui.controller.players.size.toString)
       playerNameTextField.setText("")
     } else {
       new Alert(AlertType.Warning) {

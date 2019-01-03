@@ -1,6 +1,6 @@
 package de.htwg.se.durak.view.gui.scenes
 
-import de.htwg.se.durak.view.gui.SFXGui
+import de.htwg.se.durak.view.gui.Gui
 import scalafx.scene.control.Button
 import scalafxml.core.macros.sfxml
 import scala.swing.Reactor
@@ -9,7 +9,7 @@ import scala.swing.Reactor
 class MainMenuScene(private val newGameButton: Button) extends Reactor {
 
   def newGameButtonPressed(): Unit = {
-    SFXGui.displayNewGameScene()
+    Gui.displayNewGameScene()
   }
 
 }

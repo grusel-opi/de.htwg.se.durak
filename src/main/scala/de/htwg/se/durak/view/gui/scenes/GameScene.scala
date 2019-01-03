@@ -2,7 +2,7 @@ package de.htwg.se.durak.view.gui.scenes
 
 import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.CardImgConverter
-import de.htwg.se.durak.view.gui.SFXGui
+import de.htwg.se.durak.view.gui.Gui
 import scalafx.scene.layout.{AnchorPane, Background, HBox, VBox}
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
@@ -43,7 +43,7 @@ class GameScene(private val rootPane: AnchorPane,
   checkIfGameIsFinished()
 
   def hideOkayButtonForVictim(): Unit = {
-    if (SFXGui.controller.game.active.equals(SFXGui.controller.game.currentTurn.victim)) {
+    if (Gui.controller.game.active.equals(Gui.controller.game.currentTurn.victim)) {
       okayButton.setDisable(true)
       okayButton.setVisible(false)
     } else {
@@ -53,27 +53,27 @@ class GameScene(private val rootPane: AnchorPane,
   }
 
   def showTrumpCard(): Unit = {
-    val trumpCardImgView = CardImgConverter.convertCardToImgView(SFXGui.controller.game.trump)
+    val trumpCardImgView = CardImgConverter.convertCardToImgView(Gui.controller.game.trump)
     trumpCardImgView.setFitHeight(CARD_HEIGHT)
     trumpCardImgView.setFitWidth(CARD_WIDTH)
     trumpCardBox.children.add(trumpCardImgView)
   }
 
   def showHandCards(): Unit = {
-    val attacker = SFXGui.controller.game.currentTurn.attacker
-    val active = SFXGui.controller.game.active
+    val attacker = Gui.controller.game.currentTurn.attacker
+    val active = Gui.controller.game.active
 
-    SFXGui.controller.game.active.handCards.foreach(card => {
+    Gui.controller.game.active.handCards.foreach(card => {
       val cardImgView = CardImgConverter.convertCardToImgView(card)
       cardImgView.setFitHeight(CARD_HEIGHT)
       cardImgView.setFitWidth(CARD_WIDTH)
       cardImgView.onMouseClicked = (me: MouseEvent) => {
         if (attacker.equals(active)) {
           println("clicked on: " + card)
-          SFXGui.controller.playCard(Some(card), None)
+          Gui.controller.playCard(Some(card), None)
         } else {
           if (cardToBlock.nonEmpty) {
-            SFXGui.controller.playCard(Some(card), cardToBlock)
+            Gui.controller.playCard(Some(card), cardToBlock)
           } else {
             new Alert(AlertType.Information) {
               title = "Information Dialog"
@@ -88,7 +88,7 @@ class GameScene(private val rootPane: AnchorPane,
   }
 
   def showAttackCards(): Unit = {
-    SFXGui.controller.game.currentTurn.attackCards.foreach(card => {
+    Gui.controller.game.currentTurn.attackCards.foreach(card => {
       val cardImgView = CardImgConverter.convertCardToImgView(card)
       cardImgView.setFitHeight(CARD_HEIGHT)
       cardImgView.setFitWidth(CARD_WIDTH)
@@ -101,7 +101,7 @@ class GameScene(private val rootPane: AnchorPane,
 
 
   def showBlockingCards(): Unit = {
-    SFXGui.controller.game.currentTurn.blockedBy.foreach(card => {
+    Gui.controller.game.currentTurn.blockedBy.foreach(card => {
       val attackCardImgView = CardImgConverter.convertCardToImgView(card._1)
       val blockingCardImgView = CardImgConverter.convertCardToImgView(card._2)
 
@@ -119,26 +119,26 @@ class GameScene(private val rootPane: AnchorPane,
   }
 
   def takeButtonPressed(): Unit = {
-    SFXGui.controller.takeCards()
+    Gui.controller.takeCards()
   }
 
   def okayButtonPressed(): Unit = {
     // TODO player should only be okay, if cards were played!
-    SFXGui.controller.playOK()
+    Gui.controller.playOK()
   }
 
   def undoButtonPressed(): Unit = {
-    SFXGui.controller.undo()
+    Gui.controller.undo()
   }
 
   def setGameSeceneStatusText(): Unit = {
-    attackerPlayerText.setText(SFXGui.controller.game.currentTurn.attacker.name)
-    victimPlayerText.setText(SFXGui.controller.game.currentTurn.victim.name)
-    activePlayerText.setText(SFXGui.controller.game.active.name)
-    cardsInDeckText.setText(SFXGui.controller.game.deck.cards.size.toString)
+    attackerPlayerText.setText(Gui.controller.game.currentTurn.attacker.name)
+    victimPlayerText.setText(Gui.controller.game.currentTurn.victim.name)
+    activePlayerText.setText(Gui.controller.game.active.name)
+    cardsInDeckText.setText(Gui.controller.game.deck.cards.size.toString)
 
-    if (SFXGui.controller.players.size > 2) {
-      neighborTextContent.setText(SFXGui.controller.game.currentTurn.neighbor.name)
+    if (Gui.controller.players.size > 2) {
+      neighborTextContent.setText(Gui.controller.game.currentTurn.neighbor.name)
     } else {
       neighborText.setVisible(false)
       neighborTextContent.setVisible(false)
@@ -147,18 +147,18 @@ class GameScene(private val rootPane: AnchorPane,
 
   // TODO: Add winningPlayer to Durak Game
   def checkIfPlayerHasFinished(): Unit = {
-    if (SFXGui.controller.game.active.handCards.isEmpty) {
-      SFXGui.controller.game.win
+    if (Gui.controller.game.active.handCards.isEmpty) {
+      Gui.controller.game.win
     }
   }
 
   def checkIfGameIsFinished(): Unit = {
-    if (SFXGui.controller.game.players.size == 1) {
+    if (Gui.controller.game.players.size == 1) {
       endGame()
     }
   }
 
   def endGame(): Unit = {
-    SFXGui.displayWinningGameScene()
+    Gui.displayWinningGameScene()
   }
 }

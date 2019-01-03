@@ -1,6 +1,6 @@
 package de.htwg.se.durak.view.gui.scenes
 
-import de.htwg.se.durak.view.gui.SFXGui
+import de.htwg.se.durak.view.gui.Gui
 import scalafx.scene.control.Button
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
@@ -13,6 +13,6 @@ class WinningGameScene(private val winningPlayerNameText: Text,
   winningPlayerNameText.setText("Somebody")
 
   def backToMainMenuButtonPressed(): Unit = {
-    SFXGui.displayMainMenuScene()
+    Gui.displayMainMenuScene()
   }
 }
