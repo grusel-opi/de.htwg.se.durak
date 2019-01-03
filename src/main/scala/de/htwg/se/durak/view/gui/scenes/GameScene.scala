@@ -3,7 +3,7 @@ package de.htwg.se.durak.view.gui.scenes
 import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.CardImgConverter
 import de.htwg.se.durak.view.gui.Gui
-import scalafx.scene.layout.{AnchorPane, Background, HBox, VBox}
+import scalafx.scene.layout.{AnchorPane, HBox, VBox}
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 import scalafx.scene.input.MouseEvent
@@ -69,7 +69,6 @@ class GameScene(private val rootPane: AnchorPane,
       cardImgView.setFitWidth(CARD_WIDTH)
       cardImgView.onMouseClicked = (me: MouseEvent) => {
         if (attacker.equals(active)) {
-          println("clicked on: " + card)
           Gui.controller.playCard(Some(card), None)
         } else {
           if (cardToBlock.nonEmpty) {

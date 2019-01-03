@@ -32,7 +32,7 @@ class CreateNewGameScene(private val numberOfPlayersText: Text,
     val playerName: String = playerNameTextField.getText
 
     if (!playerName.equals("")) {
-      Gui.controller.newPlayer(playerName);
+      Gui.controller.newPlayer(playerName)
       numberOfPlayersText.setText(Gui.controller.players.size.toString)
       playerNameTextField.setText("")
     } else {
