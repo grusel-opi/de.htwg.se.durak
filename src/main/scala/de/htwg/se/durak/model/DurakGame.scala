@@ -43,12 +43,22 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: FUCKING USE THIS METHOD!!
 
   def playOk: DurakGame = {
-    if (active.ne(currentTurn.victim) && currentTurn.attackCards.isEmpty){
+    if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty){
       if (ok.nonEmpty) {
         val (nextTurn, newDeck) = closeTurn(true)
         copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
       } else {
-        copy(ok = active :: ok, active = nextPlayersMove())
+        if (players.size > 2) {
+          if (currentTurn.attackCards.nonEmpty) {
+            copy(ok = active :: ok, active = nextPlayersMove())
+          } else {
+            val (nextTurn, newDeck) = closeTurn(true)
+            copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+          }
+        } else {
+          val (nextTurn, newDeck) = closeTurn(true)
+          copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+        }
       }
     } else {
       continue
@@ -94,6 +104,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       if (active.hasCard(c)) {
         active match {
           case x if x.equals(currentTurn.victim) =>
+
             defend(c, cardToBlock)
           case y if y.equals(currentTurn.attacker)
             || y.equals(currentTurn.neighbor) =>
@@ -122,6 +133,10 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     copy(ok = Nil, currentTurn = currentTurn.addAttackCard(card))
   } else {
     this
+  }
+
+  def shove(card: Card): DurakGame = {
+    throw new Exception("Not implemented yet :(")
   }
 
   def checkBlockCard(use: Card, against: Card): Boolean = {

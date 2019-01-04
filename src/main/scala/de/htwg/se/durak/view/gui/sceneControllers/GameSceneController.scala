@@ -13,21 +13,21 @@ import scalafx.scene.control.Alert.AlertType
 
 
 @sfxml
-class GameScene(private val rootPane: AnchorPane,
-                private val attackerPlayerText: Text,
-                private val victimPlayerText: Text,
-                private val activePlayerText: Text,
-                private val neighborText: Text,
-                private val neighborTextContent: Text,
-                private val cardsInDeckText: Text,
-                private val trumpCardBox: HBox,
-                private val handCardBox: HBox,
-                private val handCardScrollPane: ScrollPane,
-                private val cardsOnTableBox: HBox,
-                private val cardsOnTabeScrollPane: ScrollPane,
-                private val takeButton: Button,
-                private val okayButton: Button,
-                private val undoButton: Button) {
+class GameSceneController(private val rootPane: AnchorPane,
+                          private val attackerPlayerText: Text,
+                          private val victimPlayerText: Text,
+                          private val activePlayerText: Text,
+                          private val neighborText: Text,
+                          private val neighborTextContent: Text,
+                          private val cardsInDeckText: Text,
+                          private val trumpCardBox: HBox,
+                          private val handCardBox: HBox,
+                          private val handCardScrollPane: ScrollPane,
+                          private val cardsOnTableBox: HBox,
+                          private val cardsOnTabeScrollPane: ScrollPane,
+                          private val takeButton: Button,
+                          private val okayButton: Button,
+                          private val undoButton: Button) {
 
   var cardToBlock: Option[Card] = None
   val CARD_HEIGHT = 100

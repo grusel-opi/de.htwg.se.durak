@@ -6,8 +6,8 @@ import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class WinningGameScene(private val winningPlayerNameText: Text,
-                       private val backToMainMenuButton: Button) {
+class WinningGameSceneController(private val winningPlayerNameText: Text,
+                                 private val backToMainMenuButton: Button) {
 
   // TODO: Replace trough winning player!
   winningPlayerNameText.setText("Somebody")
