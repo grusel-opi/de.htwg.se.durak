@@ -1,6 +1,6 @@
 package de.htwg.se.durak.controller
 
-import de.htwg.se.durak.controller.events.{CardsChanged, NewGameEvent, NewPlayerEvent, Notification}
+import de.htwg.se.durak.controller.events._
 import de.htwg.se.durak.model._
 import de.htwg.se.durak.util.{Observable, UndoManager}
 
@@ -39,6 +39,11 @@ class Controller(var game: DurakGame) extends Publisher {
       game = game.playCard(firstCard, secondCard)
     }
     publish(new CardsChanged)
+    game = game.checkIfPlayerHasWon()
+    val gameIsOver: Boolean = game.checkIfGameIsOver()
+    if (gameIsOver) {
+      publish(new GameOverEvent())
+    }
   }
 
   def undo(): Unit = {

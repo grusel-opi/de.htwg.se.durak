@@ -28,9 +28,9 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     for (i <- players.indices) {
       players(i).pickCards(cardsDeckTuple._1)
       players(i).sortHandCards
-        if (i < players.size - 1) {
-          cardsDeckTuple = cardsDeckTuple._2.popNCards(5)
-        }
+      if (i < players.size - 1) {
+        cardsDeckTuple = cardsDeckTuple._2.popNCards(5)
+      }
     }
     val beginner: Player = players(math.abs(Random.nextInt()) % players.size)
     val firstVictim: Player = getNeighbor(beginner)
@@ -43,7 +43,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: FUCKING USE THIS METHOD!!
 
   def playOk: DurakGame = {
-    if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty){
+    if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
       if (ok.nonEmpty) {
         val (nextTurn, newDeck) = closeTurn(true)
         copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
@@ -104,7 +104,6 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
       if (active.hasCard(c)) {
         active match {
           case x if x.equals(currentTurn.victim) =>
-
             defend(c, cardToBlock)
           case y if y.equals(currentTurn.attacker)
             || y.equals(currentTurn.neighbor) =>
@@ -157,8 +156,8 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     val notDefended = currentTurn.attackCards
     (notDefended ::: defended ::: defendedBy).foreach(c =>
       if (c.value.equals(card.value)) {
-      return true
-    })
+        return true
+      })
     false
   }
 
@@ -193,7 +192,7 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     val cardsToBlock = currentTurn.attackCards.sorted
     val availableCards = (player match {
       case Some(p) => p.handCards
-      case None    => active.handCards
+      case None => active.handCards
     }).sorted.reverse
     var result: Map[Card, Card] = Map[Card, Card]()
     cardsToBlock.foreach(c => {
@@ -206,4 +205,19 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     result
   }
 
+  def checkIfGameIsOver(): Boolean = {
+    if (players.size == 1) {
+      true
+    } else {
+      false
+    }
+  }
+
+  def checkIfPlayerHasWon(): DurakGame = {
+    if (active.handCards.isEmpty) {
+      win
+    } else {
+      this
+    }
+  }
 }

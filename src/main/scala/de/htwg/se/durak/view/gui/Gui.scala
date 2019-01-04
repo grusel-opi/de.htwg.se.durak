@@ -1,7 +1,7 @@
 package de.htwg.se.durak.view.gui
 
 import de.htwg.se.durak.controller.Controller
-import de.htwg.se.durak.controller.events.Notification
+import de.htwg.se.durak.controller.events.{Notification, GameOverEvent}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -51,7 +51,8 @@ object Gui extends JFXApp with Reactor {
   }
 
   reactions += {
-    case notification: Notification => notifyUser(notification)
+    case n: Notification => notifyUser(n)
+    case goe: GameOverEvent => displayWinningGameScene()
     case _ => updateGui()
 
   }

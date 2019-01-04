@@ -9,10 +9,12 @@ import scalafxml.core.macros.sfxml
 class WinningGameSceneController(private val winningPlayerNameText: Text,
                                  private val backToMainMenuButton: Button) {
 
-  // TODO: Replace trough winning player!
-  winningPlayerNameText.setText("Somebody")
-
   def backToMainMenuButtonPressed(): Unit = {
     Gui.displayMainMenuScene()
+  }
+
+  def setWinningPlayerText(playerName: String): Unit = {
+    // TODO: Set winners name...
+    winningPlayerNameText.setText("Somebody has won the game.")
   }
 }

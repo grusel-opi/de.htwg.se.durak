@@ -24,7 +24,7 @@ class GameSceneController(private val rootPane: AnchorPane,
                           private val handCardBox: HBox,
                           private val handCardScrollPane: ScrollPane,
                           private val cardsOnTableBox: HBox,
-                          private val cardsOnTabeScrollPane: ScrollPane,
+                          private val cardsOnTableScrollPane: ScrollPane,
                           private val takeButton: Button,
                           private val okayButton: Button,
                           private val undoButton: Button) {
@@ -40,7 +40,8 @@ class GameSceneController(private val rootPane: AnchorPane,
   showAttackCards()
   showBlockingCards()
   checkIfPlayerHasFinished()
-  checkIfGameIsFinished()
+  configureHandCardScrollPane()
+  configureCardsOnTableScrollPane()
 
   def hideOkayButtonForVictim(): Unit = {
     if (Gui.controller.game.active.equals(Gui.controller.game.currentTurn.victim)) {
@@ -122,7 +123,6 @@ class GameSceneController(private val rootPane: AnchorPane,
   }
 
   def okayButtonPressed(): Unit = {
-    // TODO player should only be okay, if cards were played!
     Gui.controller.playOK()
   }
 
@@ -151,13 +151,18 @@ class GameSceneController(private val rootPane: AnchorPane,
     }
   }
 
-  def checkIfGameIsFinished(): Unit = {
-    if (Gui.controller.game.players.size == 1) {
-      endGame()
-    }
+  def configureHandCardScrollPane(): Unit = {
+    // disable verical scrolling
+    handCardScrollPane.setFitToHeight(true)
+    // remove ugly border around ScrollPane
+    handCardScrollPane.getStyleClass.add("edge-to-edge")
   }
 
-  def endGame(): Unit = {
-    Gui.displayWinningGameScene()
+  def configureCardsOnTableScrollPane(): Unit = {
+    // disable verical scrolling
+    cardsOnTableScrollPane.setFitToHeight(true);
+    // remove ugly border around ScrollPane
+    cardsOnTableScrollPane.getStyleClass.add("edge-to-edge")
   }
+
 }

@@ -8,7 +8,7 @@
 
 <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1250.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.view.gui.sceneControllers.GameSceneController">
    <children>
-      <ScrollPane fx:id="handCardScrollPane" layoutX="110.0" layoutY="504.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="1110.0" style="-fx-background: green; -fx-border-color: green;" vbarPolicy="NEVER">
+      <ScrollPane fx:id="handCardScrollPane" layoutX="110.0" layoutY="504.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="1110.0" style="-fx-background: green; -fx-border-color: green;" vbarPolicy="NEVER">
          <content>
             <HBox fx:id="handCardBox" layoutX="100.0" prefHeight="150.0" prefWidth="570.0" />
          </content>
