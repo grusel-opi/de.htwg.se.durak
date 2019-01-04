@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="650.0" prefWidth="1250.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.view.gui.scenes.WinningGameScene">
+<AnchorPane prefHeight="650.0" prefWidth="1250.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.view.gui.sceneControllers.WinningGameSceneController">
    <children>
       <Text fx:id="winningPlayerNameText" layoutX="201.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL">
          <font>

@@ -1,4 +1,4 @@
-package de.htwg.se.durak.view.gui.scenes
+package de.htwg.se.durak.view.gui.sceneControllers
 
 import de.htwg.se.durak.model.Card
 import de.htwg.se.durak.util.CardImgConverter

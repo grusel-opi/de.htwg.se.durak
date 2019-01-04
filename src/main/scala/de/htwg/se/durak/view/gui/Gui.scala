@@ -42,6 +42,14 @@ object Gui extends JFXApp with Reactor {
     stage.scene = new Scene(FXMLView(getClass.getResource("/mainMenuScene.fxml"), NoDependencyResolver))
   }
 
+  def exitGame(): Unit = {
+    System.exit(0)
+  }
+
+  def displayRulesScene(): Unit = {
+    stage.scene = new Scene(FXMLView(getClass.getResource("/rulesScene.fxml"), NoDependencyResolver))
+  }
+
   reactions += {
     case notification: Notification => notifyUser(notification)
     case _ => updateGui()

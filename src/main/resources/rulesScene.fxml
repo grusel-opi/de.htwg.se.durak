@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.view.gui.sceneControllers.RulesSceneController">
+   <children>
+      <Text layoutX="499.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spielregeln">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Text>
+      <Text layoutX="56.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximale Anzahl Spieler:" />
+      <Text layoutX="56.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zu Beginn des Spiels erhält jeder Spieler 5 Handkarten. " wrappingWidth="222.47265614569187" />
+      <Text layoutX="54.0" layoutY="580.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Der Spieler welcher als erstes keine Handkarten mehr besitzt, gewinnt das Spiel." wrappingWidth="447.53861613571644" />
+      <Text layoutX="54.0" layoutY="616.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Das Spiel wird solange weitergespielt bis es nur noch einen Spieler gibt, der als einziges noch Handkarten besitzt. Derjenige ist dann der Verlierer. " wrappingWidth="447.53863476216793" />
+      <Text layoutX="55.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vorbereitung:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="57.0" layoutY="130.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Anzah Karten im Deck: " />
+      <Text layoutX="229.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="52" />
+      <Text layoutX="229.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="10" />
+      <Text layoutX="54.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spielverlauf:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="55.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Es wird rundenweiße im Uhrzeigersinn gespielt. Eine Runde beginnt mit dem Angriff des Angreifers, welcher den Spieler seiner linken (den Vertetiger) angreifen darf. Der Vertetiger muss nun die vom Angreifer gelegten Karten decken." wrappingWidth="447.53857421875" />
+      <Text layoutX="54.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gelingt ihm dies, dürfen beide Nachbarn des Verteidigers weitere Karten hinzuwerfen. Es können jedoch nur Karten dazugeworfen werden, welche die selbe Wertigkeit besitzen, wie eine der bereits auf dem Spielfeld liegenden Karten. Die dazugeworfenen Karten muss der Verteidiger nun ebenfalls decken (sobald dieser an der Reihe ist), wodurch der Zyklus wieder von vorne beginnt. Dies wird solange Wiederholt, bis beide Nachbarn des Verteidigers zufrieden sind, also keine Karten mehr dazu werfen möchten." wrappingWidth="447.53857888281345" />
+      <Text layoutX="54.0" layoutY="461.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gelingt es dem Vertediger nicht, den Anfriff des Angreifers abzwehren, so muss dieser die Karten auf dem Tisch aufnehmen und der Spieler zu seiner linken ist nun an der Reihe anzugreifen." wrappingWidth="447.53859750926495" />
+      <Text layoutX="58.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text layoutX="55.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ein zufällig ausgewählter Spieler darf beginnen." />
+      <Text layoutX="538.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angriff:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="538.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ein Angreifer darf beliebig viele Karten der gleichen Wertigkeit legen um den Verteidiger anzugreifen." />
+      <Text layoutX="306.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Karten:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="306.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Die Spielkarten geordnet von der niedrigsten Wertigkeit zur höchsten Wertigkeit:" wrappingWidth="197.47265614569187" />
+      <Text layoutX="318.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2, 3, 4, 5, 6, 7, 8, 9, Bube, Dame, König, 10, Ass" wrappingWidth="173.9521484375">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="539.0" layoutY="270.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Verteidigen:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="539.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ein Verteidiger muss alle ungedeckten Karten auf dem Spielfeld decken, und zwar solange bis beide nachbarn zufrieden sind und nichts mehr dazuwerfen möchten. Eine auf dem Spielfeld liegende Karte kann nur mit der selben Farbe und einer höherern Wertigkeit gedeckt werden. Ausnahme Trumpfkarten." wrappingWidth="696.5278275310993" />
+      <Text layoutX="539.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trumpfkarte:">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
+      <Text layoutX="539.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zu Beginn des Spiels wird eine Trumpfkarte festgelegt (die letzte karte des Stapels). Die Farbe dieser Karte legt die Trumpffarbe fest, d.h. alle Karten mit dieser Farbe sind nun Trumpfkarten. Diese Karte ist für alle Spielteilnehmer sichtbar und kann auch aufgezogen werden." wrappingWidth="684.267578125" />
+      <Text layoutX="538.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Eine Trumpfkarte kann jede normale Karte decken. Eine Trumpfkarte kann mit einer anderen Trumpfkarte mit höherer Wertigkeit gedeckt werden." wrappingWidth="696.52783203125" />
+      <Text layoutX="54.0" layoutY="514.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sobald ein Spieler einen Zug an einen anderen Spieler übergibt muss dierser Karten aufziehen, falls er unter 5 Karten auf der Hand hat. Es werden so viele Karten gezogen, bis der Spieler wieder 5 Handkarten besitzt." wrappingWidth="447.53857888281345" />
+      <Text layoutX="538.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ein Verteidiger hat auch die Möglichkeit einen Angriff weiterzuschieben, indem er eine Karte einer anderen Farbe mit der selben Wertigkeit wie die auf dem Spielfeld liegenden Karten besitzt. Dadurch greift der Verteidiger nun den Spieler zu seiner linken an. Dies ist jedoch nur möglich, solange der Vertediger noch keine der Angriffskarten gedeckt hat." wrappingWidth="696.5278348004504" />
+      <Button fx:id="mainMenuButton" layoutX="749.0" layoutY="423.0" mnemonicParsing="false" onAction="#mainMenuButtonPressed" text="Main Menu" />
+   </children>
+</AnchorPane>
