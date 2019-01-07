@@ -124,7 +124,13 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
             defend(c, cardToBlock)
           case y if y.equals(currentTurn.attacker)
             || y.equals(currentTurn.neighbor) =>
-            attack(c)
+            println("attack cards size: " + currentTurn.attackCards.size)
+            println("victim hand cards size: " + currentTurn.victim.handCards.size)
+            if (currentTurn.attackCards.size < currentTurn.victim.handCards.size) {
+              attack(c)
+            } else {
+              throw new VictimHasNotEnoughCardsToBlockException()
+            }
         }
       } else this // player does not have card.. punish him!
     case None => continue
@@ -133,22 +139,18 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def defend(card: Card, cardToBlock: Option[Card]): DurakGame = cardToBlock match {
     case Some(enemy) =>
       if (checkBlockCard(card, enemy)) {
-        if (currentTurn.attackCards.size <= currentTurn.victim.handCards.size) {
-          val newTurn = currentTurn.addBlockCard(enemy, card)
-          active.dropCards(card :: Nil)
-          if (newTurn.attackCards.isEmpty) {
-            if (!active.handCards.isEmpty) {
-              copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil)
-            } else {
-              println("YO!")
-              this
-            }
+        val newTurn = currentTurn.addBlockCard(enemy, card)
+        active.dropCards(card :: Nil)
+        if (newTurn.attackCards.isEmpty) {
+          if (!active.handCards.isEmpty) {
+            copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil)
           } else {
-            copy(currentTurn = newTurn, ok = Nil)
+            this
           }
         } else {
-          throw new VictimHasNotEnoughCardsToBlockException()
+          copy(currentTurn = newTurn, ok = Nil)
         }
+
       } else {
         throw new IllegalTurnException()
       }
