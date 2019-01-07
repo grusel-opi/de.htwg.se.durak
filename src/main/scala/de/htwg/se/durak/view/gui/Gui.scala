@@ -27,7 +27,7 @@ object Gui extends JFXApp with Reactor {
   }
 
   def displayNewGameScene(): Unit = {
-    stage.scene = new Scene(FXMLView(getClass.getResource("/createNewGameScene.fxml"), NoDependencyResolver))
+    stage.scene = new Scene(FXMLView(getClass.getResource("/NewGameScene.fxml"), NoDependencyResolver))
   }
 
   def displayGameScene(): Unit = {
@@ -52,7 +52,10 @@ object Gui extends JFXApp with Reactor {
 
   reactions += {
     case n: Notification => notifyUser(n)
-    case goe: GameOverEvent => displayWinningGameScene()
+    case goe: GameOverEvent => {
+      gameStarted = false
+      displayWinningGameScene()
+    }
     case _ => updateGui()
 
   }
@@ -72,11 +75,31 @@ object Gui extends JFXApp with Reactor {
           headerText = "Warning: " + notification.getMessage()
           contentText = ""
         }.showAndWait()
+
+      case "Illegal Turn!" => {
+        new Alert(AlertType.Warning) {
+          title = "Warning Dialog"
+          headerText = "Warning: " + notification.getMessage()
+          contentText = ""
+        }.showAndWait()
+        updateGui()
+      }
+
+      case "Missing blocking Card!" => {
+        new Alert(AlertType.Warning) {
+          title = "Warning Dialog"
+          headerText = "Warning: " + notification.getMessage()
+          contentText = "You have to specify a blocking card!"
+        }.showAndWait()
+      }
+
+      case _ =>
     }
   }
 
   def updateGui(): Unit = {
     if (gameStarted) {
+      println("update gui")
       displayGameScene()
     }
   }

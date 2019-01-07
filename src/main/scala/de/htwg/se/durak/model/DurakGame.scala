@@ -1,11 +1,14 @@
 package de.htwg.se.durak.model
 
+import de.htwg.se.durak.model.exceptions.{IllegalTurnException, MissingBlockingCardException, VictimHasNotEnoughCardsToBlockException}
+
 import scala.util.Random
 
-case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player]) {
+case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player],
+                     winner: Option[Player]) {
 
   def this(players: List[Player], deck: Deck) = this(players, deck, deck.cards.last,
-    new Turn(players.head, players.head, players.head), players.head, Nil)
+    new Turn(players.head, players.head, players.head), players.head, Nil, None)
 
   def this(players: List[Player]) = this(players, new Deck().shuffle)
 
@@ -40,27 +43,41 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
     copy(deck = cardsDeckTuple._2, currentTurn = newTurn, active = beginner, ok = Nil)
   }
 
-  def win: DurakGame = copy(players = players.filterNot(p => p.equals(active))) //TODO: FUCKING USE THIS METHOD!!
-
   def playOk: DurakGame = {
     if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
       if (ok.nonEmpty) {
+        println("1")
         val (nextTurn, newDeck) = closeTurn(true)
         copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
       } else {
         if (players.size > 2) {
           if (currentTurn.attackCards.nonEmpty) {
+            println("2")
             copy(ok = active :: ok, active = nextPlayersMove())
-          } else {
+          } else if (!currentTurn.blockedBy.isEmpty) {
+            println("3")
             val (nextTurn, newDeck) = closeTurn(true)
             copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+          } else {
+            println("4")
+            this
           }
         } else {
-          val (nextTurn, newDeck) = closeTurn(true)
-          copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+          if (!currentTurn.attackCards.isEmpty) {
+            println("5")
+            copy(ok = active :: ok, active = nextPlayersMove())
+          } else if (!currentTurn.blockedBy.isEmpty) {
+            println("6")
+            val (nextTurn, newDeck) = closeTurn(true)
+            copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+          } else {
+            println("7")
+            this
+          }
         }
       }
     } else {
+      println("8")
       continue
     }
   }
@@ -116,15 +133,26 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   def defend(card: Card, cardToBlock: Option[Card]): DurakGame = cardToBlock match {
     case Some(enemy) =>
       if (checkBlockCard(card, enemy)) {
-        val newTurn = currentTurn.addBlockCard(enemy, card) // TODO: check if victim has enough cards to block!
-        active.dropCards(card :: Nil)
-        if (newTurn.attackCards.isEmpty) {
-          copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil)
+        if (currentTurn.attackCards.size <= currentTurn.victim.handCards.size) {
+          val newTurn = currentTurn.addBlockCard(enemy, card)
+          active.dropCards(card :: Nil)
+          if (newTurn.attackCards.isEmpty) {
+            if (!active.handCards.isEmpty) {
+              copy(currentTurn = newTurn, active = nextPlayersMove(), ok = Nil)
+            } else {
+              println("YO!")
+              this
+            }
+          } else {
+            copy(currentTurn = newTurn, ok = Nil)
+          }
         } else {
-          copy(currentTurn = newTurn, ok = Nil)
+          throw new VictimHasNotEnoughCardsToBlockException()
         }
-      } else this // cannot use this card to defend => notify
-    case None => this // must specify which card to block => exception?
+      } else {
+        throw new IllegalTurnException()
+      }
+    case None => throw new MissingBlockingCardException()
   }
 
   def attack(card: Card): DurakGame = if (checkAttackCard(card)) {
@@ -214,9 +242,39 @@ case class DurakGame(players: List[Player], deck: Deck, trump: Card, currentTurn
   }
 
   def checkIfPlayerHasWon(): DurakGame = {
+    println("checkIfPlayerHasWon...")
+    println("active hand card size: " + active.handCards.size)
     if (active.handCards.isEmpty) {
-      win
+      if (winner == None) {
+        if (players.size == 2) {
+          println("1")
+          copy(players = players.filterNot(p => p.equals(active)), winner = Some(active))
+        } else {
+          if (active.equals(currentTurn.attacker) || active.equals(currentTurn.neighbor)) {
+            println("2")
+            val newTurn = new Turn(currentTurn.neighbor, currentTurn.victim, currentTurn.neighbor, currentTurn.attackCards,
+              blockedBy = currentTurn.blockedBy)
+            copy(players = players.filterNot(p => p.equals(active)), currentTurn = newTurn, active = nextPlayersMove(),
+              winner = Some(active))
+          } else {
+            println("3")
+            val newTurn = new Turn(currentTurn.neighbor, currentTurn.attacker, currentTurn.neighbor)
+            val winner = active
+            copy(players = players.filterNot(p => p.equals(active)), currentTurn = newTurn, active = nextPlayersMove(),
+              winner = Some(active))
+          }
+        }
+      } else {
+        println("4")
+        if (players.size == 2) {
+          copy(players = players.filterNot(p => p.equals(active)))
+        } else {
+          println("5")
+          copy(players = players.filterNot(p => p.equals(active)), active = nextPlayersMove())
+        }
+      }
     } else {
+      println("6")
       this
     }
   }

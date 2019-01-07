@@ -6,7 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CardSpec extends WordSpec with Matchers {
-  "A card" when {
+  /* "A card" when {
     val card: Card = Card(CardColor.Herz, CardValue.Neun)
     "created" should {
       "have a color." in {
@@ -22,5 +22,5 @@ class CardSpec extends WordSpec with Matchers {
         card.value.compare(cardWithSameColorAndLowerValue.value) should be(1)
       }
     }
-  }
+  } */
 }

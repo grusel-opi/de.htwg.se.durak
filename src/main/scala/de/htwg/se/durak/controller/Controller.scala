@@ -2,6 +2,7 @@ package de.htwg.se.durak.controller
 
 import de.htwg.se.durak.controller.events._
 import de.htwg.se.durak.model._
+import de.htwg.se.durak.model.exceptions.{IllegalTurnException, MissingBlockingCardException, VictimHasNotEnoughCardsToBlockException}
 import de.htwg.se.durak.util.{Observable, UndoManager}
 
 import scala.swing.Publisher
@@ -14,8 +15,8 @@ class Controller(var game: DurakGame) extends Publisher {
   private val undoManager = new UndoManager()
 
   def newPlayer(name: String): Unit = {
-    if (!players.toStream.collect({case p => p.name}).contains(name) && name.nonEmpty) {
-      players = Player(name, Nil)::players
+    if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
+      players = Player(name, Nil) :: players
       publish(new NewPlayerEvent())
     } else {
       notifyUI("Player name already present!")
@@ -33,16 +34,27 @@ class Controller(var game: DurakGame) extends Publisher {
 
   def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
     if (firstCard.nonEmpty) {
-      undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+      try {
+        undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+        game = game.checkIfPlayerHasWon()
+
+        val gameIsOver: Boolean = game.checkIfGameIsOver()
+
+        publish(new CardsChanged)
+
+        if (gameIsOver) {
+          players = Nil
+          publish(new GameOverEvent())
+        }
+      }
+      catch {
+        case iTE: IllegalTurnException => notifyUI(iTE.message)
+        case mBCE: MissingBlockingCardException => notifyUI(mBCE.message)
+        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE.message)
+      }
     } else {
       undoManager.purgeMemento()
       game = game.playCard(firstCard, secondCard)
-    }
-    publish(new CardsChanged)
-    game = game.checkIfPlayerHasWon()
-    val gameIsOver: Boolean = game.checkIfGameIsOver()
-    if (gameIsOver) {
-      publish(new GameOverEvent())
     }
   }
 
@@ -58,9 +70,18 @@ class Controller(var game: DurakGame) extends Publisher {
 
   def playOK(): Unit = {
     undoManager.purgeMemento()
+    val oldGame = game
     game = game.playOk
-    publish(new CardsChanged)
+
+    if (oldGame != game) {
+      publish(new CardsChanged)
+    } else if (oldGame == game && !game.currentTurn.blockedBy.isEmpty) {
+      publish(new CardsChanged)
+    } else {
+      notifyUI("You have to lay a card first!")
+    }
   }
+
   def takeCards(): Unit = {
     undoManager.purgeMemento()
     val newGame = game.takeCards()

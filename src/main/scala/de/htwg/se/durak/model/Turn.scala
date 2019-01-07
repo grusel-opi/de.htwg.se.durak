@@ -8,7 +8,7 @@ case class Turn(attacker: Player, victim: Player, neighbor: Player, attackCards:
   def addBlockCard(attackCard: Card, blockCard: Card): Turn = copy(attacker, victim, neighbor,
     attackCards.filterNot(c => c.equals(attackCard)), blockedBy + (attackCard -> blockCard))
 
-  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, card :: attackCards)
+  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbor, attackCards ::: List(card))
 
   def getCards: List[Card] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
 

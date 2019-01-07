@@ -2,17 +2,18 @@ package de.htwg.se.durak.view.gui.sceneControllers
 
 import de.htwg.se.durak.view.gui.Gui
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.{Alert, Button, TextField}
+import scalafx.scene.control.{Alert, Button, CheckBox, TextField}
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class CreateNewGameSceneController(private val playerNameTextField: TextField,
-                                   private val addPlayerButton: Button,
-                                   private val numberOfPlayersText: Text,
-                                   private val mainMenuButton: Button,
-                                   private val startGameButton: Button,
-                                   private val resetButton: Button) {
+class NewGameSceneController(private val playerNameTextField: TextField,
+                             private val addPlayerButton: Button,
+                             private val numberOfPlayersText: Text,
+                             private val bigDeckCheckBox: CheckBox,
+                             private val mainMenuButton: Button,
+                             private val startGameButton: Button,
+                             private val resetButton: Button) {
 
   setNumberOfPlayersText()
 
@@ -59,6 +60,16 @@ class CreateNewGameSceneController(private val playerNameTextField: TextField,
   def resetButtonPressed(): Unit = {
     Gui.controller.players = Nil
     Gui.displayNewGameScene()
+  }
+
+  def bigDeckCheckBoxPressed(): Unit = {
+    if (bigDeckCheckBox.isSelected) {
+      println("is selected")
+      bigDeckCheckBox.setSelected(true)
+    } else {
+      println("is not selected")
+      bigDeckCheckBox.setSelected(false)
+    }
   }
 
 }
