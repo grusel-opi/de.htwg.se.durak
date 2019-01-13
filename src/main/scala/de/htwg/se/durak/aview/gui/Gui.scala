@@ -16,12 +16,6 @@ import scala.swing.Reactor
 
 case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
 
-  // var controller: Controller = _
-
-//  def setController(controller: Controller): Unit = {
-//    this.controller = controller
-//    listenTo(controller)
-//  }
   listenTo(controller)
 
   stage = new PrimaryStage() {
@@ -113,6 +107,14 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
           headerText = "Warning: " + exceptionEvent.getException.getMessage
           contentText = ""
         }.showAndWait
+
+      case _: LayCardFirsException => {
+        new Alert(AlertType.Warning) {
+          title = "Warning Dialog"
+          headerText = "Warning: " + exceptionEvent.getException.getMessage
+          contentText = ""
+        }.showAndWait()
+      }
       case _ => System.err.println("Unhandled Exception - FIX ME :(")
     }
   }

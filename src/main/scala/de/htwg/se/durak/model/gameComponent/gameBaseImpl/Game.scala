@@ -4,10 +4,10 @@ import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.Player
-import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, MissingBlockingCardException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
+import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, MissingBlockingCardException,
+  NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
 
 import scala.util.Random
-import scala.xml.Elem
 
 case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player],
                 winner: Option[Player]) extends GameInterface {
@@ -54,13 +54,16 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
       if (ok.nonEmpty) {
         val (nextTurn, newDeck) = closeTurn(true)
+        println("1")
         copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
       } else {
         if (players.size > 2) {
           if (currentTurn.attackCards.nonEmpty) {
+            println("2")
             copy(ok = active :: ok, active = nextPlayersMove())
           } else if (currentTurn.blockedBy.nonEmpty) {
             val (nextTurn, newDeck) = closeTurn(true)
+            println("3")
             copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
           } else {
             this
@@ -70,18 +73,21 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
             copy(ok = active :: ok, active = nextPlayersMove())
           } else if (currentTurn.blockedBy.nonEmpty) {
             val (nextTurn, newDeck) = closeTurn(true)
+            println("4")
             copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
           } else {
+            println("5")
             this
           }
         }
       }
     } else {
+      println("6")
       continue()
     }
   }
 
-  def continue(): Game = copy(active = nextPlayersMove())
+  def continue(): Game = copy(ok = active :: ok, active = nextPlayersMove())
 
   def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!
     var tmpDeck = (List[Card](), deck)
@@ -150,6 +156,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
             defendAndSetWinner()
           }
         } else {
+          println("2")
           copy(currentTurn = currentTurn.addBlockCard(enemy, card), ok = Nil)
         }
       } else {
@@ -328,25 +335,4 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     })
     result
   }
-
-  def toXml: Elem = <durakGame>
-    <players>
-      {players}
-    </players>
-    <deck>
-      {deck}
-    </deck>
-    <trump>
-      {trump}
-    </trump>
-    <currentTurn>
-      {currentTurn}
-    </currentTurn>
-    <active>
-      {active}
-    </active>
-    <ok>
-      {ok}
-    </ok>
-  </durakGame>
 }

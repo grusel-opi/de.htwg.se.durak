@@ -1,0 +1,274 @@
+<game>
+    <players>
+        <player>
+            <name> Günter </name>
+            <handCards>
+                <card>
+                    <color> Pik </color>
+                    <value> Acht </value>
+                </card>
+                <card>
+                    <color> Pik </color>
+                    <value> Dame </value>
+                </card>
+                <card>
+                    <color> Pik </color>
+                    <value> Ass </value>
+                </card>
+            </handCards>
+        </player>
+        <player>
+            <name> Felix </name>
+            <handCards>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Zwei </value>
+                </card>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Fünf </value>
+                </card>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Sieben </value>
+                </card>
+                <card>
+                    <color> Karo </color>
+                    <value> Neun </value>
+                </card>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Zehn </value>
+                </card>
+                <card>
+                    <color> Karo </color>
+                    <value> Acht </value>
+                </card>
+            </handCards>
+        </player>
+        <player>
+            <name> Stephan </name>
+            <handCards>
+                <card>
+                    <color> Herz </color>
+                    <value> Dame </value>
+                </card>
+                <card>
+                    <color> Herz </color>
+                    <value> Neun </value>
+                </card>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Acht </value>
+                </card>
+            </handCards>
+        </player>
+    </players>
+    <deck>
+        <deck>
+            <card>
+                <color> Herz </color>
+                <value> Zwei </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Fünf </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Neun </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Zehn </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Dame </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Vier </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Neun </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Bube </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Sechs </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> König </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> König </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Sieben </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Sieben </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Ass </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Drei </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Vier </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Ass </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Bube </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Drei </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Sechs </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Vier </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Drei </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Zwei </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Bube </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Bube </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Sechs </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Zwei </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Acht </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Sechs </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Dame </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Fünf </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Zehn </value>
+            </card>
+            <card>
+                <color> Karo </color>
+                <value> Sieben </value>
+            </card>
+            <card>
+                <color> Kreuz </color>
+                <value> Drei </value>
+            </card>
+            <card>
+                <color> Herz </color>
+                <value> Vier </value>
+            </card>
+            <card>
+                <color> Pik </color>
+                <value> Fünf </value>
+            </card>
+        </deck>
+    </deck>
+    <trump>
+        <card>
+            <color> Pik </color>
+            <value> Fünf </value>
+        </card>
+    </trump>
+    <currentTurn>
+        <turn>
+            <attacker>
+                <player>
+                    <name> Günter </name>
+                </player>
+            </attacker>
+            <victim>
+                <player>
+                    <name> Stephan </name>
+                </player>
+            </victim>
+            <neighbour>
+                <player>
+                    <name> Felix </name>
+                </player>
+            </neighbour>
+            <attackCards> </attackCards>
+            <blockedBy>
+                <attackCards>
+                    <card>
+                        <color> Pik </color>
+                        <value> König </value>
+                    </card>
+                </attackCards>
+                <blockingCards>
+                    <card>
+                        <color> Pik </color>
+                        <value> Zehn </value>
+                    </card>
+                </blockingCards>
+                <attackCards>
+                    <card>
+                        <color> Kreuz </color>
+                        <value> König </value>
+                    </card>
+                </attackCards>
+                <blockingCards>
+                    <card>
+                        <color> Kreuz </color>
+                        <value> Ass </value>
+                    </card>
+                </blockingCards>
+            </blockedBy>
+        </turn>
+    </currentTurn>
+    <active>
+        <player>
+            <name> Günter </name>
+        </player>
+    </active>
+    <ok> </ok>
+    <winner> </winner>
+</game>

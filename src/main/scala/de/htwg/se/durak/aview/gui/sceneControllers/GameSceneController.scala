@@ -6,12 +6,9 @@ import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 import scalafx.scene.input.MouseEvent
 import scalafx.Includes._
-import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
-import scalafx.scene.control.{Alert, Button, ButtonType, ScrollPane}
+import scalafx.scene.control._
 import scalafx.scene.image.ImageView
-import scalafx.stage.FileChooser
-import java.io.File
 
 import de.htwg.se.durak.Durak
 import de.htwg.se.durak.model.cardComponent.Card
@@ -283,81 +280,81 @@ class GameSceneController(private val rootPane: AnchorPane,
     val attackCardsArray: Array[String] = gui.controller.currentAttackCardsToString().split(",")
     val blockedBy = gui.controller.getCurrentBlockedByMap()
 
-    if (!attackCardsArray(0).equals("")) {
-      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
-        println("1")
-        okayButton.setDisable(false)
-        okayButton.setVisible(true)
-      } else if (activeAsString.equals(victimAsString)) {
-        println("2")
-        okayButton.setVisible(false)
-      }
-    } else {
-      println("JETZT")
-      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
-        if (blockedBy.nonEmpty) {
-          println("3")
-          okayButton.setDisable(false)
-          okayButton.setVisible(true)
-        } else {
-          println("4")
-        }
-      }
-    }
+    //    if (!attackCardsArray(0).equals("")) {
+    //      println("1")
+    //      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
+    //        okayButton.setDisable(false)
+    //        okayButton.setVisible(true)
+    //      } else if (activeAsString.equals(victimAsString)) {
+    //        okayButton.setVisible(false)
+    //      }
+    //    } else {
+    //      println("2")
+    //      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
+    //        if (blockedBy.nonEmpty) {
+    //          okayButton.setDisable(false)
+    //          okayButton.setVisible(true)
+    //        } else {
+    //        }
+    //      }
+    //    }
+    //
+    //    if (activeAsString.equals(neighbourAsString) && !activeAsString.equals(attackerAsString)) {
+    //      okayButton.setDisable(false)
+    //      okayButton.setVisible(true)
+    //    }
 
-    if (activeAsString.equals(neighbourAsString) && !activeAsString.equals(attackerAsString)) {
+    if (activeAsString.equals(neighbourAsString) || activeAsString.equals(attackerAsString)) {
       okayButton.setDisable(false)
       okayButton.setVisible(true)
     }
   }
 
-  def configureTakeButton(): Unit = {
-    val victimAsString: String = gui.controller.currentVictimToString()
-    val activeAsString: String = gui.controller.activePlayerToString()
+    def configureTakeButton(): Unit = {
+      val victimAsString: String = gui.controller.currentVictimToString()
+      val activeAsString: String = gui.controller.activePlayerToString()
 
-    if (!activeAsString.equals(victimAsString)) {
-      takeButton.setDisable(true)
-      takeButton.setVisible(false)
-    } else {
-      takeButton.setDisable(false)
-      takeButton.setVisible(true)
+      if (!activeAsString.equals(victimAsString)) {
+        takeButton.setDisable(true)
+        takeButton.setVisible(false)
+      } else {
+        takeButton.setDisable(false)
+        takeButton.setVisible(true)
+      }
     }
-  }
 
-  def mainMenuButtonPressed(): Unit = {
-    val confirmButton: ButtonType = new ButtonType("Ok", ButtonData.Apply)
-    val abortButton: ButtonType = new ButtonType("No", ButtonData.No)
+    def mainMenuButtonPressed(): Unit = {
+      val confirmButton: ButtonType = new ButtonType("Ok", ButtonData.Apply)
+      val abortButton: ButtonType = new ButtonType("No", ButtonData.No)
 
-    val res = new Alert(AlertType.Confirmation) {
-      title = "Back to Main Menu Cofirmation Dialog"
-      headerText = "Warning: Do you want to save the game before returning to Main Menu?"
-      buttonTypes.setAll(abortButton, confirmButton)
-    }.showAndWait()
+      val res: Option[String] = new TextInputDialog("") {
+        title = "Save Game"
+        headerText = "Do you want to save the game before returning to Main Menu?"
+        contentText = "If so, enter a file name:"
+      }.showAndWait()
 
-    if (res.get.buttonData.equals(ButtonData.No)) {
+      if (res.isDefined) {
+        gui.controller.saveGame(res.get)
+      }
+
       gui.controller.resetPlayers()
       gui.displayMainMenuScene()
-    } else {
-      val fileChooser: FileChooser = new FileChooser()
-      fileChooser.setTitle("Save durak game")
-      val file: File = fileChooser.showSaveDialog(gui.stage)
 
-      System.err.println("Not implemented yet :(")
-      System.exit(-1)
+
+      // }
     }
-  }
 
-  def update(): Unit = {
-    setGameSeceneStatusText()
-    configureOkayButton()
-    configureTakeButton()
-    showTrumpCard()
-    showHandCards()
-    showDefendedCards()
-    showAttackCards()
-    configureHandCardScrollPane()
-    configureAttackCardsScrollPane()
-    configureDefendedCardsScrollPane()
-  }
+    def update(): Unit = {
+      setGameSeceneStatusText()
+      configureOkayButton()
+      configureTakeButton()
+      showTrumpCard()
+      showHandCards()
+      showDefendedCards()
+      showAttackCards()
+      configureHandCardScrollPane()
+      configureAttackCardsScrollPane()
+      configureDefendedCardsScrollPane()
+    }
 
-}
+  }

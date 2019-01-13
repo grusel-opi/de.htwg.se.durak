@@ -3,6 +3,8 @@ package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.playerComponent.Player
 
+import scala.xml.{Elem, NodeBuffer}
+
 case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards: List[Card], blockedBy: Map[Card, Card]) {
 
   def this(attacker: Player, victim: Player, neighbor: Player)
@@ -16,6 +18,35 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
   def getCards: List[Card] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
 
   def getPlayers: List[Player] = List(attacker, victim, neighbour)
+
+  def toXml: Elem = {
+    <turn>
+      <attacker>
+        {attacker.nameToXml}
+      </attacker>
+      <victim>
+        {victim.nameToXml}
+      </victim>
+      <neighbour>
+        {neighbour.nameToXml}
+      </neighbour>
+      <attackCards>
+        {attackCards.map(c => c.toXml)}
+      </attackCards>
+      <blockedBy>
+        {blockedBy.map(entry => blockedByMapEntryToXml(entry))}
+      </blockedBy>
+    </turn>
+  }
+
+  def blockedByMapEntryToXml(entry: (Card, Card)): NodeBuffer = {
+    <attackCards>
+      {entry._1.toXml}
+    </attackCards>
+    <blockingCards>
+      {entry._2.toXml}
+    </blockingCards>
+  }
 
   override def toString: String = {
     ("Attacker: " + attacker.toString + "\n"

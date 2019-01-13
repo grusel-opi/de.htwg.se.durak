@@ -4,6 +4,9 @@ import com.google.inject.{Guice, Inject}
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
+import de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl.FileIOXml
+import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
 import de.htwg.se.durak.model.playerComponent.Player
@@ -11,10 +14,11 @@ import de.htwg.se.durak.util.undoManager.UndoManager
 
 import scala.swing.Publisher
 
-class Controller /* @Inject() */(var game: Game) extends ControllerInterface with Publisher {
+class Controller /* @Inject() */(var game: GameInterface) extends ControllerInterface with Publisher {
 
   var players: List[Player] = Nil
   private val undoManager = new UndoManager
+  val fileIO = new FileIOXml
   // val injector = Guice.createInjector(new DurakModule)
 
   def newPlayer(name: String): Unit = {
@@ -167,5 +171,14 @@ class Controller /* @Inject() */(var game: Game) extends ControllerInterface wit
 
   def winnerToString(): String = {
     game.winner.get.toString
+  }
+
+  def saveGame(fileName: String): Unit = {
+    fileIO.save(game, fileName)
+  }
+
+  def loadGame(fileName: String): Unit = {
+    game = fileIO.load(fileName)
+    publish(new NewGameEvent)
   }
 }

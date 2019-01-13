@@ -8,6 +8,14 @@ import de.htwg.se.durak.model.playerComponent.Player
 import scala.xml.Elem
 
 trait GameInterface {
+  val players: List[Player]
+  val deck: Deck
+  val trump: Card
+  val currentTurn: Turn
+  val active: Player
+  val ok: List[Player]
+  val winner: Option[Player]
+
   def start(): Game
   def playOk(): Game
   def continue(): Game
@@ -25,5 +33,4 @@ trait GameInterface {
   def computePossibilities(): Either[List[Card], Map[Card, Card]]
   def computeAttackerPossibilities(): List[Card]
   def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card]
-  def toXml: Elem
 }

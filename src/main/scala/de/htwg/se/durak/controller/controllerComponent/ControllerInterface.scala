@@ -54,6 +54,10 @@ trait ControllerInterface extends Publisher {
   def deckSizeToString(): String
 
   def winnerToString(): String
+
+  def saveGame(fileName: String): Unit
+
+  def loadGame(fileName: String): Unit
 }
 
 class CardsChangedEvent extends Event

@@ -4,6 +4,7 @@ import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.DeckInterface
 
 import scala.util.Random
+import scala.xml.Elem
 
 case class Deck(cards: List[Card]) extends DeckInterface {
   def this() = this(for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v))
@@ -24,6 +25,11 @@ case class Deck(cards: List[Card]) extends DeckInterface {
     }
   }
 
+  def toXml: Elem = {
+    <deck>
+    {cards.map(c => c.toXml)}
+    </deck>
+  }
   override def toString: String = "Deck: " + cards.mkString(", ")
 
 }
