@@ -13,17 +13,17 @@ trait GameInterface {
   val trump: Card
   val currentTurn: Turn
   val active: Player
-  val ok: List[Player]
-  val winner: Option[Player]
+  //val ok: List[Player]
+  val winners: List[Player]
 
   def start(): Game
   def playOk(): Game
-  def continue(): Game
+  //def continue(): Game
   def closeTurn(success: Boolean): (Turn, Deck)
   def takeCards(): Game
   def playCard(card: Option[Card], cardToBlock: Option[Card]): Game
   def defend(card: Card, cardToBlock: Option[Card]): Game
-  def defendAndSetWinner(): Game
+  def winByDefence(): Game
   def attack(card: Card): Game
   def shove(card: Card): Game
   def checkBlockCard(use: Card, against: Card): Boolean

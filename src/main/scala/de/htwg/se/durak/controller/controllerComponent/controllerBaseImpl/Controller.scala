@@ -14,7 +14,7 @@ import de.htwg.se.durak.util.undoManager.UndoManager
 
 import scala.swing.Publisher
 
-class Controller /* @Inject() */(var game: GameInterface) extends ControllerInterface with Publisher {
+class Controller @Inject() (var game: GameInterface) extends ControllerInterface with Publisher {
 
   var players: List[Player] = Nil
   private val undoManager = new UndoManager
@@ -94,7 +94,7 @@ class Controller /* @Inject() */(var game: GameInterface) extends ControllerInte
     val oldGame = game
     game = game.playOk
 
-    if (oldGame != game || oldGame == game && game.currentTurn.blockedBy.nonEmpty) {
+    if (oldGame != game || oldGame == game && game.currentTurn.blockedBy.nonEmpty) { // TODO: ? dafuq
       publish(new CardsChangedEvent)
     } else {
       notifyUI(new LayCardFirsException)
@@ -170,7 +170,7 @@ class Controller /* @Inject() */(var game: GameInterface) extends ControllerInte
   }
 
   def winnerToString(): String = {
-    game.winner.get.toString
+    game.winners.get.toString
   }
 
   def saveGame(fileName: String): Unit = {
