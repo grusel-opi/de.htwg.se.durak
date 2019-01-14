@@ -129,7 +129,7 @@ class FileIO extends FileIOInterface {
   def gameToXml(game: GameInterface): Elem = {
     println(game.ok.map(p => p.nameToXml))
 
-    if (game.winner.isDefined) {
+    if (game.winners.isDefined) {
       <game>
         <players>
           {game.players.map(p => p.toXml)}
@@ -150,7 +150,7 @@ class FileIO extends FileIOInterface {
           {game.ok.map(p => p.toXml)}
         </ok>
         <winner>
-          {game.winner.get.toXml}
+          {game.winners.get.toXml}
         </winner>
       </game>
     } else {

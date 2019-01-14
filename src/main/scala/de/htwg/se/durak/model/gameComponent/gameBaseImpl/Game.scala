@@ -9,15 +9,16 @@ import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, MissingBloc
 
 import scala.util.Random
 
-case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, ok: List[Player],
-                winner: Option[Player]) extends GameInterface {
+case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, winners: List[Player]) extends GameInterface {
 
   def this(players: List[Player], deck: Deck) = this(players, deck, deck.cards.last,
-    new Turn(players.head, players.head, players.head), players.head, Nil, None)
+    new Turn(players.head, players.head, players.head), players.head, Nil)
 
   def this(players: List[Player]) = this(players, new Deck().shuffle)
 
   def this() = this(List(new Player("default")))
+
+  val NUMBER_OF_HAND_CARDS = 5
 
   implicit val CardOrdering: Ordering[Card] = (x: Card, y: Card) => {
     if (x.color.equals(y.color)) {
@@ -31,84 +32,50 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  val NUMBER_OF_HAND_CARDS = 5
-
   def start(): Game = {
-    var cardsDeckTuple: (List[Card], Deck) = deck.popNCards(NUMBER_OF_HAND_CARDS)
-    for (i <- players.indices) {
-      players(i).pickCards(cardsDeckTuple._1)
-      players(i).sortHandCards
-      if (i < players.size - 1) {
-        cardsDeckTuple = cardsDeckTuple._2.popNCards(NUMBER_OF_HAND_CARDS)
-      }
-    }
+    val newDeck = distributeCards(players)
     val beginner: Player = players(math.abs(Random.nextInt()) % players.size)
     val firstVictim: Player = getNeighbour(beginner)
     val fistNeighbor: Player = getNeighbour(firstVictim)
     val newTurn = Turn(beginner, firstVictim, fistNeighbor, Nil, Map[Card, Card]())
 
-    copy(deck = cardsDeckTuple._2, currentTurn = newTurn, active = beginner, ok = Nil)
+    copy(deck = newDeck, currentTurn = newTurn, active = beginner)
   }
 
-  def playOk(): Game = {
-    if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
-      if (ok.nonEmpty) {
-        val (nextTurn, newDeck) = closeTurn(true)
-        println("1")
-        copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
-      } else {
-        if (players.size > 2) {
-          if (currentTurn.attackCards.nonEmpty) {
-            println("2")
-            copy(ok = active :: ok, active = nextPlayersMove())
-          } else if (currentTurn.blockedBy.nonEmpty) {
-            val (nextTurn, newDeck) = closeTurn(true)
-            println("3")
-            copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
-          } else {
-            this
-          }
-        } else {
-          if (currentTurn.attackCards.nonEmpty) {
-            copy(ok = active :: ok, active = nextPlayersMove())
-          } else if (currentTurn.blockedBy.nonEmpty) {
-            val (nextTurn, newDeck) = closeTurn(true)
-            println("4")
-            copy(ok = Nil, currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
-          } else {
-            println("5")
-            this
-          }
-        }
-      }
-    } else {
-      println("6")
-      continue()
-    }
-  }
-
-  def continue(): Game = copy(ok = active :: ok, active = nextPlayersMove())
-
-  def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!
+  def distributeCards(people: List[Player]): Deck = {
     var tmpDeck = (List[Card](), deck)
-    currentTurn.getPlayers.foreach(p => {
-      val missingAmount = 5 - p.handCards.size
+    people.foreach(p => {
+      val missingAmount = NUMBER_OF_HAND_CARDS - p.handCards.size
       if (missingAmount > 0) {
         tmpDeck = tmpDeck._2.popNCards(missingAmount)
         p.pickCards(tmpDeck._1)
         p.sortHandCards
       }
     })
+    tmpDeck._2
+  }
+
+  def playOk(): Game = {
+    if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
+      val (nextTurn, newDeck) = closeTurn(true)
+      copy(currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
+    } else {
+      copy(active = nextPlayersMove())
+    }
+  }
+
+  def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!
+    val newDeck = distributeCards(currentTurn.getPlayers)
     if (success) {
       (new Turn(currentTurn.victim,
         currentTurn.neighbour,
         getNeighbour(currentTurn.neighbour)),
-        tmpDeck._2)
+        newDeck)
     } else {
       (new Turn(currentTurn.neighbour,
         getNeighbour(currentTurn.neighbour),
         getNeighbour(getNeighbour(currentTurn.neighbour))),
-        tmpDeck._2)
+        newDeck)
     }
   }
 
@@ -118,7 +85,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       active.sortHandCards
       val (nextTurn, newDeck) = closeTurn(false)
       copy(currentTurn = nextTurn, active = currentTurn.neighbour, deck = newDeck)
-    case _ => throw new NoCardsToTakeException() // nonsense action; ignored in tui, blocked in gui
+    case _ => throw new NoCardsToTakeException()
   }
 
   def playCard(card: Option[Card], cardToBlock: Option[Card]): Game = card match {
@@ -131,8 +98,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
             } else {
               defend(c, cardToBlock)
             }
-          case y if (y.equals(currentTurn.attacker)
-            || y.equals(currentTurn.neighbour)) =>
+          case y if y.equals(currentTurn.attacker) || y.equals(currentTurn.neighbour) =>
             if (currentTurn.attackCards.size < currentTurn.victim.handCards.size) {
               attack(c)
             } else {
@@ -142,7 +108,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       } else {
         this // player does not have card.. punish him!
       }
-    case None => continue()
+    case None => copy(active = nextPlayersMove())
   }
 
   def defend(card: Card, cardToBlock: Option[Card]): Game = cardToBlock match {
@@ -151,13 +117,12 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
         active.dropCards(card :: Nil)
         if (currentTurn.addBlockCard(enemy, card).attackCards.isEmpty) {
           if (active.handCards.nonEmpty) {
-            copy(ok = Nil, currentTurn = currentTurn.addBlockCard(enemy, card), active = nextPlayersMove())
+            copy(currentTurn = currentTurn.addBlockCard(enemy, card), active = nextPlayersMove())
           } else {
-            defendAndSetWinner()
+            winByDefence()
           }
         } else {
-          println("2")
-          copy(currentTurn = currentTurn.addBlockCard(enemy, card), ok = Nil)
+          copy(currentTurn = currentTurn.addBlockCard(enemy, card))
         }
       } else {
         throw new IllegalTurnException()
@@ -165,104 +130,76 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     case None => throw new MissingBlockingCardException()
   }
 
-  def defendAndSetWinner(): Game = {
-    if (winner.isEmpty) {
-      if (players.size == 2) {
-        copy(players = players.filterNot(p => p.equals(active)), winner = Some(active))
-      } else {
-        val newPlayers: List[Player] = players.filterNot(p => p.equals(active))
-        if (newPlayers.size == 2) {
-          copy(players = newPlayers, active = getNeighbour(active), winner = Some(active),
-            currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)),
-              getNeighbour(active)))
-        } else {
-          copy(players = newPlayers, active = getNeighbour(active), winner = Some(active),
-            currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)),
-              getNeighbour(getNeighbour(getNeighbour(active)))))
-        }
-      }
+  def winByDefence(): Game = {
+    val newWinners = active :: winners
+    val newPlayers = players.filterNot(p => p.equals(active))
+    if (newPlayers.size == 1) {
+      copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+    } else if (newPlayers.size == 2) {
+      copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+        currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(active)))
     } else {
-      if (players.size == 2) {
-        copy(players.filterNot(p => p.equals(active)))
-      } else {
-        val newPlayers: List[Player] = players.filterNot(p => p.equals(active))
-        if (newPlayers.size == 2) {
-          copy(ok = Nil, players = newPlayers, currentTurn = new Turn(getNeighbour(active),
-            getNeighbour(getNeighbour(active)), getNeighbour(active)), active = getNeighbour(active))
-        } else {
-          copy(ok = Nil, players = newPlayers, currentTurn = new Turn(getNeighbour(active),
-            getNeighbour(getNeighbour(active)), getNeighbour(getNeighbour(getNeighbour(active)))),
-            active = getNeighbour(active))
-        }
-      }
+      copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+        currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(getNeighbour(getNeighbour(active)))))
     }
   }
 
   def attack(card: Card): Game = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
-
-    val newAttacker: Player = getNeighbour(currentTurn.victim)
-    val newAttackCards: List[Card] = currentTurn.addAttackCard(card).attackCards
-    val newTurn: Turn = Turn(newAttacker, currentTurn.victim, newAttacker, newAttackCards, Map())
-
-    if (active.handCards.nonEmpty) {
-      copy(ok = Nil, currentTurn = currentTurn.addAttackCard(card))
-    } else if (winner.isEmpty) {
-      if (players.size == 2) {
-        copy(ok = Nil, players = players.filterNot(p => p.equals(active)), winner = Some(active))
-      } else {
-        copy(ok = Nil, players = players.filterNot(p => p.equals(active)), currentTurn = newTurn,
-          active = currentTurn.victim, winner = Some(active))
-      }
+    if (active.handCards.nonEmpty) { // attacker won
+      copy(currentTurn = currentTurn.addAttackCard(card))
     } else {
-      copy(ok = Nil, players = players.filterNot(p => p.equals(active)), currentTurn = newTurn, active = currentTurn.victim)
+      val newWinners = active :: winners
+      val newPlayers = players.filterNot(p => p.equals(active))
+      if (newPlayers.size == 1) {
+        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+      } else if (newPlayers.size == 2) {
+        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+          currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, getRightNeighbour(active),
+            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+      } else {
+        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+          currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, currentTurn.neighbour,
+            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+      }
     }
   } else {
     throw new IllegalTurnException()
   }
 
   def shove(card: Card): Game = {
-    if (getNeighbour(active).handCards.size >= currentTurn.attackCards.size + 1) {
-      if (card.value.equals(currentTurn.attackCards.head.value) && currentTurn.blockedBy.isEmpty) {
-        currentTurn.victim.dropCards(card :: Nil)
-        if (currentTurn.victim.handCards.isEmpty) {
-          if (winner.isEmpty) {
-            if (players.size == 2) {
-              copy(players = players.filterNot(p => p.equals(active)), winner = Some(active))
-            } else {
-              val newPlayers: List[Player] = players.filterNot(p => p.equals(active))
-              if (newPlayers.size == 2) {
-                copy(players = newPlayers, winner = Some(active), active = getNeighbour(active),
-                  currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                    getNeighbour(getNeighbour(active)), currentTurn.addAttackCard(card).attackCards, Map()))
-              } else {
-                copy(players = newPlayers, winner = Some(active), active = getNeighbour(active),
-                  currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                    getNeighbour(getNeighbour(getNeighbour(active))), currentTurn.addAttackCard(card).attackCards, Map()))
-              }
-            }
-          } else {
-            val newPlayers = players.filterNot(p => p.equals(active))
-            if (newPlayers.size == 2) {
-              copy(players = newPlayers, active = getNeighbour(getNeighbour(active)),
-                currentTurn = Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(active),
-                  currentTurn.addAttackCard(card).attackCards, Map()))
-            } else {
-              copy(players = newPlayers, active = getNeighbour(getNeighbour(active)),
-                currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                  getNeighbour(getNeighbour(getNeighbour(active))), currentTurn.addAttackCard(card).attackCards, Map()))
-            }
-          }
+    if (isShovable(card)) {
+      active.dropCards(card::Nil)
+      if (active.handCards.nonEmpty) {
+        copy(active = getNeighbour(active), currentTurn = Turn(active, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+          attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+      } else { // active won
+        val newWinners = active :: winners
+        val newPlayers = players.filterNot(p => p.equals(active))
+        if (newPlayers.size == 1) {
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+        } else if (newPlayers.size == 2) {
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
+              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         } else {
-          copy(ok = Nil, active = getNeighbour(currentTurn.victim), currentTurn = Turn(currentTurn.victim,
-            getNeighbour(currentTurn.victim), getNeighbour(getNeighbour(currentTurn.victim)),
-            card :: currentTurn.attackCards, Map()))
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         }
-      } else {
-        throw new IllegalTurnException()
       }
     } else {
-      throw new VictimHasNotEnoughCardsToBlockException()
+      throw new IllegalTurnException()
+    }
+  }
+
+  def isShovable(card: Card): Boolean = {
+    if (currentTurn.neighbour.handCards.size > currentTurn.attackCards.size
+      && currentTurn.blockedBy.isEmpty
+      && card.value.equals(currentTurn.attackCards.head.value)) {
+      true
+    } else {
+      false
     }
   }
 
@@ -302,6 +239,12 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     case 0 => players.last
     case _ => players(players.indexOf(player) - 1)
   }
+
+  def getRightNeighbour(player: Player): Player = players.indexOf(player) match {
+    case players.size -1 => players.head
+    case _ => players(players.indexOf(player) + 1)
+  }
+
 
   def computePossibilities(): Either[List[Card], Map[Card, Card]] = {
     if (active.equals(currentTurn.attacker) || active.equals(currentTurn.neighbour)) {
