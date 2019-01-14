@@ -120,7 +120,7 @@ class GameSceneController(private val rootPane: AnchorPane,
 
   def showAttackCards(): Unit = {
     val attackCardsArray: Array[String] = gui.controller.currentAttackCardsToString().split(",")
-    val blockedBy = gui.controller.getCurrentBlockedByMap()
+    val blockedBy = gui.controller.getCurrentBlockedByMap
     val activeAsString: String = gui.controller.activePlayerToString()
     val victimAsString: String = gui.controller.currentVictimToString()
 
@@ -209,7 +209,7 @@ class GameSceneController(private val rootPane: AnchorPane,
   }
 
   def showDefendedCards(): Unit = {
-    val blockedBy = gui.controller.getCurrentBlockedByMap()
+    val blockedBy = gui.controller.getCurrentBlockedByMap
 
     blockedBy.foreach(card => {
       val attackCardImgView = CardImgConverter.convertCardToImgView(card._1)
@@ -278,7 +278,7 @@ class GameSceneController(private val rootPane: AnchorPane,
     val neighbourAsString: String = gui.controller.currentNeighbourToString()
     val activeAsString: String = gui.controller.activePlayerToString()
     val attackCardsArray: Array[String] = gui.controller.currentAttackCardsToString().split(",")
-    val blockedBy = gui.controller.getCurrentBlockedByMap()
+    val blockedBy = gui.controller.getCurrentBlockedByMap
 
     if (activeAsString.equals(neighbourAsString) || activeAsString.equals(attackerAsString)) {
       okayButton.setDisable(false)
