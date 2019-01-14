@@ -32,6 +32,7 @@ class GameSceneController(private val rootPane: AnchorPane,
                           private val defendedCardsScrollPane: ScrollPane,
                           private val takeButton: Button,
                           private val okayButton: Button,
+                          private val continueButton: Button,
                           private val undoButton: Button,
                           private val mainMenuButton: Button) {
 
@@ -234,9 +235,12 @@ class GameSceneController(private val rootPane: AnchorPane,
     gui.controller.takeCards()
   }
 
+  def continueButtonPressed(): Unit = {
+    gui.controller.playCard(None, None)
+  }
+
   def okayButtonPressed(): Unit = {
     gui.controller.playOk()
-
   }
 
   def undoButtonPressed(): Unit = {

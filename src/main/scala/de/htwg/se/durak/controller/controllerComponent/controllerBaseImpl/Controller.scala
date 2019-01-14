@@ -63,6 +63,7 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     } else {
       undoManager.purgeMemento()
       game = game.playCard(firstCard, secondCard)
+      publish(new CardsChangedEvent)
     }
   }
 

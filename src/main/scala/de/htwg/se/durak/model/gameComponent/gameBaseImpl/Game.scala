@@ -59,8 +59,10 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     if (active.equals(currentTurn.attacker) && currentTurn.attackCards.isEmpty) {
       val (nextTurn, newDeck) = closeTurn(true)
       copy(currentTurn = nextTurn, active = nextTurn.attacker, deck = newDeck)
-    } else {
+    } else if (active.equals(currentTurn.neighbour) && currentTurn.attackCards.isEmpty) {
       copy(active = nextPlayersMove())
+    } else {
+      this
     }
   }
 
@@ -143,6 +145,23 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
         currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(getNeighbour(getNeighbour(active)))))
     }
   }
+//
+//  def win(): Game = {
+//    val newWinners = active :: winners
+//    val newPlayers = players.filterNot(p => p.equals(active))
+//    newPlayers.size match {
+//      case 1 =>
+//        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+//      case 2 =>
+//        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+//          currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
+//            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+//      case _ =>
+//        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+//          currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+//            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+//    }
+//  }
 
   def attack(card: Card): Game = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
@@ -176,14 +195,15 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       } else { // active won
         val newWinners = active :: winners
         val newPlayers = players.filterNot(p => p.equals(active))
-        if (newPlayers.size == 1) {
-          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
-        } else if (newPlayers.size == 2) {
-          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+        newPlayers.size match {
+          case 1 =>
+            copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+          case 2 =>
+            copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
             currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
               attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
-        } else {
-          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+          case _ =>
+            copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
             currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
               attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         }
