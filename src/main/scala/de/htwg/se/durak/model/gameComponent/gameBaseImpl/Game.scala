@@ -161,53 +161,45 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
         copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
           currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, currentTurn.neighbour,
             attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
-      }    }
+      }
+    }
   } else {
     throw new IllegalTurnException()
   }
 
   def shove(card: Card): Game = {
-    if (getNeighbour(active).handCards.size >= currentTurn.attackCards.size + 1) {
-      if (card.value.equals(currentTurn.attackCards.head.value) && currentTurn.blockedBy.isEmpty) {
-        currentTurn.victim.dropCards(card :: Nil)
-        if (currentTurn.victim.handCards.isEmpty) {
-          if (winners.isEmpty) {
-            if (players.size == 2) {
-              copy(players = players.filterNot(p => p.equals(active)), winners = active :: winners)
-            } else {
-              val newPlayers: List[Player] = players.filterNot(p => p.equals(active))
-              if (newPlayers.size == 2) {
-                copy(players = newPlayers, winners = active :: winners, active = getNeighbour(active),
-                  currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                    getNeighbour(getNeighbour(active)), currentTurn.addAttackCard(card).attackCards, Map()))
-              } else {
-                copy(players = newPlayers, winners = active :: winners, active = getNeighbour(active),
-                  currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                    getNeighbour(getNeighbour(getNeighbour(active))), currentTurn.addAttackCard(card).attackCards, Map()))
-              }
-            }
-          } else {
-            val newPlayers = players.filterNot(p => p.equals(active))
-            if (newPlayers.size == 2) {
-              copy(players = newPlayers, active = getNeighbour(getNeighbour(active)),
-                currentTurn = Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(active),
-                  currentTurn.addAttackCard(card).attackCards, Map()))
-            } else {
-              copy(players = newPlayers, active = getNeighbour(getNeighbour(active)),
-                currentTurn = Turn(getNeighbour(getNeighbour(active)), getNeighbour(active),
-                  getNeighbour(getNeighbour(getNeighbour(active))), currentTurn.addAttackCard(card).attackCards, Map()))
-            }
-          }
+    if (isShovable(card)) {
+      active.dropCards(card::Nil)
+      if (active.handCards.nonEmpty) {
+        copy(active = getNeighbour(active), currentTurn = Turn(active, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+          attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+      } else { // active won
+        val newWinners = active :: winners
+        val newPlayers = players.filterNot(p => p.equals(active))
+        if (newPlayers.size == 1) {
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+        } else if (newPlayers.size == 2) {
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
+              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         } else {
-          copy(active = getNeighbour(currentTurn.victim), currentTurn = Turn(currentTurn.victim,
-            getNeighbour(currentTurn.victim), getNeighbour(getNeighbour(currentTurn.victim)),
-            card :: currentTurn.attackCards, Map()))
+          copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
+            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         }
-      } else {
-        throw new IllegalTurnException()
       }
     } else {
-      throw new VictimHasNotEnoughCardsToBlockException()
+      throw new IllegalTurnException()
+    }
+  }
+
+  def isShovable(card: Card): Boolean = {
+    if (currentTurn.neighbour.handCards.size > currentTurn.attackCards.size
+      && currentTurn.blockedBy.isEmpty
+      && card.value.equals(currentTurn.attackCards.head.value)) {
+      true
+    } else {
+      false
     }
   }
 

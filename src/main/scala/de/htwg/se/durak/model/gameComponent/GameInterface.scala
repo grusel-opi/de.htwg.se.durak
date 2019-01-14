@@ -13,14 +13,14 @@ trait GameInterface {
   val trump: Card
   val currentTurn: Turn
   val active: Player
-  //val ok: List[Player]
   val winners: List[Player]
 
   def start(): Game
   def playOk(): Game
-  //def continue(): Game
+  def isShovable(card: Card): Boolean
   def closeTurn(success: Boolean): (Turn, Deck)
   def takeCards(): Game
+  def distributeCards(people: List[Player]): Deck
   def playCard(card: Option[Card], cardToBlock: Option[Card]): Game
   def defend(card: Card, cardToBlock: Option[Card]): Game
   def winByDefence(): Game
@@ -30,6 +30,7 @@ trait GameInterface {
   def checkAttackCard(card: Card): Boolean
   def nextPlayersMove(): Player
   def getNeighbour(player: Player): Player
+  def getRightNeighbour(player: Player): Player
   def computePossibilities(): Either[List[Card], Map[Card, Card]]
   def computeAttackerPossibilities(): List[Card]
   def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card]
