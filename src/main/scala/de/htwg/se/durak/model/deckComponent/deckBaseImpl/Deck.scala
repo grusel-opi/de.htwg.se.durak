@@ -2,6 +2,7 @@ package de.htwg.se.durak.model.deckComponent.deckBaseImpl
 
 import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.DeckInterface
+import play.api.libs.json.{JsObject, Json}
 
 import scala.util.Random
 import scala.xml.Elem
@@ -27,9 +28,14 @@ case class Deck(cards: List[Card]) extends DeckInterface {
 
   def toXml: Elem = {
     <deck>
-    {cards.map(c => c.toXml)}
+      {cards.map(c => c.toXml)}
     </deck>
   }
+
+  def toJson: List[JsObject] = {
+    cards.map(c => c.toJson)
+  }
+
   override def toString: String = "Deck: " + cards.mkString(", ")
 
 }

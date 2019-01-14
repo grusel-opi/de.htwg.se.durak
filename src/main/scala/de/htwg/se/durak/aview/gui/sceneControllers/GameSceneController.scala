@@ -280,30 +280,6 @@ class GameSceneController(private val rootPane: AnchorPane,
     val attackCardsArray: Array[String] = gui.controller.currentAttackCardsToString().split(",")
     val blockedBy = gui.controller.getCurrentBlockedByMap()
 
-    //    if (!attackCardsArray(0).equals("")) {
-    //      println("1")
-    //      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
-    //        okayButton.setDisable(false)
-    //        okayButton.setVisible(true)
-    //      } else if (activeAsString.equals(victimAsString)) {
-    //        okayButton.setVisible(false)
-    //      }
-    //    } else {
-    //      println("2")
-    //      if (activeAsString.equals(attackerAsString) || activeAsString.equals(neighbourAsString)) {
-    //        if (blockedBy.nonEmpty) {
-    //          okayButton.setDisable(false)
-    //          okayButton.setVisible(true)
-    //        } else {
-    //        }
-    //      }
-    //    }
-    //
-    //    if (activeAsString.equals(neighbourAsString) && !activeAsString.equals(attackerAsString)) {
-    //      okayButton.setDisable(false)
-    //      okayButton.setVisible(true)
-    //    }
-
     if (activeAsString.equals(neighbourAsString) || activeAsString.equals(attackerAsString)) {
       okayButton.setDisable(false)
       okayButton.setVisible(true)
@@ -339,9 +315,6 @@ class GameSceneController(private val rootPane: AnchorPane,
 
       gui.controller.resetPlayers()
       gui.displayMainMenuScene()
-
-
-      // }
     }
 
     def update(): Unit = {

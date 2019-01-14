@@ -2,6 +2,7 @@ package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.playerComponent.Player
+import play.api.libs.json.{JsObject, Json}
 
 import scala.xml.{Elem, NodeBuffer}
 
@@ -43,9 +44,26 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
     <attackCards>
       {entry._1.toXml}
     </attackCards>
-    <blockingCards>
-      {entry._2.toXml}
-    </blockingCards>
+      <blockingCards>
+        {entry._2.toXml}
+      </blockingCards>
+  }
+
+  def toJson: JsObject = {
+    Json.obj(
+      "attacker" -> attacker.nameToJson,
+      "victim" -> victim.nameToJson,
+      "neighbour" -> neighbour.nameToJson,
+      "attackCards" -> attackCards.map(c => c.toJson),
+      "blockedBy" -> blockedBy.map(entry => blockedByMapEntryToJson(entry))
+    )
+  }
+
+  def blockedByMapEntryToJson(entry: (Card, Card)): JsObject = {
+    Json.obj(
+      "attackCards" -> entry._1.toJson,
+      "blockingCards" -> entry._2.toJson
+    )
   }
 
   override def toString: String = {

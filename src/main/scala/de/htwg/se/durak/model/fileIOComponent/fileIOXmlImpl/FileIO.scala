@@ -13,16 +13,16 @@ import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import scala.xml.Node
 import scala.xml.{Elem, PrettyPrinter}
 
-class FileIOXml extends FileIOInterface {
+class FileIO extends FileIOInterface {
 
   override def load(fileName: String): GameInterface = {
     var game: GameInterface = null
-    var players: List[Player] = List()
+    var players: List[Player] = Nil
     var deck: Deck = null
     var trump: Card = null
     var currentTurn: Turn = null
     var active: Player = null
-    var ok: List[Player] = null
+    var ok: List[Player] = Nil
     var winner: Option[Player] = None
 
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
@@ -38,7 +38,7 @@ class FileIOXml extends FileIOInterface {
 
     playersNode.foreach(node => {
       val name = (node \ "name").text.toString.trim
-      var handCards: List[Card] = List()
+      var handCards: List[Card] = Nil
 
       (node \ "handCards" \ "card").foreach(c => {
         handCards = handCards ::: createCard(c)
@@ -48,7 +48,7 @@ class FileIOXml extends FileIOInterface {
       players = players ::: List(player)
     })
 
-    var deckCards: List[Card] = List()
+    var deckCards: List[Card] = Nil
 
     deckNode.foreach(node => {
       (node \ "card").foreach(c => {
@@ -64,19 +64,19 @@ class FileIOXml extends FileIOInterface {
     val attackerName = (currentTurnNode \ "attacker" \ "player" \ "name").text.toString.trim
     val victimName = (currentTurnNode \ "victim" \ "player" \ "name").text.toString.trim
     val neighbourName = (currentTurnNode \ "neighbour" \ "player" \ "name").text.toString.trim
-    var attackCards: List[Card] = List()
+    var attackCards: List[Card] = Nil
 
     (currentTurnNode \ "attackCards" \ "card").foreach(c => {
       attackCards = attackCards ::: createCard(c)
     })
 
-    var blockedAttackCards: List[Card] = List()
+    var blockedAttackCards: List[Card] = Nil
 
     (currentTurnNode \ "blockedBy" \ "attackCards" \ "card").foreach(c => {
       blockedAttackCards = blockedAttackCards ::: createCard(c)
     })
 
-    var blockingCards: List[Card] = List()
+    var blockingCards: List[Card] = Nil
     (currentTurnNode \ "blockedBy" \ "blockingCards" \ "card").foreach(c => {
       blockingCards = blockingCards ::: createCard(c)
     })
