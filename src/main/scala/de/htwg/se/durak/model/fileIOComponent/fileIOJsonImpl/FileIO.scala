@@ -23,7 +23,7 @@ class FileIO extends FileIOInterface {
     var currentTurn: Turn = null
     var active: Player = null
     var ok: List[Player] = Nil
-    var winner: Option[Player] = None
+    var winner: List[Player] = Nil
 
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val sourceOfFile: String = Source.fromFile("save/" + fileNameWithoutExtension + ".json").getLines().mkString
@@ -99,7 +99,7 @@ class FileIO extends FileIOInterface {
 
     // TODO: set ok and winner!
 
-    Game(players, deck, trump, currentTurn, active, ok, winner)
+    Game(players, deck, trump, currentTurn, active, winner)
   }
 
   override def save(game: GameInterface, fileName: String): Unit = {
@@ -125,7 +125,7 @@ class FileIO extends FileIOInterface {
         "trump" -> game.trump.toJson,
         "currentTurn" -> game.currentTurn.toJson,
         "active" -> game.active.nameToJson,
-        "ok" -> game.ok.map(p => p.toJson)
+        /* "ok" -> game.ok.map(p => p.toJson) */
       )
     )
   }

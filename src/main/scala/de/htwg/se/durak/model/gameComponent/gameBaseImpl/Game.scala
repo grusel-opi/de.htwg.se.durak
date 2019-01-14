@@ -241,7 +241,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
   }
 
   def getRightNeighbour(player: Player): Player = players.indexOf(player) match {
-    case players.size -1 => players.head
+    case x if x.equals(players.size -1) => players.head
     case _ => players(players.indexOf(player) + 1)
   }
 

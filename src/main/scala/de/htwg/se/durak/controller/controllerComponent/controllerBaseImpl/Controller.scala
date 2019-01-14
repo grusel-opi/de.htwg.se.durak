@@ -142,9 +142,9 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     game.currentTurn.toString
   }
 
-  def playersOkToString(): String = {
-    game.ok.mkString(", ")
-  }
+//  def playersOkToString(): String = {
+//    game.ok.mkString(", ")
+//  }
 
   def currentAttackerToString(): String = {
     game.currentTurn.attacker.toString
@@ -171,7 +171,7 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
   }
 
   def winnerToString(): String = {
-    game.winners.get.toString
+    game.winners.toString
   }
 
   def saveGame(fileName: String): Unit = {

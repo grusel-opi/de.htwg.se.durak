@@ -37,7 +37,7 @@ trait ControllerInterface extends Publisher {
 
   def currentTurnToString(): String
 
-  def playersOkToString(): String
+  // def playersOkToString(): String
 
   def activePlayerHandCardsToString(): String
 
@@ -49,7 +49,7 @@ trait ControllerInterface extends Publisher {
 
   def currentAttackCardsToString(): String
 
-  def getCurrentBlockedByMap(): Map[Card, Card]
+  def getCurrentBlockedByMap: Map[Card, Card]
 
   def deckSizeToString(): String
 

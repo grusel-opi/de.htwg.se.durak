@@ -23,7 +23,7 @@ class FileIO extends FileIOInterface {
     var currentTurn: Turn = null
     var active: Player = null
     var ok: List[Player] = Nil
-    var winner: Option[Player] = None
+    var winner: List[Player] = Nil
 
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val file = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
@@ -97,7 +97,7 @@ class FileIO extends FileIOInterface {
 
     // TODO: set ok and winner!
 
-    Game(players, deck, trump, currentTurn, active, ok, winner)
+    Game(players, deck, trump, currentTurn, active, winner)
   }
 
   def createCard(c: Node): List[Card] = {
@@ -127,55 +127,26 @@ class FileIO extends FileIOInterface {
   }
 
   def gameToXml(game: GameInterface): Elem = {
-    println(game.ok.map(p => p.nameToXml))
 
-    if (game.winners.isDefined) {
-      <game>
-        <players>
-          {game.players.map(p => p.toXml)}
-        </players>
-        <deck>
-          {game.deck.toXml}
-        </deck>
-        <trump>
-          {game.trump.toXml}
-        </trump>
-        <currentTurn>
-          {game.currentTurn.toXml}
-        </currentTurn>
-        <active>
-          {game.active.toXml}
-        </active>
-        <ok>
-          {game.ok.map(p => p.toXml)}
-        </ok>
-        <winner>
-          {game.winners.get.toXml}
-        </winner>
-      </game>
-    } else {
-      <game>
-        <players>
-          {game.players.map(p => p.toXml)}
-        </players>
-        <deck>
-          {game.deck.toXml}
-        </deck>
-        <trump>
-          {game.trump.toXml}
-        </trump>
-        <currentTurn>
-          {game.currentTurn.toXml}
-        </currentTurn>
-        <active>
-          {game.active.nameToXml}
-        </active>
-        <ok>
-          {game.ok.map(p => p.nameToXml)}
-        </ok>
-        <winner>
-        </winner>
-      </game>
-    }
+    <game>
+      <players>
+        {game.players.map(p => p.toXml)}
+      </players>
+      <deck>
+        {game.deck.toXml}
+      </deck>
+      <trump>
+        {game.trump.toXml}
+      </trump>
+      <currentTurn>
+        {game.currentTurn.toXml}
+      </currentTurn>
+      <active>
+        {game.active.toXml}
+      </active>
+      <winner>
+        {game.winners.map(p => p.nameToXml)}
+      </winner>
+    </game>
   }
 }
