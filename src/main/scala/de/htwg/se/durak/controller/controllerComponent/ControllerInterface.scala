@@ -15,7 +15,7 @@ trait ControllerInterface extends Publisher {
 
   def newGame(): Unit
 
-  def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit
+  def playCard(firstCard: Card, secondCard: Option[Card]): Unit
 
   def throwCardIn(card: Card): Unit
 

@@ -32,7 +32,6 @@ class GameSceneController(private val rootPane: AnchorPane,
                           private val defendedCardsScrollPane: ScrollPane,
                           private val takeButton: Button,
                           private val okayButton: Button,
-                          private val continueButton: Button,
                           private val undoButton: Button,
                           private val mainMenuButton: Button) {
 
@@ -86,14 +85,14 @@ class GameSceneController(private val rootPane: AnchorPane,
     cardImgView.onMouseClicked = (_: MouseEvent) => {
       if (attackerAsString.equals(activeAsString) || neighbourAsString.equals(activeAsString)) {
         // attack
-        gui.controller.playCard(Some(card), None)
+        gui.controller.playCard(card, None)
       } else {
 
         highlightSelectedHandCard(cardImgView, card)
 
         if (selectedHandCard.isDefined && selectedCardToDefend.isDefined) {
           // block
-          gui.controller.playCard(Some(card), selectedCardToDefend)
+          gui.controller.playCard(card, selectedCardToDefend)
         }
       }
     }
@@ -167,7 +166,7 @@ class GameSceneController(private val rootPane: AnchorPane,
 
       if (selectedHandCard.isDefined && selectedCardToDefend.isDefined) {
         // block
-        gui.controller.playCard(selectedHandCard, Some(card))
+        gui.controller.playCard(selectedHandCard.get, Some(card))
       }
     }
   }
@@ -233,10 +232,6 @@ class GameSceneController(private val rootPane: AnchorPane,
 
   def takeButtonPressed(): Unit = {
     gui.controller.takeCards()
-  }
-
-  def continueButtonPressed(): Unit = {
-    gui.controller.playCard(None, None)
   }
 
   def okayButtonPressed(): Unit = {

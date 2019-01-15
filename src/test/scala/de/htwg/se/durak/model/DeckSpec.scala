@@ -1,12 +1,14 @@
 package de.htwg.se.durak.model
 
+import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class DeckSpec extends WordSpec with Matchers {
-  /* "A Deck" when {
+  "A Deck" when {
 
     "created with predefined cards" should {
       val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
@@ -123,5 +125,5 @@ class DeckSpec extends WordSpec with Matchers {
         newDeck.cards should be(List(card3))
       }
     }
-  } */
+  }
 }

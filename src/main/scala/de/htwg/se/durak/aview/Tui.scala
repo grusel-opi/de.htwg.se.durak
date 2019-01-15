@@ -3,6 +3,7 @@ package de.htwg.se.durak.aview
 import de.htwg.se.durak.controller.controllerComponent.ControllerInterface
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
+import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 
 import scala.swing.Reactor
 import scala.util.{Failure, Success, Try}
@@ -53,13 +54,12 @@ class Tui(controller: ControllerInterface) extends Reactor {
     println("type [take] to take all cards if you are the victim of the current turn")
   }
 
-  def parseCards(input: List[String]): Try[(Option[Card], Option[Card])] = {
+  def parseCards(input: List[String]): Try[(Card, Option[Card])] = {
     input.size match {
-      case 0 => Try(None,None)
-      case 2 => Try(Some(Card(converter.parseColorString(input.head), converter.parseValueString(input.last))), None)
-      case 4 => Try((Some(Card(converter.parseColorString(input.head), converter.parseValueString(input(1)))),
+      case 2 => Try(Card(converter.parseColorString(input.head), converter.parseValueString(input.last)), None)
+      case 4 => Try((Card(converter.parseColorString(input.head), converter.parseValueString(input(1))),
                      Some(Card(converter.parseColorString(input(2)), converter.parseValueString(input(3))))))
-      case _ => Try(None, None) // TODO: cannot use more than two cards at once; exception?
+      case _ => throw new IllegalTurnException("Specify card pls..") // TODO: cannot use more than two cards at once; exception?
     }
 
   }

@@ -1,12 +1,14 @@
 package de.htwg.se.durak.model
 
+import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class PlayerSpec extends WordSpec with Matchers {
-  /* "A Player" when {
+  "A Player" when {
     "created with hand cards" should {
       val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
       val card2: Card = Card(CardColor.Pik, CardValue.Zehn)
@@ -136,5 +138,5 @@ class PlayerSpec extends WordSpec with Matchers {
         player.hasCard(cardThatPlayerDoesntOwn) should be(false)
       }
     }
-  } */
+  }
 }
