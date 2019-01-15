@@ -39,6 +39,5 @@
          </content>
       </ScrollPane>
       <Button fx:id="mainMenuButton" layoutX="1139.0" layoutY="603.0" mnemonicParsing="false" onAction="#mainMenuButtonPressed" prefHeight="26.0" prefWidth="95.0" text="Main Menu" />
-      <Button fx:id="continueButton" layoutX="14.0" layoutY="478.0" mnemonicParsing="false" onAction="#continueButtonPressed" prefHeight="26.0" prefWidth="66.0" text="cont." />
    </children>
 </AnchorPane>

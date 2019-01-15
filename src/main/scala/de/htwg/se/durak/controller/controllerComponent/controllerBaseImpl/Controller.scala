@@ -46,30 +46,24 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     }
   }
 
-  def playCard(firstCard: Option[Card], secondCard: Option[Card]): Unit = {
-    if (firstCard.nonEmpty) {
-      try {
-        undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+  def playCard(firstCard: Card, secondCard: Option[Card]): Unit = {
+    try {
+      undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
 
-        if (!checkIfGameIsOver) {
-          publish(new CardsChangedEvent)
-        }
+      if (!checkIfGameIsOver) {
+        publish(new CardsChangedEvent)
       }
-      catch {
-        case iTE: IllegalTurnException => notifyUI(iTE)
-        case mBCE: MissingBlockingCardException => notifyUI(mBCE)
-        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
-      }
-    } else {
-      undoManager.purgeMemento()
-      game = game.playCard(firstCard, secondCard)
-      publish(new CardsChangedEvent)
+    }
+    catch {
+      case iTE: IllegalTurnException => notifyUI(iTE)
+      case mBCE: MissingBlockingCardException => notifyUI(mBCE)
+      case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
     }
   }
 
   def throwCardIn(card: Card): Unit = {
     try {
-      undoManager.doStep(new PlayCommand(Some(card), None, this))
+      undoManager.doStep(new PlayCommand(card, None, this))
       if (!checkIfGameIsOver) {
         publish(new CardsChangedEvent)
       }
@@ -93,13 +87,11 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
 
   def playOk(): Unit = {
     undoManager.purgeMemento()
-    val oldGame = game
-    game = game.playOk
-
-    if (oldGame != game || oldGame == game && game.currentTurn.blockedBy.nonEmpty) { // TODO: ? dafuq
+    try {
+      game = game.playOk()
       publish(new CardsChangedEvent)
-    } else {
-      notifyUI(new LayCardFirsException)
+    } catch {
+      case _ : LayCardFirsException => notifyUI(new LayCardFirsException)
     }
   }
 

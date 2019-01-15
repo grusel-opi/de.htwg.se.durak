@@ -21,7 +21,7 @@ trait GameInterface {
   def closeTurn(success: Boolean): (Turn, Deck)
   def takeCards(): Game
   def distributeCards(people: List[Player]): Deck
-  def playCard(card: Option[Card], cardToBlock: Option[Card]): Game
+  def playCard(card: Card, cardToBlock: Option[Card]): Game
   def defend(card: Card, cardToBlock: Option[Card]): Game
   def winByDefence(): Game
   def attack(card: Card): Game

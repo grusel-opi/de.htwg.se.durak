@@ -1,12 +1,13 @@
 package de.htwg.se.durak.model
 
+import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CardSpec extends WordSpec with Matchers {
-  /* "A card" when {
+  "A card" when {
     val card: Card = Card(CardColor.Herz, CardValue.Neun)
     "created" should {
       "have a color." in {
@@ -22,5 +23,5 @@ class CardSpec extends WordSpec with Matchers {
         card.value.compare(cardWithSameColorAndLowerValue.value) should be(1)
       }
     }
-  } */
+  }
 }

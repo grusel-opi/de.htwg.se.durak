@@ -1,12 +1,15 @@
 package de.htwg.se.durak.model
 
+import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Turn
+import de.htwg.se.durak.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class TurnSpec extends WordSpec with Matchers {
-  /* "A Turn" when {
+  "A Turn" when {
 
     val attacker: Player = new Player("Kai")
     val victim: Player = new Player("Lutscho")
@@ -62,8 +65,8 @@ class TurnSpec extends WordSpec with Matchers {
         val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
         val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
         val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
-        val attackCardsStringRepresentation: String = "Cards to block: \n" + attackCards.mkString("; ") + "\n"
-        val blockingCardsStringRepresentation: String = "Blocked Cards: " + blockedBy.mkString("; ") + "\n"
+        val attackCardsStringRepresentation: String = "Cards to block: " + attackCards.mkString("; ") + "\n"
+        val blockingCardsStringRepresentation: String = "Blocked Cards: " + blockedBy.mkString("; ")
 
         val turnStringRepresentation: String = attackerStringRepresentation + victimStringRepresentation +
           neighborStringRepresentation + attackCardsStringRepresentation + blockingCardsStringRepresentation
@@ -108,8 +111,8 @@ class TurnSpec extends WordSpec with Matchers {
         val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
         val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
         val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
-        val attackCardsStringRepresentation: String = "Cards to block: \n\n"
-        val blockingCardsStringRepresentation: String = "Blocked Cards: \n"
+        val attackCardsStringRepresentation: String = "Cards to block: " + turn.attackCards.mkString("; ") + "\n"
+        val blockingCardsStringRepresentation: String = "Blocked Cards: " + turn.blockedBy.mkString("; ")
 
         val turnStringRepresentation: String = attackerStringRepresentation + victimStringRepresentation +
           neighborStringRepresentation + attackCardsStringRepresentation + blockingCardsStringRepresentation
@@ -147,7 +150,7 @@ class TurnSpec extends WordSpec with Matchers {
         val newTurn: Turn = turn.addAttackCard(cardToAdd)
 
         newTurn.attackCards.size should be(attackCards.size + 1)
-        newTurn.attackCards should be(cardToAdd :: attackCards)
+        newTurn.attackCards should be (cardToAdd::attackCards)
       }
     }
 
@@ -220,5 +223,5 @@ class TurnSpec extends WordSpec with Matchers {
         newTurn.getCards should be(Nil ::: blockedBy.values.toList ::: blockedBy.keys.toList)
       }
     }
-  } */
+  }
 }
