@@ -4,13 +4,14 @@ import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, Turn}
 import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.util.customExceptions.LayCardFirsException
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class GameSpec extends WordSpec with Matchers {
-   "A Game" when {
+  "A Game" when {
 
     val player1: Player = new Player("Martin")
     val player2: Player = new Player("Abduhl")
@@ -23,7 +24,6 @@ class GameSpec extends WordSpec with Matchers {
       val trump: Card = shuffledDeck.cards.last
       val turn: Turn = new Turn(player1, player2, player3)
       val active: Player = player1
-      val satisfiedPlayers: List[Player] = Nil
 
       val game: Game = Game(players, shuffledDeck, trump, turn, active, Nil)
 
@@ -145,6 +145,14 @@ class GameSpec extends WordSpec with Matchers {
       }
     }
 
+    "distribute cards" should {
+      val game = new Game(players)
+      game.distributeCards(game.players)
+      "give each player 5 cards" in {
+        game.players.foreach(p => p.handCards.size should be(5))
+      }
+    }
+
     "started" should {
 
       val player1: Player = new Player("Gerhard")
@@ -153,9 +161,9 @@ class GameSpec extends WordSpec with Matchers {
 
       val players: List[Player] = List(player1, player2, player3)
 
-      val Game: Game = new Game(players)
+      val game: Game = new Game(players)
 
-      val newGame: Game = Game.start()
+      val newGame: Game = game.start()
 
       "give each player of the players list hand cards." in {
         newGame.players.foreach(player => player.handCards.size should be(5))
@@ -163,31 +171,35 @@ class GameSpec extends WordSpec with Matchers {
 
       "return a new durak game with valid parameters." in {
 
-        val cardsDeckTuple: (List[Card], Deck) = Game.deck.popNCards(5 * players.size)
-        val newDeck: Deck = cardsDeckTuple._2
+        val cardsDeckTuple: (List[Card], Deck) = game.deck.popNCards(5 * players.size)
 
         newGame.players should be(players)
-        newGame.deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size
-          - players.size * 5)
-        newGame.trump should be(Game.trump)
+        newGame.deck.cards.size should be(cardsDeckTuple._2.cards.size)
       }
     }
 
-    "a player is satisfied with his turn" should {
-
-      val shuffledDeck: Deck = new Deck().shuffle
-
-      val attackCard1: Card = Card(CardColor.Herz, CardValue.Neun)
-      val attackCard2: Card = Card(CardColor.Kreuz, CardValue.Neun)
-      val attackCards: List[Card] = List(attackCard1, attackCard2)
-
-      val turn: Turn = Turn(player1, player2, player3, attackCards, Map())
-
-      val game: Game = Game(players, shuffledDeck, shuffledDeck.cards.last, turn, player1, Nil)
-
-      "should set the next player active." in {
-
+    "a player says ok" should {
+      var game = new Game(players)
+      game = game.start()
+      "throw an LayCardFistException if he has not layed a card yet" in {
+        intercept[LayCardFirsException] {
+          game.playOk()
+        }
+      }
+      "let the next player play" in {
+        game = game.playCard(game.active.handCards.head, None)
+        game = game.playOk()
+        game.active should be(game.getNeighbour(game.currentTurn.attacker))
+      }
+      "let the turn close if victim has blocked all cards" in {
+        val card0 = Card(CardColor.Herz, CardValue.Acht)
+        val card1 = Card(CardColor.Herz, CardValue.Neun)
+        val turn = Turn(player1, player2, player3, Nil, Map(card0 -> card1))
+        var tmpGame = Game(players, new Deck(), card0, turn, player1, Nil)
+        tmpGame = tmpGame.playOk()
+        tmpGame.active should be theSameInstanceAs player2
       }
     }
+
   }
 }
