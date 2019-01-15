@@ -16,103 +16,27 @@ import scala.xml.{Elem, PrettyPrinter}
 class FileIO extends FileIOInterface {
 
   override def load(fileName: String): GameInterface = {
-    var game: GameInterface = null
-    var players: List[Player] = Nil
-    var deck: Deck = null
-    var trump: Card = null
-    var currentTurn: Turn = null
-    var active: Player = null
-    var ok: List[Player] = Nil
-    var winner: List[Player] = Nil
-
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
-    val file = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
+    val file: Elem = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
 
-    val playersNode = (file \ "players" \\ "player")
-    val deckNode = (file \\ "deck")
-    val trumpNode = (file \\ "trump")
-    val currentTurnNode = (file \\ "turn")
-    val activeNode = (file \\ "active")
-    val okNode = (file \\ "ok")
-    val winnerNode = (file \\ "winner")
+    val players: List[Player] = createPlayersList(file)
+    val deck: Deck = createDeck(file)
+    val trump: Card = createTrump(file)
+    val currentTurn: Turn = createTurn(file, players)
+    val active: Player = createActivePlayer(file, players)
+    val winners: List[Player] = createWinnersList(file)
 
-    playersNode.foreach(node => {
-      val name = (node \ "name").text.toString.trim
-      var handCards: List[Card] = Nil
-
-      (node \ "handCards" \ "card").foreach(c => {
-        handCards = handCards ::: createCard(c)
-      })
-
-      val player: Player = Player(name, handCards)
-      players = players ::: List(player)
-    })
-
-    var deckCards: List[Card] = Nil
-
-    deckNode.foreach(node => {
-      (node \ "card").foreach(c => {
-        deckCards = deckCards ::: createCard(c)
-      })
-    })
-    deck = Deck(deckCards)
-
-    (trumpNode \ "card").foreach(c => {
-      trump = createCard(c).head
-    })
-
-    val attackerName = (currentTurnNode \ "attacker" \ "player" \ "name").text.toString.trim
-    val victimName = (currentTurnNode \ "victim" \ "player" \ "name").text.toString.trim
-    val neighbourName = (currentTurnNode \ "neighbour" \ "player" \ "name").text.toString.trim
-    var attackCards: List[Card] = Nil
-
-    (currentTurnNode \ "attackCards" \ "card").foreach(c => {
-      attackCards = attackCards ::: createCard(c)
-    })
-
-    var blockedAttackCards: List[Card] = Nil
-
-    (currentTurnNode \ "blockedBy" \ "attackCards" \ "card").foreach(c => {
-      blockedAttackCards = blockedAttackCards ::: createCard(c)
-    })
-
-    var blockingCards: List[Card] = Nil
-    (currentTurnNode \ "blockedBy" \ "blockingCards" \ "card").foreach(c => {
-      blockingCards = blockingCards ::: createCard(c)
-    })
-
-    val attacker: Player = players.filter(p => p.name.equals(attackerName)).head
-    val victim: Player = players.filter(p => p.name.equals(victimName)).head
-    val neighbour: Player = players.filter(p => p.name.equals(neighbourName)).head
-    var blockedBy: Map[Card, Card] = Map()
-
-    for ((attackCard, blockingCard) <- (blockedAttackCards zip blockingCards)) {
-      blockedBy = blockedBy + (attackCard -> blockingCard)
-    }
-
-    currentTurn = Turn(attacker, victim, neighbour, attackCards, blockedBy)
-
-    val activePlayerName: String = (activeNode \ "player" \ "name").text.toString.trim
-    active = players.filter(p => p.name.equals(activePlayerName)).head
-
-    // TODO: set ok and winner!
-
-    Game(players, deck, trump, currentTurn, active, winner)
-  }
-
-  def createCard(c: Node): List[Card] = {
-    val cardColor: String = (c \ "color").text.trim
-    val cardValue: String = (c \ "value").text.trim
-    val card: Card = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
-    List(card)
+    Game(players, deck, trump, currentTurn, active, winners)
   }
 
   override def save(game: GameInterface, fileName: String): Unit = saveString(game, fileName)
 
   def saveString(game: GameInterface, fileName: String): Unit = {
+    val WIDTH: Int = 120
+    val STEP: Int = 4
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val printWriter: PrintWriter = new PrintWriter(new File("save/" + fileNameWithoutExtension + ".xml"))
-    val prettyPrinter: PrettyPrinter = new PrettyPrinter(120, 4)
+    val prettyPrinter: PrettyPrinter = new PrettyPrinter(WIDTH, STEP)
     val xml = prettyPrinter.format(gameToXml(game))
     printWriter.write(xml)
     printWriter.close()
@@ -126,8 +50,94 @@ class FileIO extends FileIOInterface {
     }
   }
 
-  def gameToXml(game: GameInterface): Elem = {
+  def createCard(c: Node): List[Card] = {
+    val cardColor: String = (c \ "color").text.trim
+    val cardValue: String = (c \ "value").text.trim
+    val card: Card = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
+    List(card)
+  }
 
+  def createPlayersList(file: Elem): List[Player] = {
+    var players: List[Player] = Nil
+
+    (file \\ "players" \\ "player").foreach(node => {
+      val name = (node \ "name").text.toString.trim
+      var handCards: List[Card] = Nil
+
+      (node \\ "handCards" \ "card").foreach(card => {
+        handCards = handCards ::: createCard(card)
+      })
+
+      players = players ::: List(Player(name, handCards))
+    })
+
+    players
+  }
+
+  def createDeck(file: Elem): Deck = {
+    var cards: List[Card] = Nil
+
+    (file \\ "deck" \ "card").foreach(card => {
+      cards = cards ::: createCard(card)
+    })
+
+    Deck(cards)
+  }
+
+  def createTrump(file: Elem): Card = {
+    createCard((file \\ "trump" \ "card").head).head
+  }
+
+  def createTurn(file: Elem, players: List[Player]): Turn = {
+    val attackerName = (file \\ "attacker" \ "player" \ "name").text.toString.trim
+    val victimName = (file \\ "victim" \ "player" \ "name").text.toString.trim
+    val neighbourName = (file \\ "neighbour" \ "player" \ "name").text.toString.trim
+
+    var attackCards: List[Card] = Nil
+    var blockedAttackCards: List[Card] = Nil
+    var blockingCards: List[Card] = Nil
+
+    (file \\ "currentTurn" \ "attackCards" \ "card").foreach(c => {
+      attackCards = attackCards ::: createCard(c)
+    })
+
+    (file \\ "blockedBy" \ "attackCards" \ "card").foreach(c => {
+      blockedAttackCards = blockedAttackCards ::: createCard(c)
+    })
+
+    (file \\ "blockedBy" \ "blockingCards" \ "card").foreach(c => {
+      blockingCards = blockingCards ::: createCard(c)
+    })
+
+    val attacker: Player = players.filter(p => p.name.equals(attackerName)).head
+    val victim: Player = players.filter(p => p.name.equals(victimName)).head
+    val neighbour: Player = players.filter(p => p.name.equals(neighbourName)).head
+    var blockedBy: Map[Card, Card] = Map()
+
+    for ((attackCard, blockingCard) <- blockedAttackCards zip blockingCards) {
+      blockedBy = blockedBy + (attackCard -> blockingCard)
+    }
+
+    Turn(attacker, victim, neighbour, attackCards, blockedBy)
+  }
+
+  def createActivePlayer(file: Elem, players: List[Player]): Player = {
+    val activePlayerName: String = (file \\ "active" \ "player" \ "name").text.toString.trim
+    players.filter(p => p.name.equals(activePlayerName)).head
+  }
+
+  def createWinnersList(file: Elem): List[Player] = {
+    var winners: List[Player] = Nil
+
+    (file \\ "winners" \ "player").foreach(p => {
+      val playerName: String = (p \ "name").text.toString.trim
+      winners = winners ::: List(Player(playerName, Nil))
+    })
+
+    winners
+  }
+
+  def gameToXml(game: GameInterface): Elem = {
     <game>
       <players>
         {game.players.map(p => p.toXml)}
@@ -142,11 +152,11 @@ class FileIO extends FileIOInterface {
         {game.currentTurn.toXml}
       </currentTurn>
       <active>
-        {game.active.toXml}
+        {game.active.nameToXml}
       </active>
-      <winner>
+      <winners>
         {game.winners.map(p => p.nameToXml)}
-      </winner>
+      </winners>
     </game>
   }
 }

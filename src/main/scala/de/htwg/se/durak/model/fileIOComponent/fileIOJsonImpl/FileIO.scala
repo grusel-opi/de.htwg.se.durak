@@ -12,94 +12,21 @@ import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import play.api.libs.json.{JsObject, JsValue, Json}
 
 import scala.io.Source
-import scala.xml.Node
 
 class FileIO extends FileIOInterface {
   override def load(fileName: String): GameInterface = {
-    var game: GameInterface = null
-    var players: List[Player] = Nil
-    var deck: Deck = null
-    var trump: Card = null
-    var currentTurn: Turn = null
-    var active: Player = null
-    var ok: List[Player] = Nil
-    var winner: List[Player] = Nil
-
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
-    val sourceOfFile: String = Source.fromFile("save/" + fileNameWithoutExtension + ".json").getLines().mkString
+    val source: String = Source.fromFile("save/" + fileNameWithoutExtension + ".json").getLines().mkString
+    val sourceAsJson: JsValue = Json.parse(source)
 
-    val sourceOfFileAsJson: JsValue = Json.parse(sourceOfFile)
+    val players: List[Player] = createPlayersLit(sourceAsJson)
+    val deck: Deck = createDeck(sourceAsJson)
+    val trump: Card = createTrump(sourceAsJson)
+    val currentTurn = createTurn(sourceAsJson, players)
+    val active: Player = createActivePlayer(sourceAsJson, players)
+    val winners: List[Player] = createWinnersList(sourceAsJson)
 
-    val gameNode: JsValue = (sourceOfFileAsJson \ "game").get
-    val currentTurnNode: JsValue = (gameNode \ "currentTurn").get
-    val activeNode: JsValue = (gameNode \ "active").get
-    val okNode: JsValue = (gameNode \ "ok").get
-    // val winnerNode: JsValue = (gameNode \ "winner").get
-
-    (sourceOfFileAsJson \ "game" \ "players" \\ "player").foreach(p => {
-      val name: String = (p \ "name").get.as[String]
-      var handCards: List[Card] = Nil
-
-      (p \ "handCards" \\ "card").foreach(c => {
-        handCards = handCards ::: createCard(c)
-      })
-
-      val player: Player = Player(name, handCards)
-      players = players ::: List(player)
-    })
-
-    var deckCards: List[Card] = Nil
-
-    (sourceOfFileAsJson \ "game" \ "deck" \\ "card").foreach(c => {
-      deckCards = deckCards ::: createCard(c)
-    })
-
-    deck = Deck(deckCards)
-
-    trump = createCard((sourceOfFileAsJson \ "game" \ "trump" \\ "card").head).head
-
-    val attackerName = (sourceOfFileAsJson \ "game" \ "currentTurn" \ "attacker" \ "player" \ "name").get.as[String]
-    val victimName = (sourceOfFileAsJson \ "game" \ "currentTurn" \ "victim" \ "player" \ "name").get.as[String]
-    val neighbourName = (sourceOfFileAsJson \ "game" \ "currentTurn" \ "neighbour" \ "player" \ "name").get.as[String]
-    var attackCards: List[Card] = Nil
-
-    (sourceOfFileAsJson \ "game" \ "currentTurn" \ "attackCards" \\ "card").foreach(c => {
-      attackCards = attackCards ::: createCard(c)
-    })
-
-    var blockedAttackCards: List[Card] = Nil
-
-    (sourceOfFileAsJson \ "game" \ "currentTurn" \ "blockedBy" \\ "attackCards").foreach(entry => {
-      (entry \\ "card").foreach(c => {
-        blockedAttackCards = blockedAttackCards ::: createCard(c)
-      })
-    })
-
-    var blockingCards: List[Card] = Nil
-
-    (sourceOfFileAsJson \ "game" \ "currentTurn" \ "blockedBy" \\ "blockingCards").foreach(entry => {
-      (entry \\ "card").foreach(c => {
-        blockingCards = blockingCards ::: createCard(c)
-      })
-    })
-
-    val attacker: Player = players.filter(p => p.name.equals(attackerName)).head
-    val victim: Player = players.filter(p => p.name.equals(victimName)).head
-    val neighbour: Player = players.filter(p => p.name.equals(neighbourName)).head
-    var blockedBy: Map[Card, Card] = Map()
-
-    for ((attackCard, blockingCard) <- (blockedAttackCards zip blockingCards)) {
-      blockedBy = blockedBy + (attackCard -> blockingCard)
-    }
-
-    currentTurn = Turn(attacker, victim, neighbour, attackCards, blockedBy)
-
-    val activePlayerName: String = (sourceOfFileAsJson \ "game" \ "active" \ "player" \ "name").get.as[String]
-    active = players.filter(p => p.name.equals(activePlayerName)).head
-
-    // TODO: set ok and winner!
-
-    Game(players, deck, trump, currentTurn, active, winner)
+    Game(players, deck, trump, currentTurn, active, winners)
   }
 
   override def save(game: GameInterface, fileName: String): Unit = {
@@ -117,6 +44,98 @@ class FileIO extends FileIOInterface {
     }
   }
 
+  def createCard(c: JsValue): List[Card] = {
+    val cardColor: String = (c \ "color").get.as[String]
+    val cardValue: String = (c \ "value").get.as[String]
+    val card: Card = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
+    List(card)
+  }
+
+  def createPlayersLit(sourceAsJson: JsValue): List[Player] = {
+    var players: List[Player] = Nil
+
+    (sourceAsJson \ "game" \ "players" \\ "player").foreach(p => {
+      val name: String = (p \ "name").get.as[String]
+      var handCards: List[Card] = Nil
+
+      (p \ "handCards" \\ "card").foreach(c => {
+        handCards = handCards ::: createCard(c)
+      })
+
+      val player: Player = Player(name, handCards)
+      players = players ::: List(player)
+    })
+
+    players
+  }
+
+  def createDeck(sourceAsJson: JsValue): Deck = {
+    var cards: List[Card] = Nil
+
+    (sourceAsJson \ "game" \ "deck" \\ "card").foreach(c => {
+      cards = cards ::: createCard(c)
+    })
+
+    Deck(cards)
+  }
+
+  def createTrump(sourceAsJson: JsValue): Card = {
+    createCard((sourceAsJson \ "game" \ "trump" \\ "card").head).head
+  }
+
+  def createTurn(sourceAsJson: JsValue, players: List[Player]): Turn = {
+    val attackerName = (sourceAsJson \ "game" \ "currentTurn" \ "attacker" \ "player" \ "name").get.as[String]
+    val victimName = (sourceAsJson \ "game" \ "currentTurn" \ "victim" \ "player" \ "name").get.as[String]
+    val neighbourName = (sourceAsJson \ "game" \ "currentTurn" \ "neighbour" \ "player" \ "name").get.as[String]
+
+    var attackCards: List[Card] = Nil
+    var blockedAttackCards: List[Card] = Nil
+    var blockingCards: List[Card] = Nil
+
+    (sourceAsJson \ "game" \ "currentTurn" \ "attackCards" \\ "card").foreach(c => {
+      attackCards = attackCards ::: createCard(c)
+    })
+
+    (sourceAsJson \ "game" \ "currentTurn" \ "blockedBy" \\ "attackCards").foreach(entry => {
+      (entry \\ "card").foreach(c => {
+        blockedAttackCards = blockedAttackCards ::: createCard(c)
+      })
+    })
+
+    (sourceAsJson \ "game" \ "currentTurn" \ "blockedBy" \\ "blockingCards").foreach(entry => {
+      (entry \\ "card").foreach(c => {
+        blockingCards = blockingCards ::: createCard(c)
+      })
+    })
+
+    val attacker: Player = players.filter(p => p.name.equals(attackerName)).head
+    val victim: Player = players.filter(p => p.name.equals(victimName)).head
+    val neighbour: Player = players.filter(p => p.name.equals(neighbourName)).head
+    var blockedBy: Map[Card, Card] = Map()
+
+    for ((attackCard, blockingCard) <- (blockedAttackCards zip blockingCards)) {
+      blockedBy = blockedBy + (attackCard -> blockingCard)
+    }
+
+    Turn(attacker, victim, neighbour, attackCards, blockedBy)
+  }
+
+  def createActivePlayer(sourceAsJson: JsValue, players: List[Player]): Player = {
+    val activePlayerName: String = (sourceAsJson \ "game" \ "active" \ "player" \ "name").get.as[String]
+    players.filter(p => p.name.equals(activePlayerName)).head
+  }
+
+  def createWinnersList(sourceAsJson: JsValue): List[Player] = {
+    var winners: List[Player] = Nil
+
+    (sourceAsJson \ "game" \ "winners" \\ "player").foreach(player => {
+      val playerName: String = (player \ "name").get.as[String]
+      winners = winners ::: List(Player(playerName, Nil))
+    })
+
+    winners
+  }
+
   def gameToJson(game: GameInterface): JsObject = {
     Json.obj(
       "game" -> Json.obj(
@@ -125,15 +144,8 @@ class FileIO extends FileIOInterface {
         "trump" -> game.trump.toJson,
         "currentTurn" -> game.currentTurn.toJson,
         "active" -> game.active.nameToJson,
-        /* "ok" -> game.ok.map(p => p.toJson) */
+        "winners" -> game.winners.map(p => p.nameToJson)
       )
     )
-  }
-
-  def createCard(c: JsValue): List[Card] = {
-    val cardColor: String = (c \ "color").get.as[String]
-    val cardValue: String = (c \ "value").get.as[String]
-    val card: Card = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
-    List(card)
   }
 }

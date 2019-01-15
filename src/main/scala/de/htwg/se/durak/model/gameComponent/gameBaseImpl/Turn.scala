@@ -20,8 +20,7 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
 
   def getPlayers: List[Player] = List(attacker, victim, neighbour)
 
-  def toXml: Elem = {
-    <turn>
+  def toXml:NodeBuffer = {
       <attacker>
         {attacker.nameToXml}
       </attacker>
@@ -37,7 +36,6 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
       <blockedBy>
         {blockedBy.map(entry => blockedByMapEntryToXml(entry))}
       </blockedBy>
-    </turn>
   }
 
   def blockedByMapEntryToXml(entry: (Card, Card)): NodeBuffer = {

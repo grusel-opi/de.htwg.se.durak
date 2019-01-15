@@ -271,9 +271,9 @@ class GameSceneController(private val rootPane: AnchorPane,
 
   def configureDefendedCardsScrollPane(): Unit = {
     // disable verical scrolling
-    attackCardsScrollPane.setFitToHeight(true)
+    defendedCardsScrollPane.setFitToHeight(true)
     // remove ugly border around ScrollPane
-    attackCardsScrollPane.getStyleClass.add("edge-to-edge")
+    defendedCardsScrollPane.getStyleClass.add("edge-to-edge")
   }
 
   def configureOkayButton(): Unit = {

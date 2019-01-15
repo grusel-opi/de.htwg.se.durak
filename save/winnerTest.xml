@@ -1,0 +1,74 @@
+<game>
+    <players>
+        <player>
+            <name> Günter </name>
+            <handCards>
+                <card>
+                    <color> Pik </color>
+                    <value> König </value>
+                </card>
+                <card>
+                    <color> Kreuz </color>
+                    <value> Ass </value>
+                </card>
+                <card>
+                    <color> Pik </color>
+                    <value> Fünf </value>
+                </card>
+                <card>
+                    <color> Karo </color>
+                    <value> Dame </value>
+                </card>
+            </handCards>
+        </player>
+        <player>
+            <name> Stephan </name>
+            <handCards>
+                <card>
+                    <color> Pik </color>
+                    <value> Acht </value>
+                </card>
+                <card>
+                    <color> Pik </color>
+                    <value> Dame </value>
+                </card>
+            </handCards>
+        </player>
+    </players>
+    <deck> </deck>
+    <trump>
+        <card>
+            <color> Karo </color>
+            <value> Acht </value>
+        </card>
+    </trump>
+    <currentTurn>
+        <attacker>
+            <player>
+                <name> Günter </name>
+            </player>
+        </attacker>
+        <victim>
+            <player>
+                <name> Stephan </name>
+            </player>
+        </victim>
+        <neighbour>
+            <player>
+                <name> Günter </name>
+            </player>
+        </neighbour>
+        <attackCards> </attackCards>
+        <blockedBy> </blockedBy>
+    </currentTurn>
+    <active>
+        <player>
+            <name> Günter </name>
+        </player>
+    </active>
+    <winners>
+        <player>
+            <name> Felix </name>
+        </player>
+    </winners>
+</game>

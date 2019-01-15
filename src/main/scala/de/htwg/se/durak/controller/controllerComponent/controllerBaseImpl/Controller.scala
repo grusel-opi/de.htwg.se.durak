@@ -4,7 +4,6 @@ import com.google.inject.{Guice, Inject}
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
-import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
 // import de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl.FileIO
 import de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl.FileIO
 import de.htwg.se.durak.model.gameComponent.GameInterface
@@ -172,7 +171,7 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
   }
 
   def winnerToString(): String = {
-    game.winners.toString
+    game.winners.last.toString
   }
 
   def saveGame(fileName: String): Unit = {
