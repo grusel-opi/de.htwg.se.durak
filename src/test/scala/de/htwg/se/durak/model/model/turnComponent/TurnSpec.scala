@@ -1,4 +1,4 @@
-package de.htwg.se.durak.model.model.gameComponent
+package de.htwg.se.durak.model.model.turnComponent
 
 import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
@@ -8,6 +8,9 @@ import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
+import play.api.libs.json.{JsObject, Json}
+
+import scala.xml.{Node, Utility}
 
 @RunWith(classOf[JUnitRunner])
 class TurnSpec extends WordSpec with Matchers {
@@ -15,7 +18,7 @@ class TurnSpec extends WordSpec with Matchers {
 
     val attacker: Player = new Player("Kai")
     val victim: Player = new Player("Lutscho")
-    val neighbor: Player = new Player("Lukas")
+    val neighbour: Player = new Player("Lukas")
 
     "created" should {
       val attackCard1: CardInterface = Card(CardColor.Herz, CardValue.König)
@@ -33,7 +36,7 @@ class TurnSpec extends WordSpec with Matchers {
       val blockedBy: Map[CardInterface, CardInterface] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
         (attackCard3, blockingCard3), (attackCard4, blockingCard4))
 
-      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, blockedBy)
+      val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, blockedBy)
 
       "have a attacker." in {
         turn.attacker should be(attacker)
@@ -66,7 +69,7 @@ class TurnSpec extends WordSpec with Matchers {
       "have a nice string representation." in {
         val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
         val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
-        val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
+        val neighborStringRepresentation: String = "Neighbor: " + neighbour.name + "\n"
         val attackCardsStringRepresentation: String = "Cards to block: " + attackCards.mkString("; ") + "\n"
         val blockingCardsStringRepresentation: String = "Blocked Cards: " + blockedBy.mkString("; ")
 
@@ -79,7 +82,7 @@ class TurnSpec extends WordSpec with Matchers {
 
     "created without attack cards and without cards which block attack cards" should {
 
-      val turn: TurnInterface = new Turn(attacker, victim, neighbor)
+      val turn: TurnInterface = new Turn(attacker, victim, neighbour)
 
       "have a attacker." in {
         turn.attacker should be(attacker)
@@ -112,7 +115,7 @@ class TurnSpec extends WordSpec with Matchers {
       "have a nice string representation." in {
         val attackerStringRepresentation: String = "Attacker: " + attacker.name + "\n"
         val victimStringRepresentation: String = "Defender: " + victim.name + "\n"
-        val neighborStringRepresentation: String = "Neighbor: " + neighbor.name + "\n"
+        val neighborStringRepresentation: String = "Neighbor: " + neighbour.name + "\n"
         val attackCardsStringRepresentation: String = "Cards to block: " + turn.attackCards.mkString("; ") + "\n"
         val blockingCardsStringRepresentation: String = "Blocked Cards: " + turn.blockedBy.mkString("; ")
 
@@ -126,7 +129,7 @@ class TurnSpec extends WordSpec with Matchers {
     "add a attack card to empty attack cards" should {
       val cardToAdd: CardInterface = Card(CardColor.Herz, CardValue.Fünf)
 
-      val turn: TurnInterface = Turn(attacker, victim, neighbor, Nil, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbour, Nil, Map())
 
       "have one attack card." in {
         turn.attackCards.size should be(0)
@@ -144,7 +147,7 @@ class TurnSpec extends WordSpec with Matchers {
       val existingAttackCard: CardInterface = Card(CardColor.Karo, CardValue.Acht)
       val attackCards: List[CardInterface] = List(existingAttackCard)
 
-      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, Map())
       "have one attack card more as before" in {
         turn.attackCards.size should be(attackCards.size)
         turn.attackCards should be(attackCards)
@@ -152,7 +155,7 @@ class TurnSpec extends WordSpec with Matchers {
         val newTurn: TurnInterface = turn.addAttackCard(cardToAdd)
 
         newTurn.attackCards.size should be(attackCards.size + 1)
-        newTurn.attackCards should be (cardToAdd::attackCards)
+        newTurn.attackCards should be(cardToAdd :: attackCards)
       }
     }
 
@@ -161,7 +164,7 @@ class TurnSpec extends WordSpec with Matchers {
       val attackCard: CardInterface = Card(CardColor.Herz, CardValue.Fünf)
       val attackCards: List[CardInterface] = List(attackCard)
 
-      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, Map())
 
       "have one card, blocking one of the attack cards." in {
         turn.attackCards.size should be(attackCards.size)
@@ -182,7 +185,7 @@ class TurnSpec extends WordSpec with Matchers {
     "trying to get all cards" should {
 
       "return no cards, if attack cards and blocking cards are empty." in {
-        val turn: TurnInterface = new Turn(attacker, victim, neighbor)
+        val turn: TurnInterface = new Turn(attacker, victim, neighbour)
 
         turn.getCards.size should be(0)
         turn.getCards should be(Nil)
@@ -193,7 +196,7 @@ class TurnSpec extends WordSpec with Matchers {
         val attackCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
 
         val attackCards: List[CardInterface] = List(attackCard1, attackCard2)
-        val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
+        val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, Map())
 
         turn.getCards.size should be(2)
         turn.getCards should be(attackCards)
@@ -215,7 +218,7 @@ class TurnSpec extends WordSpec with Matchers {
         val blockedBy: Map[CardInterface, CardInterface] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
           (attackCard3, blockingCard3), (attackCard4, blockingCard4))
 
-        val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
+        val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, Map())
         var newTurn: TurnInterface = turn.addBlockCard(attackCard1, blockingCard1)
         newTurn = newTurn.addBlockCard(attackCard2, blockingCard2)
         newTurn = newTurn.addBlockCard(attackCard3, blockingCard3)
@@ -223,6 +226,76 @@ class TurnSpec extends WordSpec with Matchers {
 
         newTurn.getCards.size should be(attackCards.size + blockingCards.size)
         newTurn.getCards should be(Nil ::: blockedBy.values.toList ::: blockedBy.keys.toList)
+      }
+
+      "parsed to XML" should {
+        val attackCard: CardInterface = Card(CardColor.Pik, CardValue.König)
+        val attackCards: List[CardInterface] = List()
+        val blockedAttackCard: CardInterface = Card(CardColor.Herz, CardValue.Dame)
+        val blockingCard: CardInterface = Card(CardColor.Herz, CardValue.König)
+        val blockedBy: Map[CardInterface, CardInterface] = Map[CardInterface, CardInterface](
+          blockedAttackCard -> blockingCard)
+        val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, blockedBy)
+
+        "return the turn as a XML structure." in {
+          val turnAsXml: Node = Utility.trim(turn.toXml)
+          val expectedXmlTurnStructure =
+            Utility.trim(
+              <currentTurn>
+                <attacker>
+                  {attacker.nameToXml}
+                </attacker>
+                <victim>
+                  {victim.nameToXml}
+                </victim>
+                <neighbour>
+                  {neighbour.nameToXml}
+                </neighbour>
+                <attackCards>
+                  {attackCards.map(c => c.toXml)}
+                </attackCards>
+                <blockedBy>
+                  <attackCards>
+                    {blockedAttackCard.toXml}
+                  </attackCards>
+                  <blockingCards>
+                    {blockingCard.toXml}
+                  </blockingCards>
+                </blockedBy>
+              </currentTurn>
+            )
+
+          turnAsXml should be(expectedXmlTurnStructure)
+        }
+      }
+
+      "parsed to JSON" should {
+        val attackCard: CardInterface = Card(CardColor.Pik, CardValue.König)
+        val attackCards: List[CardInterface] = List()
+        val blockedAttackCard: CardInterface = Card(CardColor.Herz, CardValue.Dame)
+        val blockingCard: CardInterface = Card(CardColor.Herz, CardValue.König)
+        val blockedBy: Map[CardInterface, CardInterface] = Map[CardInterface, CardInterface](
+          blockedAttackCard -> blockingCard)
+        val turn: TurnInterface = Turn(attacker, victim, neighbour, attackCards, blockedBy)
+
+        "return the turn as a JSON structure." in {
+          val turnAsJson: JsObject = turn.toJson
+          val expectedJsonTurnStructure: JsObject =
+            Json.obj(
+              "attacker" -> attacker.nameToJson,
+              "victim" -> victim.nameToJson,
+              "neighbour" -> neighbour.nameToJson,
+              "attackCards" -> attackCards.map(c => c.toJson),
+              "blockedBy" -> Json.arr(
+                Json.obj(
+                  "attackCards" -> blockedAttackCard.toJson,
+                  "blockingCards" -> blockingCard.toJson
+                )
+              )
+            )
+
+          turnAsJson should be(expectedJsonTurnStructure)
+        }
       }
     }
   }

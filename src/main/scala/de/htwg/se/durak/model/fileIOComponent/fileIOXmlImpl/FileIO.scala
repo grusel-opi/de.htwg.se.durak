@@ -155,9 +155,7 @@ class FileIO extends FileIOInterface {
       <trump>
         {game.trump.toXml}
       </trump>
-      <currentTurn>
         {game.currentTurn.toXml}
-      </currentTurn>
       <active>
         {game.active.nameToXml}
       </active>

@@ -5,7 +5,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import play.api.libs.json.{JsObject, Json}
 
-import scala.xml.NodeBuffer
+import scala.xml.Node
 
 case class Turn(attacker: PlayerInterface, victim: PlayerInterface, neighbour: PlayerInterface,
                 attackCards: List[CardInterface], blockedBy: Map[CardInterface, CardInterface]) extends TurnInterface {
@@ -22,10 +22,11 @@ case class Turn(attacker: PlayerInterface, victim: PlayerInterface, neighbour: P
 
   def getPlayers: List[PlayerInterface] = List(attacker, victim, neighbour)
 
-  def toXml: NodeBuffer = {
-    <attacker>
-      {attacker.nameToXml}
-    </attacker>
+  def toXml: Node = {
+    <currentTurn>
+      <attacker>
+        {attacker.nameToXml}
+      </attacker>
       <victim>
         {victim.nameToXml}
       </victim>
@@ -35,18 +36,19 @@ case class Turn(attacker: PlayerInterface, victim: PlayerInterface, neighbour: P
       <attackCards>
         {attackCards.map(c => c.toXml)}
       </attackCards>
-      <blockedBy>
         {blockedBy.map(entry => blockedByMapEntryToXml(entry))}
-      </blockedBy>
+    </currentTurn>
   }
 
-  def blockedByMapEntryToXml(entry: (CardInterface, CardInterface)): NodeBuffer = {
-    <attackCards>
-      {entry._1.toXml}
-    </attackCards>
+  def blockedByMapEntryToXml(entry: (CardInterface, CardInterface)): Node = {
+    <blockedBy>
+      <attackCards>
+        {entry._1.toXml}
+      </attackCards>
       <blockingCards>
         {entry._2.toXml}
       </blockingCards>
+    </blockedBy>
   }
 
   def toJson: JsObject = {

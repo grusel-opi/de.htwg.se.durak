@@ -1,0 +1,32 @@
+{
+  "attacker": {
+    "player": {
+      "name": "Kai"
+    }
+  },
+  "victim": {
+    "player": {
+      "name": "Lutscho"
+    }
+  },
+  "neighbour": {
+    "player": {
+      "name": "Lukas"
+    }
+  },
+  "attackCards": [],
+  "blockedBy": {
+    "attackCards": {
+      "card": {
+        "color": "Herz",
+        "value": "Dame"
+      }
+    },
+    "blockingCards": {
+      "card": {
+        "color": "Herz",
+        "value": "König"
+      }
+    }
+  }
+}

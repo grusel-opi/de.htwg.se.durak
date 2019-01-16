@@ -5,7 +5,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import play.api.libs.json.JsObject
 
-import scala.xml.NodeBuffer
+import scala.xml.Node
 
 trait TurnInterface {
   val attacker: PlayerInterface
@@ -26,9 +26,9 @@ trait TurnInterface {
 
   def getPlayers: List[PlayerInterface]
 
-  def toXml: NodeBuffer
+  def toXml: Node
 
-  def blockedByMapEntryToXml(entry: (CardInterface, CardInterface)): NodeBuffer
+  def blockedByMapEntryToXml(entry: (CardInterface, CardInterface)): Node
 
   def toJson: JsObject
 
