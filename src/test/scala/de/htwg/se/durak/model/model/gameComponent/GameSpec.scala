@@ -30,8 +30,9 @@ class GameSpec extends WordSpec with Matchers {
       val trump: CardInterface = shuffledDeck.cards.last
       val turn: TurnInterface = new Turn(player1, player2, player3)
       val active: PlayerInterface = player1
+      val winners = Nil
 
-      val game: GameInterface = Game(players, shuffledDeck, trump, turn, active, Nil)
+      val game: GameInterface = Game(players, shuffledDeck, trump, turn, active, winners)
 
       "have a players list." in {
         game.players.size should be(players.size)
@@ -54,6 +55,11 @@ class GameSpec extends WordSpec with Matchers {
       "have a active player." in {
         game.active should be(player1)
       }
+
+      "have a winners list." in {
+        game.winners should be(winners)
+      }
+
     }
 
     "created with only a players list and a deck" should {
@@ -177,7 +183,6 @@ class GameSpec extends WordSpec with Matchers {
       }
     }
 
-
     "a player says ok" should {
       val attackerHandCard1: CardInterface = Card(CardColor.Karo, CardValue.Zwei)
       val attackerHandCard2: CardInterface = Card(CardColor.Karo, CardValue.Drei)
@@ -231,6 +236,8 @@ class GameSpec extends WordSpec with Matchers {
       var game: GameInterface = Game(playerList, deck, deck.cards.last, turn, attacker, Nil)
 
       "throw an LayCardFistException if the attacker has not layed a card yet." in {
+        game.active should be(attacker)
+        game.currentTurn.attackCards should be(Nil)
         intercept[LayCardFirsException] {
           game.playOk()
         }
@@ -342,9 +349,26 @@ class GameSpec extends WordSpec with Matchers {
       }
     }
 
-    "playing a card" should {
-      "" in {
+    "a player is playing a card" should {
 
+      val card1 = Card(CardColor.Herz, CardValue.Acht)
+
+      val player1 = Player("1", card1::Nil)
+
+      val player2 = Player("2", Nil)
+
+      val player3 = Player("4", Nil)
+
+      val players = List(player1, player2, player3)
+
+      val turn = new Turn(player1, player2, player3)
+
+      val deck = new Deck()
+
+      val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
+
+      "and is the attacker or the neighbour" in {
+        game.playCard(card1, None)
       }
     }
   }

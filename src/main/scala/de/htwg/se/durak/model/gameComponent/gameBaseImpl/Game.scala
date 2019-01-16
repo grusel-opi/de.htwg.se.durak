@@ -154,9 +154,9 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
 
   def attack(card: CardInterface): Game = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
-    if (active.handCards.nonEmpty) { // attacker won
+    if (active.handCards.nonEmpty) {
       copy(currentTurn = currentTurn.addAttackCard(card))
-    } else {
+    } else { // attacker won
       val newWinners = active :: winners
       val newPlayers = players.filterNot(p => p.equals(active))
       if (newPlayers.size == 1) {
