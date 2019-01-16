@@ -76,3 +76,4 @@ class ExceptionEvent(exception: Exception) extends Event {
   }
 }
 
+

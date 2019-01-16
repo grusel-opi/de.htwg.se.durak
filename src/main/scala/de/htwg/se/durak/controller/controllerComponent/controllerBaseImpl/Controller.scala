@@ -1,11 +1,12 @@
 package de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl
 
+import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject}
+import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
-// import de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl.FileIO
-import de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl.FileIO
+import de.htwg.se.durak.model.fileIOComponent._
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
@@ -14,12 +15,12 @@ import de.htwg.se.durak.util.undoManager.UndoManager
 
 import scala.swing.Publisher
 
-class Controller @Inject() (var game: GameInterface) extends ControllerInterface with Publisher {
+class Controller @Inject()(var game: GameInterface) extends ControllerInterface with Publisher {
 
   var players: List[Player] = Nil
   private val undoManager = new UndoManager
-  val fileIO = new FileIO
-  // val injector = Guice.createInjector(new DurakModule)
+  val injector = Guice.createInjector(new DurakModule)
+  val fileIO = injector.instance[FileIOInterface]
 
   def newPlayer(name: String): Unit = {
     if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
@@ -90,7 +91,7 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
       game = game.playOk()
       publish(new CardsChangedEvent)
     } catch {
-      case _ : LayCardFirsException => notifyUI(new LayCardFirsException)
+      case _: LayCardFirsException => notifyUI(new LayCardFirsException)
     }
   }
 
@@ -134,10 +135,6 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     game.currentTurn.toString
   }
 
-//  def playersOkToString(): String = {
-//    game.ok.mkString(", ")
-//  }
-
   def currentAttackerToString(): String = {
     game.currentTurn.attacker.toString
   }
@@ -154,9 +151,9 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     game.currentTurn.attackCards.mkString(",")
   }
 
- def getCurrentBlockedByMap(): Map[Card, Card] = {
-   game.currentTurn.blockedBy
- }
+  def getCurrentBlockedByMap: Map[Card, Card] = {
+    game.currentTurn.blockedBy
+  }
 
   def deckSizeToString(): String = {
     game.deck.cards.size.toString
@@ -174,4 +171,5 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
     game = fileIO.load(fileName)
     publish(new NewGameEvent)
   }
+
 }

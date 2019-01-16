@@ -4,7 +4,7 @@ import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.playerComponent.Player
 import play.api.libs.json.{JsObject, Json}
 
-import scala.xml.{Elem, NodeBuffer}
+import scala.xml.NodeBuffer
 
 case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards: List[Card], blockedBy: Map[Card, Card]) {
 

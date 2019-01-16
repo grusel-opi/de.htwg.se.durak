@@ -15,6 +15,7 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
   override def load(fileName: String): GameInterface = {
+    println("JSON LOAD")
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val source: String = Source.fromFile("save/" + fileNameWithoutExtension + ".json").getLines().mkString
     val sourceAsJson: JsValue = Json.parse(source)
