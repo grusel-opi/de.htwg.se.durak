@@ -1,7 +1,7 @@
 package de.htwg.se.durak.aview.gui
 
 import de.htwg.se.durak.controller.controllerComponent._
-import de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.durak.aview.gui.sceneControllers.GameSceneController
 import de.htwg.se.durak.util.customExceptions._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -10,7 +10,6 @@ import scalafx.Includes._
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 import scalafxml.core.{FXMLView, NoDependencyResolver}
-import scala.io.Source
 
 import scala.swing.Reactor
 
@@ -71,7 +70,7 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
           headerText = "Warning: " + exceptionEvent.getException.getMessage
           contentText = ""
         }.showAndWait
-        displayGameScene()
+        // displayGameScene()
 
       case _: NoCardsToTakeException =>
         new Alert(AlertType.Warning) {

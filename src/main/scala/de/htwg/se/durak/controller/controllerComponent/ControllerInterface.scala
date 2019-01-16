@@ -1,5 +1,6 @@
 package de.htwg.se.durak.controller.controllerComponent
 
+import de.htwg.se.durak.controller.controllerComponent.GameStatus.GameStatus
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.playerComponent.Player
 
@@ -7,6 +8,8 @@ import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
+  def gameStatus: GameStatus
+
   def players: List[Player]
 
   def newPlayer(name: String): Unit
@@ -69,6 +72,8 @@ class NewGameEvent extends Event
 class NewPlayerEvent extends Event
 
 class ResetPlayersEvent extends Event
+
+class ExitGameEvent extends Event
 
 class ExceptionEvent(exception: Exception) extends Event {
   def getException: Exception = {

@@ -67,6 +67,8 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       }
     case x if x.equals(currentTurn.neighbour) =>
       copy(active = nextPlayersMove())
+    case x if x.equals(currentTurn.victim) =>
+      this
   }
 
   def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!

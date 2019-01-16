@@ -18,10 +18,8 @@ object Durak {
     val task = new Runnable {
       def run() {
         try {
-          println("Hello to durak")
           var input: String = ""
           do {
-            println("Please enter a command (or help for help): ")
             input = readLine
             tui.processInputLine(input)
           } while (input != "q")

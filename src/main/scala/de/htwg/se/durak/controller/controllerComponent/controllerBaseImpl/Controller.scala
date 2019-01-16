@@ -1,14 +1,13 @@
 package de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject}
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.durak.DurakModule
+import de.htwg.se.durak.controller.controllerComponent.GameStatus._
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.fileIOComponent._
 import scalafx.application.Platform
-import de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl.FileIO
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
@@ -19,17 +18,20 @@ import scala.swing.Publisher
 
 class Controller @Inject()(var game: GameInterface) extends ControllerInterface with Publisher {
 
+  var gameStatus: GameStatus = IDLE
   var players: List[Player] = Nil
   private val undoManager = new UndoManager
-  val injector = Guice.createInjector(new DurakModule)
-  val fileIO = injector.instance[FileIOInterface]
+  val injector: ScalaInjector = Guice.createInjector(new DurakModule)
+  val fileIO: FileIOInterface = injector.instance[FileIOInterface]
 
   def newPlayer(name: String): Unit = {
     Platform.runLater(() => {
       if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
         players = Player(name, Nil) :: players
+        gameStatus = NEWPLAYER
         publish(new NewPlayerEvent)
       } else {
+        gameStatus = PLAYERALREADYPRESENT
         notifyUI(new PlayerAlreadyPresentException)
       }
     })
@@ -38,6 +40,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def resetPlayers(): Unit = {
     Platform.runLater(() => {
       players = Nil
+      gameStatus = RESETPLAYERS
       publish(new ResetPlayersEvent)
     })
   }
@@ -47,8 +50,10 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     Platform.runLater(() => {
       if (players.size > 1) {
         game = new Game(players).start()
+        gameStatus = NEW
         publish(new NewGameEvent)
       } else {
+        gameStatus = MOREPLAYERSNEEDED
         notifyUI(new MoreThanOnePlayerNeededException)
       }
     })
@@ -58,15 +63,21 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     Platform.runLater(() => {
       try {
         undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
-
         if (!checkIfGameIsOver) {
+          gameStatus = CARDLAYED
           publish(new CardsChangedEvent)
         }
       }
       catch {
-        case iTE: IllegalTurnException => notifyUI(iTE)
-        case mBCE: MissingBlockingCardException => notifyUI(mBCE)
-        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
+        case iTE: IllegalTurnException =>
+          gameStatus = ILLEGALTURN
+          notifyUI(iTE)
+        case mBCE: MissingBlockingCardException =>
+          gameStatus = MISSINGBLOCKINGCARD
+          notifyUI(mBCE)
+        case vHNECTBE: VictimHasNotEnoughCardsToBlockException =>
+          gameStatus = VICTIMHASNOTENOUGHTCARDS
+          notifyUI(vHNECTBE)
       }
     })
   }
@@ -76,19 +87,24 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
       try {
         undoManager.doStep(new PlayCommand(card, None, this))
         if (!checkIfGameIsOver) {
+          gameStatus = CARDLAYED
           publish(new CardsChangedEvent)
         }
       } catch {
-        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
-        case iTE: IllegalTurnException => notifyUI(iTE)
+        case vHNECTBE: VictimHasNotEnoughCardsToBlockException =>
+          gameStatus = VICTIMHASNOTENOUGHTCARDS
+          notifyUI(vHNECTBE)
+        case iTE: IllegalTurnException =>
+          gameStatus = ILLEGALTURN
+          notifyUI(iTE)
       }
     })
-
   }
 
   def undo(): Unit = {
     Platform.runLater(() => {
       undoManager.undoStep()
+      gameStatus = UNDO
       publish(new CardsChangedEvent)
     })
   }
@@ -97,6 +113,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def redo(): Unit = {
     Platform.runLater(() => {
       undoManager.redoStep()
+      gameStatus = REDO
       publish(new CardsChangedEvent)
     })
   }
@@ -106,9 +123,12 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
       undoManager.purgeMemento()
       try {
         game = game.playOk()
+        gameStatus = OK
         publish(new CardsChangedEvent)
       } catch {
-        case _: LayCardFirsException => notifyUI(new LayCardFirsException)
+        case _: LayCardFirsException =>
+          gameStatus = LAYCARDFIRST
+          notifyUI(new LayCardFirsException)
       }
     })
   }
@@ -118,9 +138,12 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
       try {
         undoManager.purgeMemento()
         game = game.takeCards()
+        gameStatus = TAKE
         publish(new CardsChangedEvent)
       } catch {
-        case nCTTE: NoCardsToTakeException => notifyUI(nCTTE)
+        case nCTTE: NoCardsToTakeException =>
+          gameStatus = NOCARDSTOTAKE
+          notifyUI(nCTTE)
       }
     })
   }
@@ -128,6 +151,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def checkIfGameIsOver: Boolean = {
     if (game.players.size == 1) {
       Platform.runLater(() => {
+        gameStatus = OVER
         publish(new GameOverEvent)
       })
       true
@@ -139,7 +163,6 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def notifyUI(exception: Exception): Unit = {
     Platform.runLater(() => {
       publish(new ExceptionEvent(exception))
-      System.err.println(exception.getMessage)
     })
   }
 
@@ -184,18 +207,24 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def winnerToString(): String = {
-    game.winners.last.toString
+    game.winners.toString()
   }
 
   def saveGame(fileName: String): Unit = {
+    gameStatus = SAVED
     fileIO.save(game, fileName)
   }
 
   def loadGame(fileName: String): Unit = {
     Platform.runLater(() => {
       game = fileIO.load(fileName)
+      gameStatus = LOADED
       publish(new NewGameEvent)
     })
+  }
+
+  def exitGame(): Unit = {
+
   }
 
 }
