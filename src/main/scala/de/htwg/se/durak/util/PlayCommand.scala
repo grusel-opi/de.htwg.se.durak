@@ -1,11 +1,11 @@
-package de.htwg.se.durak.model.gameComponent.gameBaseImpl
+package de.htwg.se.durak.util
 
-import de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.durak.controller.controllerComponent.ControllerInterface
 import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.undoManager.Command
 
-class PlayCommand(firstCard: CardInterface, secondCard: Option[CardInterface], controller: Controller) extends Command {
+case class PlayCommand(firstCard: CardInterface, secondCard: Option[CardInterface], controller: ControllerInterface) extends Command {
 
   var memento: GameInterface = controller.game
   var cardMemento: List[CardInterface] = controller.game.active.handCards

@@ -31,7 +31,4 @@ trait GameInterface {
   def nextPlayersMove(): PlayerInterface
   def getNeighbour(player: PlayerInterface): PlayerInterface
   def getRightNeighbour(player: PlayerInterface): PlayerInterface
-  def computePossibilities(): Either[List[CardInterface], Map[CardInterface, CardInterface]]
-  def computeAttackerPossibilities(): List[CardInterface]
-  def computeDefenderPossibilities(player: Option[PlayerInterface]): Map[CardInterface, CardInterface]
 }

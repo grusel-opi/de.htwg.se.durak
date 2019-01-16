@@ -10,9 +10,10 @@ import de.htwg.se.durak.model.fileIOComponent._
 import scalafx.application.Platform
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
+import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.util.PlayCommand
 import de.htwg.se.durak.util.undoManager.UndoManager
 
 import scala.swing.Publisher

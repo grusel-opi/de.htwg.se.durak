@@ -5,9 +5,6 @@ import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardV
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardValue.CardValue
 
 object CardStringConverter {
-  // val excluded = List(0x1F0BF, 0x1F0AC, 0x1F0BC, 0x1F0CC, 0x1F0CF, 0x1F0DC)
-  // val list: List[String] = (0x1F0A1 to 0x1F0DE).filterNot(i => excluded.contains(i)).map(Character.toChars(_).mkString).toList
-
   def parseColorString(input: String): CardColor = input match {
     case "Herz" | "herz"  => CardColor.Herz
     case "Karo" | "karo"  => CardColor.Karo

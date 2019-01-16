@@ -2,15 +2,18 @@ package de.htwg.se.durak.controller.controllerComponent
 
 import de.htwg.se.durak.controller.controllerComponent.GameStatus.GameStatus
 import de.htwg.se.durak.model.cardComponent.CardInterface
+import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 
 import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
-  def gameStatus: GameStatus
+  var game: GameInterface
 
-  def players: List[PlayerInterface]
+  var gameStatus: GameStatus
+
+  var players: List[PlayerInterface]
 
   def newPlayer(name: String): Unit
 

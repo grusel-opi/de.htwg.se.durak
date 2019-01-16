@@ -254,37 +254,4 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     case _ => players(players.indexOf(player) + 1)
   }
 
-
-  def computePossibilities(): Either[List[CardInterface], Map[CardInterface, CardInterface]] = {
-    if (active.equals(currentTurn.attacker) || active.equals(currentTurn.neighbour)) {
-      Left(computeAttackerPossibilities())
-    } else {
-      Right(computeDefenderPossibilities(None))
-    }
-  }
-
-  def computeAttackerPossibilities(): List[CardInterface] = {
-    if (currentTurn.attackCards.isEmpty) {
-      active.handCards
-    } else {
-      active.handCards.filter(c => checkAttackCard(c)).sorted
-    }
-  }
-
-  def computeDefenderPossibilities(player: Option[PlayerInterface]): Map[CardInterface, CardInterface] = {
-    val cardsToBlock = currentTurn.attackCards.sorted
-    val availableCards = (player match {
-      case Some(p) => p.handCards
-      case None => active.handCards
-    }).sorted.reverse
-    var result: Map[CardInterface, CardInterface] = Map[CardInterface, CardInterface]()
-    cardsToBlock.foreach(c => {
-      availableCards.foreach(a => {
-        if (checkBlockCard(a, c)) {
-          result = result ++ Map(c -> a)
-        }
-      })
-    })
-    result
-  }
 }
