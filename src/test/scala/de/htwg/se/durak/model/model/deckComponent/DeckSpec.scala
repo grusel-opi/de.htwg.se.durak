@@ -1,6 +1,8 @@
 package de.htwg.se.durak.model.model.deckComponent
 
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import org.junit.runner.RunWith
 import org.scalatest._
@@ -14,14 +16,14 @@ class DeckSpec extends WordSpec with Matchers {
   "A Deck" when {
 
     "created with predefined cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
-      val card2: Card = Card(CardColor.Herz, CardValue.Drei)
-      val card3: Card = Card(CardColor.Herz, CardValue.Vier)
-      val card4: Card = Card(CardColor.Herz, CardValue.Sechs)
-      val card5: Card = Card(CardColor.Herz, CardValue.Sieben)
+      val card1: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: CardInterface = Card(CardColor.Herz, CardValue.Drei)
+      val card3: CardInterface = Card(CardColor.Herz, CardValue.Vier)
+      val card4: CardInterface = Card(CardColor.Herz, CardValue.Sechs)
+      val card5: CardInterface = Card(CardColor.Herz, CardValue.Sieben)
 
-      val cards: List[Card] = List(card1, card2, card3, card4, card5)
-      val deck: Deck = Deck(cards)
+      val cards: List[CardInterface] = List(card1, card2, card3, card4, card5)
+      val deck: DeckInterface = Deck(cards)
 
       "contain predefined cards." in {
         deck.cards.size should be(cards.size)
@@ -30,8 +32,8 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "created without predefined cards" should {
-      val cardsShouldBeInDeck: List[Card] = for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v)
-      val deck: Deck = new Deck()
+      val cardsShouldBeInDeck: List[CardInterface] = for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v)
+      val deck: DeckInterface = new Deck()
 
       "have 52 cards" in {
         deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size)
@@ -46,8 +48,8 @@ class DeckSpec extends WordSpec with Matchers {
 
     "shuffled" should {
       "have a random card ordering." in {
-        val normalDeck: Deck = new Deck()
-        val shuffledDeck: Deck = new Deck().shuffle
+        val normalDeck: DeckInterface = new Deck()
+        val shuffledDeck: DeckInterface = new Deck().shuffle
 
         shuffledDeck.cards.size should be(52)
         shuffledDeck.cards should not be(normalDeck)
@@ -56,11 +58,11 @@ class DeckSpec extends WordSpec with Matchers {
 
     "getting the head card" should {
       "return the top card of the deck." in {
-        val card1: Card = Card(CardColor.Kreuz, CardValue.Zehn)
-        val card2: Card = Card(CardColor.Herz, CardValue.Ass)
-        val cardsInDeck: List[Card] = List(card1, card2)
+        val card1: CardInterface = Card(CardColor.Kreuz, CardValue.Zehn)
+        val card2: CardInterface = Card(CardColor.Herz, CardValue.Ass)
+        val cardsInDeck: List[CardInterface] = List(card1, card2)
 
-        val deck: Deck = Deck(cardsInDeck)
+        val deck: DeckInterface = Deck(cardsInDeck)
 
         deck.cards.size should be (cardsInDeck.size)
         deck.cards should be(cardsInDeck)
@@ -69,34 +71,34 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "getting the tail" should {
-      val deck: Deck = new Deck()
+      val deck: DeckInterface = new Deck()
       "return the cards of the deck, except the top card." in {
-        val cardsShouldBeInDeck: List[Card] = for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v)
+        val cardsShouldBeInDeck: List[CardInterface] = for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v)
 
         deck.cards.size should be(cardsShouldBeInDeck.size)
         deck.cards should be(cardsShouldBeInDeck)
 
-        val newDeck: Deck = deck.tail
+        val newDeck: DeckInterface = deck.tail
 
         newDeck.cards.size should be(cardsShouldBeInDeck.size -1)
       }
     }
 
     "pop the top card" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
-      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
-      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
+      val card1: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: CardInterface = Card(CardColor.Karo, CardValue.Ass)
+      val card3: CardInterface = Card(CardColor.Kreuz, CardValue.Fünf)
 
-      val cardsInDeck: List[Card] = List(card1, card2, card3)
-      val deck: Deck = Deck(cardsInDeck)
+      val cardsInDeck: List[CardInterface] = List(card1, card2, card3)
+      val deck: DeckInterface = Deck(cardsInDeck)
 
       "have one card less as before." in {
         deck.cards.size should be(cardsInDeck.size)
         deck.cards should be(cardsInDeck)
 
-        val cardDeckTuple: (Card, Deck) = deck.popTopCard()
-        val returnedCard: Card = cardDeckTuple._1
-        val newDeck: Deck = cardDeckTuple._2
+        val cardDeckTuple: (CardInterface, DeckInterface) = deck.popTopCard()
+        val returnedCard: CardInterface = cardDeckTuple._1
+        val newDeck: DeckInterface = cardDeckTuple._2
 
         returnedCard should be(card1)
 
@@ -106,20 +108,20 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "pop two cards" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
-      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
-      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
+      val card1: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: CardInterface = Card(CardColor.Karo, CardValue.Ass)
+      val card3: CardInterface = Card(CardColor.Kreuz, CardValue.Fünf)
 
-      val cardsInDeck: List[Card] = List(card1, card2, card3)
-      val deck: Deck = Deck(cardsInDeck)
+      val cardsInDeck: List[CardInterface] = List(card1, card2, card3)
+      val deck: DeckInterface = Deck(cardsInDeck)
 
       "have two cards less as before" in {
         deck.cards.size should be(cardsInDeck.size)
         deck.cards should be(cardsInDeck)
 
-        val cardsDeckTuple: (List[Card], Deck) = deck.popNCards(2)
-        val returnedCards: List[Card] = cardsDeckTuple._1
-        val newDeck: Deck = cardsDeckTuple._2
+        val cardsDeckTuple: (List[CardInterface], DeckInterface) = deck.popNCards(2)
+        val returnedCards: List[CardInterface] = cardsDeckTuple._1
+        val newDeck: DeckInterface = cardsDeckTuple._2
 
         returnedCards.size should be (2)
         returnedCards should be (List(card1, card2))
@@ -130,20 +132,20 @@ class DeckSpec extends WordSpec with Matchers {
     }
 
     "pop more cards as available in deck" should {
-      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
-      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
-      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
+      val card1: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: CardInterface = Card(CardColor.Karo, CardValue.Ass)
+      val card3: CardInterface = Card(CardColor.Kreuz, CardValue.Fünf)
 
-      val cardsInDeck: List[Card] = List(card1, card2, card3)
-      val deck: Deck = Deck(cardsInDeck)
+      val cardsInDeck: List[CardInterface] = List(card1, card2, card3)
+      val deck: DeckInterface = Deck(cardsInDeck)
 
       "return the left cards in deck." in {
         deck.cards.size should be(cardsInDeck.size)
         deck.cards should be(cardsInDeck)
 
-        val cardsDeckTuple: (List[Card], Deck) = deck.popNCards(5)
-        val returnedCards: List[Card] = cardsDeckTuple._1
-        val newDeck: Deck = cardsDeckTuple._2
+        val cardsDeckTuple: (List[CardInterface], DeckInterface) = deck.popNCards(5)
+        val returnedCards: List[CardInterface] = cardsDeckTuple._1
+        val newDeck: DeckInterface = cardsDeckTuple._2
 
         returnedCards.size should be(deck.cards.size)
         returnedCards should be(cardsInDeck)

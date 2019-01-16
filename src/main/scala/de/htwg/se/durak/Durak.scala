@@ -24,7 +24,7 @@ object Durak {
             tui.processInputLine(input)
           } while (input != "q")
         } catch {
-          case e: InterruptedException => /* Properly handle exception */
+          case _: InterruptedException =>
         }
       }
     }

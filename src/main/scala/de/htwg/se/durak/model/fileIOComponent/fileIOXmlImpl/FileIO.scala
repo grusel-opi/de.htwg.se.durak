@@ -4,12 +4,18 @@ import java.io.{File, PrintWriter}
 
 import com.google.inject.Guice
 import de.htwg.se.durak.DurakModule
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
+import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, Turn}
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.model.turnComponent
+import de.htwg.se.durak.model.turnComponent.{TurnInterface, turnBaseImpl}
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 
 import scala.xml.Node
@@ -22,12 +28,12 @@ class FileIO extends FileIOInterface {
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val file: Elem = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
 
-    val players: List[Player] = createPlayersList(file)
-    val deck: Deck = createDeck(file)
-    val trump: Card = createTrump(file)
-    val currentTurn: Turn = createTurn(file, players)
-    val active: Player = createActivePlayer(file, players)
-    val winners: List[Player] = createWinnersList(file)
+    val players: List[PlayerInterface] = createPlayersList(file)
+    val deck: DeckInterface = createDeck(file)
+    val trump: CardInterface = createTrump(file)
+    val currentTurn: TurnInterface = createTurn(file, players)
+    val active: PlayerInterface = createActivePlayer(file, players)
+    val winners: List[PlayerInterface] = createWinnersList(file)
 
     Game(players, deck, trump, currentTurn, active, winners)
   }
@@ -53,19 +59,19 @@ class FileIO extends FileIOInterface {
     }
   }
 
-  def createCard(c: Node): List[Card] = {
+  def createCard(c: Node): List[CardInterface] = {
     val cardColor: String = (c \ "color").text.trim
     val cardValue: String = (c \ "value").text.trim
-    val card: Card = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
+    val card: CardInterface = CardStringConverter.parseCardStringToCardObject(cardColor + " " + cardValue)
     List(card)
   }
 
-  def createPlayersList(file: Elem): List[Player] = {
-    var players: List[Player] = Nil
+  def createPlayersList(file: Elem): List[PlayerInterface] = {
+    var players: List[PlayerInterface] = Nil
 
     (file \\ "players" \\ "player").foreach(node => {
       val name = (node \ "name").text.toString.trim
-      var handCards: List[Card] = Nil
+      var handCards: List[CardInterface] = Nil
 
       (node \\ "handCards" \ "card").foreach(card => {
         handCards = handCards ::: createCard(card)
@@ -77,8 +83,8 @@ class FileIO extends FileIOInterface {
     players
   }
 
-  def createDeck(file: Elem): Deck = {
-    var cards: List[Card] = Nil
+  def createDeck(file: Elem): DeckInterface = {
+    var cards: List[CardInterface] = Nil
 
     (file \\ "deck" \ "card").foreach(card => {
       cards = cards ::: createCard(card)
@@ -87,18 +93,18 @@ class FileIO extends FileIOInterface {
     Deck(cards)
   }
 
-  def createTrump(file: Elem): Card = {
+  def createTrump(file: Elem): CardInterface = {
     createCard((file \\ "trump" \ "card").head).head
   }
 
-  def createTurn(file: Elem, players: List[Player]): Turn = {
+  def createTurn(file: Elem, players: List[PlayerInterface]): TurnInterface = {
     val attackerName = (file \\ "attacker" \ "player" \ "name").text.toString.trim
     val victimName = (file \\ "victim" \ "player" \ "name").text.toString.trim
     val neighbourName = (file \\ "neighbour" \ "player" \ "name").text.toString.trim
 
-    var attackCards: List[Card] = Nil
-    var blockedAttackCards: List[Card] = Nil
-    var blockingCards: List[Card] = Nil
+    var attackCards: List[CardInterface] = Nil
+    var blockedAttackCards: List[CardInterface] = Nil
+    var blockingCards: List[CardInterface] = Nil
 
     (file \\ "currentTurn" \ "attackCards" \ "card").foreach(c => {
       attackCards = attackCards ::: createCard(c)
@@ -112,25 +118,25 @@ class FileIO extends FileIOInterface {
       blockingCards = blockingCards ::: createCard(c)
     })
 
-    val attacker: Player = players.filter(p => p.name.equals(attackerName)).head
-    val victim: Player = players.filter(p => p.name.equals(victimName)).head
-    val neighbour: Player = players.filter(p => p.name.equals(neighbourName)).head
-    var blockedBy: Map[Card, Card] = Map()
+    val attacker: PlayerInterface = players.filter(p => p.name.equals(attackerName)).head
+    val victim: PlayerInterface = players.filter(p => p.name.equals(victimName)).head
+    val neighbour: PlayerInterface = players.filter(p => p.name.equals(neighbourName)).head
+    var blockedBy: Map[CardInterface, CardInterface] = Map()
 
     for ((attackCard, blockingCard) <- blockedAttackCards zip blockingCards) {
       blockedBy = blockedBy + (attackCard -> blockingCard)
     }
 
-    Turn(attacker, victim, neighbour, attackCards, blockedBy)
+    turnBaseImpl.Turn(attacker, victim, neighbour, attackCards, blockedBy)
   }
 
-  def createActivePlayer(file: Elem, players: List[Player]): Player = {
+  def createActivePlayer(file: Elem, players: List[PlayerInterface]): PlayerInterface = {
     val activePlayerName: String = (file \\ "active" \ "player" \ "name").text.toString.trim
     players.filter(p => p.name.equals(activePlayerName)).head
   }
 
-  def createWinnersList(file: Elem): List[Player] = {
-    var winners: List[Player] = Nil
+  def createWinnersList(file: Elem): List[PlayerInterface] = {
+    var winners: List[PlayerInterface] = Nil
 
     (file \\ "winners" \ "player").foreach(p => {
       val playerName: String = (p \ "name").text.toString.trim

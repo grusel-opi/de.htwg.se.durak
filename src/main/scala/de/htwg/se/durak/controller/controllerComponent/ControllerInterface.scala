@@ -1,8 +1,8 @@
 package de.htwg.se.durak.controller.controllerComponent
 
 import de.htwg.se.durak.controller.controllerComponent.GameStatus.GameStatus
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.cardComponent.CardInterface
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
 
 import scala.swing.Publisher
 import scala.swing.event.Event
@@ -10,7 +10,7 @@ import scala.swing.event.Event
 trait ControllerInterface extends Publisher {
   def gameStatus: GameStatus
 
-  def players: List[Player]
+  def players: List[PlayerInterface]
 
   def newPlayer(name: String): Unit
 
@@ -18,9 +18,9 @@ trait ControllerInterface extends Publisher {
 
   def newGame(): Unit
 
-  def playCard(firstCard: Card, secondCard: Option[Card]): Unit
+  def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): Unit
 
-  def throwCardIn(card: Card): Unit
+  def throwCardIn(card: CardInterface): Unit
 
   def undo(): Unit
 
@@ -50,7 +50,7 @@ trait ControllerInterface extends Publisher {
 
   def currentAttackCardsToString(): String
 
-  def getCurrentBlockedByMap: Map[Card, Card]
+  def getCurrentBlockedByMap: Map[CardInterface, CardInterface]
 
   def deckSizeToString(): String
 

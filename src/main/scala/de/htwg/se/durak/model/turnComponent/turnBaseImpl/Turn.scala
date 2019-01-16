@@ -1,29 +1,31 @@
-package de.htwg.se.durak.model.gameComponent.gameBaseImpl
+package de.htwg.se.durak.model.turnComponent.turnBaseImpl
 
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.cardComponent.CardInterface
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
+import de.htwg.se.durak.model.turnComponent.TurnInterface
 import play.api.libs.json.{JsObject, Json}
 
 import scala.xml.NodeBuffer
 
-case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards: List[Card], blockedBy: Map[Card, Card]) {
+case class Turn(attacker: PlayerInterface, victim: PlayerInterface, neighbour: PlayerInterface,
+                attackCards: List[CardInterface], blockedBy: Map[CardInterface, CardInterface]) extends TurnInterface {
 
-  def this(attacker: Player, victim: Player, neighbor: Player)
-  = this(attacker: Player, victim: Player, neighbor: Player, Nil, Map())
+  def this(attacker: PlayerInterface, victim: PlayerInterface, neighbor: PlayerInterface)
+  = this(attacker: PlayerInterface, victim: PlayerInterface, neighbor: PlayerInterface, Nil, Map())
 
-  def addBlockCard(attackCard: Card, blockCard: Card): Turn = copy(attacker, victim, neighbour,
+  def addBlockCard(attackCard: CardInterface, blockCard: CardInterface): Turn = copy(attacker, victim, neighbour,
     attackCards.filterNot(c => c.equals(attackCard)), blockedBy + (attackCard -> blockCard))
 
-  def addAttackCard(card: Card): Turn = copy(attacker, victim, neighbour, card::attackCards)
+  def addAttackCard(card: CardInterface): Turn = copy(attacker, victim, neighbour, card :: attackCards)
 
-  def getCards: List[Card] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
+  def getCards: List[CardInterface] = attackCards ::: blockedBy.values.toList ::: blockedBy.keys.toList
 
-  def getPlayers: List[Player] = List(attacker, victim, neighbour)
+  def getPlayers: List[PlayerInterface] = List(attacker, victim, neighbour)
 
-  def toXml:NodeBuffer = {
-      <attacker>
-        {attacker.nameToXml}
-      </attacker>
+  def toXml: NodeBuffer = {
+    <attacker>
+      {attacker.nameToXml}
+    </attacker>
       <victim>
         {victim.nameToXml}
       </victim>
@@ -38,7 +40,7 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
       </blockedBy>
   }
 
-  def blockedByMapEntryToXml(entry: (Card, Card)): NodeBuffer = {
+  def blockedByMapEntryToXml(entry: (CardInterface, CardInterface)): NodeBuffer = {
     <attackCards>
       {entry._1.toXml}
     </attackCards>
@@ -57,7 +59,7 @@ case class Turn(attacker: Player, victim: Player, neighbour: Player, attackCards
     )
   }
 
-  def blockedByMapEntryToJson(entry: (Card, Card)): JsObject = {
+  def blockedByMapEntryToJson(entry: (CardInterface, CardInterface)): JsObject = {
     Json.obj(
       "attackCards" -> entry._1.toJson,
       "blockingCards" -> entry._2.toJson

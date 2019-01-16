@@ -1,8 +1,10 @@
 package de.htwg.se.durak.model.model.gameComponent
 
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Turn
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.model.turnComponent.TurnInterface
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
@@ -16,22 +18,22 @@ class TurnSpec extends WordSpec with Matchers {
     val neighbor: Player = new Player("Lukas")
 
     "created" should {
-      val attackCard1: Card = Card(CardColor.Herz, CardValue.König)
-      val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
-      val attackCard3: Card = Card(CardColor.Kreuz, CardValue.König)
-      val attackCard4: Card = Card(CardColor.Karo, CardValue.König)
+      val attackCard1: CardInterface = Card(CardColor.Herz, CardValue.König)
+      val attackCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
+      val attackCard3: CardInterface = Card(CardColor.Kreuz, CardValue.König)
+      val attackCard4: CardInterface = Card(CardColor.Karo, CardValue.König)
 
-      val blockingCard1: Card = Card(CardColor.Herz, CardValue.König)
-      val blockingCard2: Card = Card(CardColor.Pik, CardValue.König)
-      val blockingCard3: Card = Card(CardColor.Kreuz, CardValue.König)
-      val blockingCard4: Card = Card(CardColor.Karo, CardValue.König)
+      val blockingCard1: CardInterface = Card(CardColor.Herz, CardValue.König)
+      val blockingCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
+      val blockingCard3: CardInterface = Card(CardColor.Kreuz, CardValue.König)
+      val blockingCard4: CardInterface = Card(CardColor.Karo, CardValue.König)
 
-      val attackCards: List[Card] = List(attackCard1, attackCard2, attackCard3, attackCard4)
-      val blockingCards: List[Card] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
-      val blockedBy: Map[Card, Card] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
+      val attackCards: List[CardInterface] = List(attackCard1, attackCard2, attackCard3, attackCard4)
+      val blockingCards: List[CardInterface] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
+      val blockedBy: Map[CardInterface, CardInterface] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
         (attackCard3, blockingCard3), (attackCard4, blockingCard4))
 
-      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, blockedBy)
+      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, blockedBy)
 
       "have a attacker." in {
         turn.attacker should be(attacker)
@@ -77,7 +79,7 @@ class TurnSpec extends WordSpec with Matchers {
 
     "created without attack cards and without cards which block attack cards" should {
 
-      val turn: Turn = new Turn(attacker, victim, neighbor)
+      val turn: TurnInterface = new Turn(attacker, victim, neighbor)
 
       "have a attacker." in {
         turn.attacker should be(attacker)
@@ -122,9 +124,9 @@ class TurnSpec extends WordSpec with Matchers {
     }
 
     "add a attack card to empty attack cards" should {
-      val cardToAdd: Card = Card(CardColor.Herz, CardValue.Fünf)
+      val cardToAdd: CardInterface = Card(CardColor.Herz, CardValue.Fünf)
 
-      val turn: Turn = Turn(attacker, victim, neighbor, Nil, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbor, Nil, Map())
 
       "have one attack card." in {
         turn.attackCards.size should be(0)
@@ -138,16 +140,16 @@ class TurnSpec extends WordSpec with Matchers {
     }
 
     "add a attack card to other attack cards" should {
-      val cardToAdd: Card = Card(CardColor.Kreuz, CardValue.Acht)
-      val existingAttackCard: Card = Card(CardColor.Karo, CardValue.Acht)
-      val attackCards: List[Card] = List(existingAttackCard)
+      val cardToAdd: CardInterface = Card(CardColor.Kreuz, CardValue.Acht)
+      val existingAttackCard: CardInterface = Card(CardColor.Karo, CardValue.Acht)
+      val attackCards: List[CardInterface] = List(existingAttackCard)
 
-      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
       "have one attack card more as before" in {
         turn.attackCards.size should be(attackCards.size)
         turn.attackCards should be(attackCards)
 
-        val newTurn: Turn = turn.addAttackCard(cardToAdd)
+        val newTurn: TurnInterface = turn.addAttackCard(cardToAdd)
 
         newTurn.attackCards.size should be(attackCards.size + 1)
         newTurn.attackCards should be (cardToAdd::attackCards)
@@ -156,10 +158,10 @@ class TurnSpec extends WordSpec with Matchers {
 
     "add a blocking card, which beat one of the attack cards" should {
 
-      val attackCard: Card = Card(CardColor.Herz, CardValue.Fünf)
-      val attackCards: List[Card] = List(attackCard)
+      val attackCard: CardInterface = Card(CardColor.Herz, CardValue.Fünf)
+      val attackCards: List[CardInterface] = List(attackCard)
 
-      val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
+      val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
 
       "have one card, blocking one of the attack cards." in {
         turn.attackCards.size should be(attackCards.size)
@@ -167,8 +169,8 @@ class TurnSpec extends WordSpec with Matchers {
         turn.blockedBy.size should be(0)
         turn.blockedBy.isEmpty should be(true)
 
-        val blockingCard: Card = Card(CardColor.Herz, CardValue.Sechs)
-        val newTurn: Turn = turn.addBlockCard(attackCard, blockingCard)
+        val blockingCard: CardInterface = Card(CardColor.Herz, CardValue.Sechs)
+        val newTurn: TurnInterface = turn.addBlockCard(attackCard, blockingCard)
 
         newTurn.attackCards.size should be(attackCards.size - 1)
         newTurn.attackCards should be(Nil)
@@ -180,41 +182,41 @@ class TurnSpec extends WordSpec with Matchers {
     "trying to get all cards" should {
 
       "return no cards, if attack cards and blocking cards are empty." in {
-        val turn: Turn = new Turn(attacker, victim, neighbor)
+        val turn: TurnInterface = new Turn(attacker, victim, neighbor)
 
         turn.getCards.size should be(0)
         turn.getCards should be(Nil)
       }
 
       "return only attack cards if blocking cards are empty." in {
-        val attackCard1: Card = Card(CardColor.Kreuz, CardValue.König)
-        val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
+        val attackCard1: CardInterface = Card(CardColor.Kreuz, CardValue.König)
+        val attackCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
 
-        val attackCards: List[Card] = List(attackCard1, attackCard2)
-        val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
+        val attackCards: List[CardInterface] = List(attackCard1, attackCard2)
+        val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
 
         turn.getCards.size should be(2)
         turn.getCards should be(attackCards)
       }
 
       "return attack cards and blocking cards, if they're not empty." in {
-        val attackCard1: Card = Card(CardColor.Herz, CardValue.König)
-        val attackCard2: Card = Card(CardColor.Pik, CardValue.König)
-        val attackCard3: Card = Card(CardColor.Kreuz, CardValue.König)
-        val attackCard4: Card = Card(CardColor.Karo, CardValue.König)
+        val attackCard1: CardInterface = Card(CardColor.Herz, CardValue.König)
+        val attackCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
+        val attackCard3: CardInterface = Card(CardColor.Kreuz, CardValue.König)
+        val attackCard4: CardInterface = Card(CardColor.Karo, CardValue.König)
 
-        val blockingCard1: Card = Card(CardColor.Herz, CardValue.König)
-        val blockingCard2: Card = Card(CardColor.Pik, CardValue.König)
-        val blockingCard3: Card = Card(CardColor.Kreuz, CardValue.König)
-        val blockingCard4: Card = Card(CardColor.Kreuz, CardValue.König)
+        val blockingCard1: CardInterface = Card(CardColor.Herz, CardValue.König)
+        val blockingCard2: CardInterface = Card(CardColor.Pik, CardValue.König)
+        val blockingCard3: CardInterface = Card(CardColor.Kreuz, CardValue.König)
+        val blockingCard4: CardInterface = Card(CardColor.Kreuz, CardValue.König)
 
-        val attackCards: List[Card] = List(attackCard1, attackCard2, attackCard3, attackCard4)
-        val blockingCards: List[Card] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
-        val blockedBy: Map[Card, Card] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
+        val attackCards: List[CardInterface] = List(attackCard1, attackCard2, attackCard3, attackCard4)
+        val blockingCards: List[CardInterface] = List(blockingCard1, blockingCard2, blockingCard3, blockingCard4)
+        val blockedBy: Map[CardInterface, CardInterface] = Map((attackCard1, blockingCard1), (attackCard2, blockingCard2),
           (attackCard3, blockingCard3), (attackCard4, blockingCard4))
 
-        val turn: Turn = Turn(attacker, victim, neighbor, attackCards, Map())
-        var newTurn: Turn = turn.addBlockCard(attackCard1, blockingCard1)
+        val turn: TurnInterface = Turn(attacker, victim, neighbor, attackCards, Map())
+        var newTurn: TurnInterface = turn.addBlockCard(attackCard1, blockingCard1)
         newTurn = newTurn.addBlockCard(attackCard2, blockingCard2)
         newTurn = newTurn.addBlockCard(attackCard3, blockingCard3)
         newTurn = newTurn.addBlockCard(attackCard4, blockingCard4)

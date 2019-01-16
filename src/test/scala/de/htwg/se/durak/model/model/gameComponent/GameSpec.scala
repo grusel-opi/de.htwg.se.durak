@@ -1,9 +1,13 @@
 package de.htwg.se.durak.model.model.gameComponent
 
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, Turn}
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.model.turnComponent.TurnInterface
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.util.customExceptions.LayCardFirsException
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -20,9 +24,9 @@ class GameSpec extends WordSpec with Matchers {
     val players: List[Player] = List(player1, player2, player3)
 
     "created" should {
-      val shuffledDeck: Deck = new Deck().shuffle
-      val trump: Card = shuffledDeck.cards.last
-      val turn: Turn = new Turn(player1, player2, player3)
+      val shuffledDeck: DeckInterface = new Deck().shuffle
+      val trump: CardInterface = shuffledDeck.cards.last
+      val turn: TurnInterface = new Turn(player1, player2, player3)
       val active: Player = player1
 
       val game: Game = Game(players, shuffledDeck, trump, turn, active, Nil)
@@ -51,7 +55,7 @@ class GameSpec extends WordSpec with Matchers {
     }
 
     "created with only a players list and a deck" should {
-      val shuffledDeck: Deck = new Deck().shuffle
+      val shuffledDeck: DeckInterface = new Deck().shuffle
 
       val Game: Game = new Game(players, shuffledDeck)
 
@@ -70,7 +74,7 @@ class GameSpec extends WordSpec with Matchers {
       }
 
       "have a default turn." in {
-        val defaultTurn: Turn = new Turn(players.head, players.head, players.head)
+        val defaultTurn: TurnInterface = new Turn(players.head, players.head, players.head)
 
         Game.currentTurn should be(defaultTurn)
       }
@@ -90,7 +94,7 @@ class GameSpec extends WordSpec with Matchers {
       }
 
       "have a shuffled deck." in {
-        val unshuffledDeck: Deck = new Deck()
+        val unshuffledDeck: DeckInterface = new Deck()
 
         Game.deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size)
         Game.deck.cards should not be unshuffledDeck
@@ -101,7 +105,7 @@ class GameSpec extends WordSpec with Matchers {
       }
 
       "have a default turn." in {
-        val defaultTurn: Turn = new Turn(players.head, players.head, players.head)
+        val defaultTurn: TurnInterface = new Turn(players.head, players.head, players.head)
 
         Game.currentTurn should be(defaultTurn)
       }
@@ -124,7 +128,7 @@ class GameSpec extends WordSpec with Matchers {
       }
 
       "have a shuffled deck." in {
-        val unshuffledDeck: Deck = new Deck()
+        val unshuffledDeck: DeckInterface = new Deck()
 
         Game.deck.cards.size should be(CardColor.values.toList.size * CardValue.values.toList.size)
         Game.deck.cards should not be unshuffledDeck
@@ -135,7 +139,7 @@ class GameSpec extends WordSpec with Matchers {
       }
 
       "have a default turn." in {
-        val defaultTurn: Turn = new Turn(defaultPlayers.head, defaultPlayers.head, defaultPlayers.head)
+        val defaultTurn: TurnInterface = new Turn(defaultPlayers.head, defaultPlayers.head, defaultPlayers.head)
 
         Game.currentTurn should be(defaultTurn)
       }
@@ -171,7 +175,7 @@ class GameSpec extends WordSpec with Matchers {
 
       "return a new durak game with valid parameters." in {
 
-        val cardsDeckTuple: (List[Card], Deck) = game.deck.popNCards(5 * players.size)
+        val cardsDeckTuple: (List[CardInterface], DeckInterface) = game.deck.popNCards(5 * players.size)
 
         newGame.players should be(players)
         newGame.deck.cards.size should be(cardsDeckTuple._2.cards.size)

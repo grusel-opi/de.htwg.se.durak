@@ -1,7 +1,7 @@
 package de.htwg.se.durak.model.model.playerComponent
 
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}

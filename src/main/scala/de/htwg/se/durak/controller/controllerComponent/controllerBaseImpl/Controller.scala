@@ -5,13 +5,14 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent.GameStatus._
 import de.htwg.se.durak.controller.controllerComponent._
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.fileIOComponent._
 import scalafx.application.Platform
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.util.undoManager.UndoManager
 
 import scala.swing.Publisher
@@ -19,7 +20,7 @@ import scala.swing.Publisher
 class Controller @Inject()(var game: GameInterface) extends ControllerInterface with Publisher {
 
   var gameStatus: GameStatus = IDLE
-  var players: List[Player] = Nil
+  var players: List[PlayerInterface] = Nil
   private val undoManager = new UndoManager
   val injector: ScalaInjector = Guice.createInjector(new DurakModule)
   val fileIO: FileIOInterface = injector.instance[FileIOInterface]
@@ -59,7 +60,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     })
   }
 
-  def playCard(firstCard: Card, secondCard: Option[Card]): Unit = {
+  def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): Unit = {
     Platform.runLater(() => {
       try {
         undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
@@ -82,7 +83,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     })
   }
 
-  def throwCardIn(card: Card): Unit = {
+  def throwCardIn(card: CardInterface): Unit = {
     Platform.runLater(() => {
       try {
         undoManager.doStep(new PlayCommand(card, None, this))
@@ -198,7 +199,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     game.currentTurn.attackCards.mkString(",")
   }
 
-  def getCurrentBlockedByMap: Map[Card, Card] = {
+  def getCurrentBlockedByMap: Map[CardInterface, CardInterface] = {
     game.currentTurn.blockedBy
   }
 

@@ -1,12 +1,26 @@
 package de.htwg.se.durak.model.deckComponent
 
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
-import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
+import de.htwg.se.durak.model.cardComponent.CardInterface
+import play.api.libs.json.JsObject
+
+import scala.xml.Node
 
 trait DeckInterface {
-  def head: Card
-  def tail: Deck
-  def shuffle: Deck
-  def popTopCard(): (Card, Deck)
-  def popNCards(n: Int): (List[Card], Deck)
+  def cards: List[CardInterface]
+
+  def head: CardInterface
+
+  def tail: DeckInterface
+
+  def shuffle: DeckInterface
+
+  def popTopCard(): (CardInterface, DeckInterface)
+
+  def popNCards(n: Int): (List[CardInterface], DeckInterface)
+
+  def toXml: Node
+
+  def toJson: List[JsObject]
+
+  def toString: String
 }

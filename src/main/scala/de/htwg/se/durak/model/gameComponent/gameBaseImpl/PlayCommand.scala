@@ -1,14 +1,14 @@
 package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 
 import de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.undoManager.Command
 
-class PlayCommand(firstCard: Card, secondCard: Option[Card], controller: Controller) extends Command {
+class PlayCommand(firstCard: CardInterface, secondCard: Option[CardInterface], controller: Controller) extends Command {
 
   var memento: GameInterface = controller.game
-  var cardMemento: List[Card] = controller.game.active.handCards
+  var cardMemento: List[CardInterface] = controller.game.active.handCards
 
   override def doStep(): Unit = {
     memento = controller.game

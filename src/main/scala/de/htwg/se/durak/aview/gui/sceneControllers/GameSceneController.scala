@@ -10,6 +10,7 @@ import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.control._
 import scalafx.scene.image.ImageView
 import de.htwg.se.durak.Durak
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.util.cardConverter.{CardImgConverter, CardStringConverter}
 
@@ -35,9 +36,9 @@ class GameSceneController(private val rootPane: AnchorPane,
                           private val mainMenuButton: Button) {
 
   val gui: Gui = Durak.gui
-  var selectedHandCard: Option[Card] = None
+  var selectedHandCard: Option[CardInterface] = None
   var lastSelectedHandCard: Option[ImageView] = None
-  var selectedCardToDefend: Option[Card] = None
+  var selectedCardToDefend: Option[CardInterface] = None
   var lastSelectedCardToDefend: Option[ImageView] = None
 
   val CARD_HEIGHT = 100
@@ -76,7 +77,7 @@ class GameSceneController(private val rootPane: AnchorPane,
     })
   }
 
-  def setHandCardClickHandler(cardImgView: ImageView, card: Card): Unit = {
+  def setHandCardClickHandler(cardImgView: ImageView, card: CardInterface): Unit = {
     val attackerAsString: String = gui.controller.currentAttackerToString()
     val neighbourAsString: String = gui.controller.currentNeighbourToString()
     val activeAsString: String = gui.controller.activePlayerToString()
@@ -97,7 +98,7 @@ class GameSceneController(private val rootPane: AnchorPane,
     }
   }
 
-  def highlightSelectedHandCard(cardImgView: ImageView, card: Card): Unit = {
+  def highlightSelectedHandCard(cardImgView: ImageView, card: CardInterface): Unit = {
     val stackPane = cardImgView.getParent
 
     if (lastSelectedHandCard.contains(cardImgView)) {
@@ -158,7 +159,7 @@ class GameSceneController(private val rootPane: AnchorPane,
     }
   }
 
-  def setCardToDefendClickHandler(cardImgView: ImageView, card: Card): Unit = {
+  def setCardToDefendClickHandler(cardImgView: ImageView, card: CardInterface): Unit = {
     cardImgView.onMouseClicked = (_: MouseEvent) => {
 
       highlightSelectedCardToDefend(cardImgView, card)
@@ -179,7 +180,7 @@ class GameSceneController(private val rootPane: AnchorPane,
     }
   }
 
-  def highlightSelectedCardToDefend(cardImgView: ImageView, card: Card): Unit = {
+  def highlightSelectedCardToDefend(cardImgView: ImageView, card: CardInterface): Unit = {
     val victimAsString: String = gui.controller.currentVictimToString()
     val activeAsString: String = gui.controller.activePlayerToString()
 

@@ -1,26 +1,29 @@
 package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 
-import de.htwg.se.durak.controller.controllerComponent.GameOverEvent
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
+import de.htwg.se.durak.model.cardComponent.CardInterface
+import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.GameInterface
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
+import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.model.turnComponent.TurnInterface
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.util.customExceptions._
 
 import scala.util.Random
 
-case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Turn, active: Player, winners: List[Player]) extends GameInterface {
+case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: CardInterface, currentTurn: TurnInterface, active: PlayerInterface, winners: List[PlayerInterface]) extends GameInterface {
 
-  def this(players: List[Player], deck: Deck) = this(players, deck, deck.cards.last,
+  def this(players: List[PlayerInterface], deck: DeckInterface) = this(players, deck, deck.cards.last,
     new Turn(players.head, players.head, players.head), players.head, Nil)
 
-  def this(players: List[Player]) = this(players, new Deck().shuffle)
+  def this(players: List[PlayerInterface]) = this(players, new Deck().shuffle)
 
   def this() = this(List(new Player("default")))
 
   val NUMBER_OF_HAND_CARDS = 5
 
-  implicit val CardOrdering: Ordering[Card] = (x: Card, y: Card) => {
+  implicit val CardOrdering: Ordering[CardInterface] = (x: CardInterface, y: CardInterface) => {
     if (x.color.equals(y.color)) {
       x.value.compare(y.value)
     } else if (x.color.equals(trump.color)) {
@@ -34,16 +37,16 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
 
   def start(): Game = {
     val newDeck = distributeCards(players)
-    val beginner: Player = players(math.abs(Random.nextInt()) % players.size)
-    val firstVictim: Player = getNeighbour(beginner)
-    val fistNeighbor: Player = getNeighbour(firstVictim)
-    val newTurn = Turn(beginner, firstVictim, fistNeighbor, Nil, Map[Card, Card]())
+    val beginner: PlayerInterface = players(math.abs(Random.nextInt()) % players.size)
+    val firstVictim: PlayerInterface = getNeighbour(beginner)
+    val fistNeighbor: PlayerInterface = getNeighbour(firstVictim)
+    val newTurn = Turn(beginner, firstVictim, fistNeighbor, Nil, Map[CardInterface, CardInterface]())
 
     copy(deck = newDeck, currentTurn = newTurn, active = beginner)
   }
 
-  def distributeCards(people: List[Player]): Deck = {
-    var tmpDeck = (List[Card](), deck)
+  def distributeCards(people: List[PlayerInterface]): DeckInterface = {
+    var tmpDeck = (List[CardInterface](), deck)
     people.foreach(p => {
       val missingAmount = NUMBER_OF_HAND_CARDS - p.handCards.size
       if (missingAmount > 0) {
@@ -71,7 +74,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       this
   }
 
-  def closeTurn(success: Boolean): (Turn, Deck) = { //dont forget to set new active on every usage!
+  def closeTurn(success: Boolean): (TurnInterface, DeckInterface) = {
     val newDeck = distributeCards(currentTurn.getPlayers)
     if (success) {
       (new Turn(currentTurn.victim,
@@ -95,7 +98,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     case _ => throw new NoCardsToTakeException()
   }
 
-  def playCard(card: Card, cardToBlock: Option[Card]): Game = {
+  def playCard(card: CardInterface, cardToBlock: Option[CardInterface]): Game = {
     if (active.hasCard(card)) {
       active match {
         case x if x.equals(currentTurn.victim) =>
@@ -116,7 +119,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def defend(card: Card, cardToBlock: Option[Card]): Game = cardToBlock match {
+  def defend(card: CardInterface, cardToBlock: Option[CardInterface]): Game = cardToBlock match {
     case Some(enemy) =>
       if (checkBlockCard(card, enemy)) {
         active.dropCards(card :: Nil)
@@ -149,7 +152,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def attack(card: Card): Game = if (checkAttackCard(card)) {
+  def attack(card: CardInterface): Game = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
     if (active.handCards.nonEmpty) { // attacker won
       copy(currentTurn = currentTurn.addAttackCard(card))
@@ -172,7 +175,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     throw new IllegalTurnException()
   }
 
-  def shove(card: Card): Game = {
+  def shove(card: CardInterface): Game = {
     if (isShovable(card)) {
       active.dropCards(card :: Nil)
       if (active.handCards.nonEmpty) {
@@ -199,7 +202,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def isShovable(card: Card): Boolean = {
+  def isShovable(card: CardInterface): Boolean = {
     if (currentTurn.neighbour.handCards.size > currentTurn.attackCards.size
       && currentTurn.blockedBy.isEmpty
       && card.value.equals(currentTurn.attackCards.head.value)) {
@@ -209,7 +212,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def checkBlockCard(use: Card, against: Card): Boolean = {
+  def checkBlockCard(use: CardInterface, against: CardInterface): Boolean = {
     if (use.color.equals(against.color)) {
       use.value.compare(against.value) > 0
     } else if (use.color.equals(trump.color)) {
@@ -219,7 +222,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def checkAttackCard(card: Card): Boolean = {
+  def checkAttackCard(card: CardInterface): Boolean = {
     if (currentTurn.attackCards.isEmpty && currentTurn.blockedBy.isEmpty) {
       true
     } else {
@@ -235,24 +238,24 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def nextPlayersMove(): Player = active match {
+  def nextPlayersMove(): PlayerInterface = active match {
     case x if x.equals(currentTurn.neighbour)
       && !currentTurn.attacker.equals(currentTurn.neighbour) => currentTurn.attacker
     case _ => getNeighbour(active)
   }
 
-  def getNeighbour(player: Player): Player = players.indexOf(player) match {
+  def getNeighbour(player: PlayerInterface): PlayerInterface = players.indexOf(player) match {
     case 0 => players.last
     case _ => players(players.indexOf(player) - 1)
   }
 
-  def getRightNeighbour(player: Player): Player = players.indexOf(player) match {
+  def getRightNeighbour(player: PlayerInterface): PlayerInterface = players.indexOf(player) match {
     case x if x.equals(players.size - 1) => players.head
     case _ => players(players.indexOf(player) + 1)
   }
 
 
-  def computePossibilities(): Either[List[Card], Map[Card, Card]] = {
+  def computePossibilities(): Either[List[CardInterface], Map[CardInterface, CardInterface]] = {
     if (active.equals(currentTurn.attacker) || active.equals(currentTurn.neighbour)) {
       Left(computeAttackerPossibilities())
     } else {
@@ -260,7 +263,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def computeAttackerPossibilities(): List[Card] = {
+  def computeAttackerPossibilities(): List[CardInterface] = {
     if (currentTurn.attackCards.isEmpty) {
       active.handCards
     } else {
@@ -268,13 +271,13 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
     }
   }
 
-  def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card] = {
+  def computeDefenderPossibilities(player: Option[PlayerInterface]): Map[CardInterface, CardInterface] = {
     val cardsToBlock = currentTurn.attackCards.sorted
     val availableCards = (player match {
       case Some(p) => p.handCards
       case None => active.handCards
     }).sorted.reverse
-    var result: Map[Card, Card] = Map[Card, Card]()
+    var result: Map[CardInterface, CardInterface] = Map[CardInterface, CardInterface]()
     cardsToBlock.foreach(c => {
       availableCards.foreach(a => {
         if (checkBlockCard(a, c)) {

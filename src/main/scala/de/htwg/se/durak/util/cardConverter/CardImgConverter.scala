@@ -1,11 +1,12 @@
 package de.htwg.se.durak.util.cardConverter
 
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import scalafx.scene.image.{Image, ImageView}
 
 object CardImgConverter {
 
-  def getCardColorPath(card: Card):String = {
+  def getCardColorPath(card: CardInterface):String = {
     card.color match {
       case CardColor.Herz => "cards/heart_"
       case CardColor.Pik => "cards/spade_"
@@ -14,16 +15,7 @@ object CardImgConverter {
     }
   }
 
-//  def getCardColorPath(cardColor: String): String = {
-//    cardColor match {
-//      case "Herz" => "cards/heart_"
-//      case "Pik" => "cards/spade_"
-//      case "Kreuz" => "cards/club_"
-//      case "Karo" => "cards/diamond_"
-//    }
-//  }
-
-  def getCardValuePath(card: Card): String = {
+  def getCardValuePath(card: CardInterface): String = {
     card.value match {
       case CardValue.Zwei => "2.png"
       case CardValue.Drei => "3.png"
@@ -41,29 +33,7 @@ object CardImgConverter {
     }
   }
 
-//  def getCardValuePath(cardValue: String): String = {
-//    cardValue match {
-//      case "Zwei" => "2.png"
-//      case "Drei" => "3.png"
-//      case "Vier" => "4.png"
-//      case "Fünf" => "5.png"
-//      case "Sechs" => "6.png"
-//      case "Sieben" => "7.png"
-//      case "Acht" => "8.png"
-//      case "Neun" => "9.png"
-//      case "Bube" => "jack.png"
-//      case "Dame" => "queen.png"
-//      case "König" => "king.png"
-//      case "Zehn" => "10.png"
-//      case "Ass" => "1.png"
-//    }
-//  }
-
-  def convertCardToImgView(card: Card): ImageView = {
+  def convertCardToImgView(card: CardInterface): ImageView = {
     new ImageView(new Image(getCardColorPath(card) + getCardValuePath(card)))
   }
-
-//  def convertCardToImgView(cardColor: String, cardValue: String): ImageView = {
-//    new ImageView(new Image(getCardColorPath(cardColor) + getCardValuePath(cardValue)))
-//  }
 }

@@ -1,37 +1,37 @@
 package de.htwg.se.durak.model.gameComponent
 
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
-import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, Turn}
-import de.htwg.se.durak.model.playerComponent.Player
+import de.htwg.se.durak.model.cardComponent.CardInterface
+import de.htwg.se.durak.model.deckComponent.DeckInterface
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
+import de.htwg.se.durak.model.turnComponent.TurnInterface
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 
-import scala.xml.Elem
 
 trait GameInterface {
-  val players: List[Player]
-  val deck: Deck
-  val trump: Card
-  val currentTurn: Turn
-  val active: Player
-  val winners: List[Player]
+  val players: List[PlayerInterface]
+  val deck: DeckInterface
+  val trump: CardInterface
+  val currentTurn: TurnInterface
+  val active: PlayerInterface
+  val winners: List[PlayerInterface]
 
-  def start(): Game
-  def playOk(): Game
-  def isShovable(card: Card): Boolean
-  def closeTurn(success: Boolean): (Turn, Deck)
-  def takeCards(): Game
-  def distributeCards(people: List[Player]): Deck
-  def playCard(card: Card, cardToBlock: Option[Card]): Game
-  def defend(card: Card, cardToBlock: Option[Card]): Game
-  def winByDefence(): Game
-  def attack(card: Card): Game
-  def shove(card: Card): Game
-  def checkBlockCard(use: Card, against: Card): Boolean
-  def checkAttackCard(card: Card): Boolean
-  def nextPlayersMove(): Player
-  def getNeighbour(player: Player): Player
-  def getRightNeighbour(player: Player): Player
-  def computePossibilities(): Either[List[Card], Map[Card, Card]]
-  def computeAttackerPossibilities(): List[Card]
-  def computeDefenderPossibilities(player: Option[Player]): Map[Card, Card]
+  def start(): GameInterface
+  def playOk(): GameInterface
+  def isShovable(card: CardInterface): Boolean
+  def closeTurn(success: Boolean): (TurnInterface, DeckInterface)
+  def takeCards(): GameInterface
+  def distributeCards(people: List[PlayerInterface]): DeckInterface
+  def playCard(card: CardInterface, cardToBlock: Option[CardInterface]): GameInterface
+  def defend(card: CardInterface, cardToBlock: Option[CardInterface]): GameInterface
+  def winByDefence(): GameInterface
+  def attack(card: CardInterface): GameInterface
+  def shove(card: CardInterface): GameInterface
+  def checkBlockCard(use: CardInterface, against: CardInterface): Boolean
+  def checkAttackCard(card: CardInterface): Boolean
+  def nextPlayersMove(): PlayerInterface
+  def getNeighbour(player: PlayerInterface): PlayerInterface
+  def getRightNeighbour(player: PlayerInterface): PlayerInterface
+  def computePossibilities(): Either[List[CardInterface], Map[CardInterface, CardInterface]]
+  def computeAttackerPossibilities(): List[CardInterface]
+  def computeDefenderPossibilities(player: Option[PlayerInterface]): Map[CardInterface, CardInterface]
 }
