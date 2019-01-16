@@ -6,7 +6,7 @@ import play.api.libs.json.JsObject
 import scala.xml.Node
 
 trait DeckInterface {
-  def cards: List[CardInterface]
+  val cards: List[CardInterface]
 
   def head: CardInterface
 

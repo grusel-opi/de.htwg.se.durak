@@ -1,5 +1,6 @@
 package de.htwg.se.durak.model.model.cardComponent
 
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -11,7 +12,7 @@ import scala.xml.{Node, Utility}
 @RunWith(classOf[JUnitRunner])
 class CardSpec extends WordSpec with Matchers {
   "A card" when {
-    val card: Card = Card(CardColor.Herz, CardValue.Neun)
+    val card: CardInterface = Card(CardColor.Herz, CardValue.Neun)
 
     "created" should {
       "have a color." in {
@@ -23,7 +24,7 @@ class CardSpec extends WordSpec with Matchers {
       }
 
       "be comparale to cards with same color." in {
-        val cardWithSameColorAndLowerValue: Card = Card(CardColor.Herz, CardValue.Zwei)
+        val cardWithSameColorAndLowerValue: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
         card.value.compare(cardWithSameColorAndLowerValue.value) should be(1)
       }
     }

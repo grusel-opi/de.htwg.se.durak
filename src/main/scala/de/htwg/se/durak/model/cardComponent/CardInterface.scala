@@ -7,9 +7,9 @@ import play.api.libs.json.JsObject
 import scala.xml.Node
 
 trait CardInterface {
-  def color: CardColor
+  val color: CardColor
 
-  def value: CardValue
+  val value: CardValue
 
   def toString: String
 
