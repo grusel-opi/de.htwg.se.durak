@@ -1,6 +1,6 @@
 package de.htwg.se.durak.model.playerComponent
 
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import play.api.libs.json.{JsObject, JsString, Json}
 
 import scala.xml.Elem

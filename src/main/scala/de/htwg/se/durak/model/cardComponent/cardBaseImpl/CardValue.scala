@@ -1,4 +1,4 @@
-package de.htwg.se.durak.model.cardComponent
+package de.htwg.se.durak.model.cardComponent.cardBaseImpl
 
 object CardValue extends Enumeration with Ordered[Enumeration#Value] {
   type CardValue = Value

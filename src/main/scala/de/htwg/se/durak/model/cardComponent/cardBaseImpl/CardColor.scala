@@ -1,4 +1,4 @@
-package de.htwg.se.durak.model.cardComponent
+package de.htwg.se.durak.model.cardComponent.cardBaseImpl
 
 object CardColor extends Enumeration {
   type CardColor = Value

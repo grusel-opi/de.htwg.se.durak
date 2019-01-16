@@ -1,8 +1,8 @@
 package de.htwg.se.durak.util.cardConverter
 
-import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
-import de.htwg.se.durak.model.cardComponent.CardColor.CardColor
-import de.htwg.se.durak.model.cardComponent.CardValue.CardValue
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardColor.CardColor
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardValue.CardValue
 
 object CardStringConverter {
   // val excluded = List(0x1F0BF, 0x1F0AC, 0x1F0BC, 0x1F0CC, 0x1F0CF, 0x1F0DC)

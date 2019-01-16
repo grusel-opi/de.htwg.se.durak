@@ -1,9 +1,9 @@
-package de.htwg.se.durak.model
+package de.htwg.se.durak.model.model.cardComponent
 
-import de.htwg.se.durak.model.cardComponent.CardValue
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardValue
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class CardValueSpec extends WordSpec with Matchers {

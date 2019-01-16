@@ -1,7 +1,7 @@
 package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 
 import de.htwg.se.durak.controller.controllerComponent.GameOverEvent
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.Player

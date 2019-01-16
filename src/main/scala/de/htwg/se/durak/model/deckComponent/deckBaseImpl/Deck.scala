@@ -1,11 +1,11 @@
 package de.htwg.se.durak.model.deckComponent.deckBaseImpl
 
-import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.DeckInterface
 import play.api.libs.json.{JsObject, Json}
 
 import scala.util.Random
-import scala.xml.Elem
+import scala.xml.Node
 
 case class Deck(cards: List[Card]) extends DeckInterface {
   def this() = this(for {c <- CardColor.values.toList; v <- CardValue.values.toList} yield Card(c, v))
@@ -26,7 +26,7 @@ case class Deck(cards: List[Card]) extends DeckInterface {
     }
   }
 
-  def toXml: List[Elem] = {
+  def toXml: List[Node] = {
       {cards.map(c => c.toXml)}
   }
 

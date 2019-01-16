@@ -2,7 +2,7 @@ package de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl
 
 import java.io.{File, PrintWriter}
 
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface

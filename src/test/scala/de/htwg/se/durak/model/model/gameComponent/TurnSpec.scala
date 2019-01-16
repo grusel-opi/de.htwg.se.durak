@@ -1,6 +1,6 @@
-package de.htwg.se.durak.model
+package de.htwg.se.durak.model.model.gameComponent
 
-import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Turn
 import de.htwg.se.durak.model.playerComponent.Player
 import org.junit.runner.RunWith

@@ -5,7 +5,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent.GameStatus._
 import de.htwg.se.durak.controller.controllerComponent._
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.model.fileIOComponent._
 import scalafx.application.Platform
 import de.htwg.se.durak.model.gameComponent.GameInterface
@@ -175,7 +175,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def trumpCardToString(): String = {
-    game.trump.toString()
+    game.trump.toString
   }
 
   def currentTurnToString(): String = {

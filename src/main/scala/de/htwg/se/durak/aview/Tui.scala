@@ -2,7 +2,7 @@ package de.htwg.se.durak.aview
 
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
 import de.htwg.se.durak.controller.controllerComponent.GameStatus._
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 
@@ -84,7 +84,6 @@ class Tui(controller: ControllerInterface) extends Reactor {
     val trumpCardValueAsString: String = trumpCardColorValueArray(1)
 
     println(GameStatus.message(controller.gameStatus))
-    println()
 
     if (controller.gameStatus == NEW || controller.gameStatus == CARDLAYED || controller.gameStatus == TAKE ||
       controller.gameStatus == OK || controller.gameStatus == UNDO || controller.gameStatus == REDO ||

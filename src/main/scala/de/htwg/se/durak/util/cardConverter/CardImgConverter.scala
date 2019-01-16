@@ -1,6 +1,6 @@
 package de.htwg.se.durak.util.cardConverter
 
-import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import scalafx.scene.image.{Image, ImageView}
 
 object CardImgConverter {

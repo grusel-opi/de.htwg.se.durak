@@ -1,6 +1,6 @@
-package de.htwg.se.durak.model
+package de.htwg.se.durak.model.model.deckComponent
 
-import de.htwg.se.durak.model.cardComponent.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import org.junit.runner.RunWith
 import org.scalatest._

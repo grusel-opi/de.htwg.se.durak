@@ -1,7 +1,7 @@
 package de.htwg.se.durak.controller.controllerComponent
 
 import de.htwg.se.durak.controller.controllerComponent.GameStatus.GameStatus
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.model.playerComponent.Player
 
 import scala.swing.Publisher

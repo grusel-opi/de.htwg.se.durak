@@ -9,9 +9,8 @@ import scalafx.Includes._
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.control._
 import scalafx.scene.image.ImageView
-
 import de.htwg.se.durak.Durak
-import de.htwg.se.durak.model.cardComponent.Card
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.util.cardConverter.{CardImgConverter, CardStringConverter}
 
 
