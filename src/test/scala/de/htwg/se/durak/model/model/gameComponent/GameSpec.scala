@@ -10,7 +10,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
-import de.htwg.se.durak.util.customExceptions.LayCardFirsException
+import de.htwg.se.durak.util.customExceptions.{LayCardFirsException, NoCardsToTakeException}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -179,7 +179,6 @@ class GameSpec extends WordSpec with Matchers {
 
 
     "a player says ok" should {
-
       val attackerHandCard1: CardInterface = Card(CardColor.Karo, CardValue.Zwei)
       val attackerHandCard2: CardInterface = Card(CardColor.Karo, CardValue.Drei)
       val attackerHandCard3: CardInterface = Card(CardColor.Karo, CardValue.Vier)
@@ -273,9 +272,80 @@ class GameSpec extends WordSpec with Matchers {
         game.currentTurn.attackCards should be(Nil)
         game.currentTurn.blockedBy should be(Map())
       }
-
-
     }
 
+    "when the victim take the attack cards" should {
+      val attackerHandCard1: CardInterface = Card(CardColor.Karo, CardValue.Zwei)
+      val attackerHandCard2: CardInterface = Card(CardColor.Karo, CardValue.Drei)
+      val attackerHandCard3: CardInterface = Card(CardColor.Karo, CardValue.Vier)
+      val attackerHandCard4: CardInterface = Card(CardColor.Karo, CardValue.Fünf)
+      val attackerHandCard5: CardInterface = Card(CardColor.Karo, CardValue.Sechs)
+
+      val attackerHandCards: List[CardInterface] = List(attackerHandCard1, attackerHandCard2, attackerHandCard3,
+        attackerHandCard4, attackerHandCard5)
+      val attacker: PlayerInterface = Player("Attacker", attackerHandCards)
+
+      val vicitmHandCard1: CardInterface = Card(CardColor.Herz, CardValue.Zwei)
+      val vicitmHandCard2: CardInterface = Card(CardColor.Herz, CardValue.Drei)
+      val vicitmHandCard3: CardInterface = Card(CardColor.Herz, CardValue.Vier)
+      val vicitmHandCard4: CardInterface = Card(CardColor.Herz, CardValue.Fünf)
+      val vicitmHandCard5: CardInterface = Card(CardColor.Herz, CardValue.Sechs)
+
+      val victimHandCards: List[CardInterface] = List(vicitmHandCard1, vicitmHandCard2, vicitmHandCard3, vicitmHandCard4,
+        vicitmHandCard5)
+      val victim: PlayerInterface = Player("Victim", victimHandCards)
+
+      val neighbourCard1: CardInterface = Card(CardColor.Pik, CardValue.Zwei)
+      val neighbourCard2: CardInterface = Card(CardColor.Pik, CardValue.Drei)
+      val neighbourCard3: CardInterface = Card(CardColor.Pik, CardValue.Vier)
+      val neighbourCard4: CardInterface = Card(CardColor.Pik, CardValue.Fünf)
+      val neighbourCard5: CardInterface = Card(CardColor.Pik, CardValue.Sechs)
+
+      val neighbourHandCards: List[CardInterface] = List(neighbourCard1, neighbourCard2, neighbourCard3, neighbourCard4,
+        neighbourCard5)
+      val neighbour: PlayerInterface = Player("Neighbour", neighbourHandCards)
+
+      val deckCard1: CardInterface = Card(CardColor.Kreuz, CardValue.Zwei)
+      val deckCard2: CardInterface = Card(CardColor.Kreuz, CardValue.Drei)
+      val deckCard3: CardInterface = Card(CardColor.Kreuz, CardValue.Vier)
+      val deckCard4: CardInterface = Card(CardColor.Kreuz, CardValue.Fünf)
+      val deckCard5: CardInterface = Card(CardColor.Kreuz, CardValue.Sechs)
+      val deckCard6: CardInterface = Card(CardColor.Kreuz, CardValue.Sieben)
+      val deckCard7: CardInterface = Card(CardColor.Kreuz, CardValue.Acht)
+      val deckCard8: CardInterface = Card(CardColor.Kreuz, CardValue.Neun)
+      val deckCard9: CardInterface = Card(CardColor.Kreuz, CardValue.Bube)
+      val deckCard10: CardInterface = Card(CardColor.Herz, CardValue.Dame)
+
+      val deckCards: List[CardInterface] = List(deckCard1, deckCard2, deckCard3, deckCard4, deckCard5, deckCard6,
+        deckCard7, deckCard8, deckCard9, deckCard10)
+      val deck: DeckInterface = Deck(deckCards)
+
+      val turn: TurnInterface = Turn(attacker, victim, neighbour, Nil, Map())
+
+      val playerList: List[PlayerInterface] = List(neighbour, victim, attacker)
+
+      var game: GameInterface = Game(playerList, deck, deck.cards.last, turn, attacker, Nil)
+
+      "throw a NoCardsToTakeException if the current player is not the victim" in {
+        intercept[NoCardsToTakeException] {
+          game.takeCards()
+        }
+      }
+
+      "start a new turn if the victim is the active player." in {
+        game = game.playCard(attackerHandCard1, None)
+        game = game.playOk()
+        game = game.takeCards()
+
+        val nextTurn: TurnInterface = Turn(neighbour, attacker, victim, Nil, Map())
+        game.currentTurn should be(nextTurn)
+      }
+    }
+
+    "playing a card" should {
+      "" in {
+
+      }
+    }
   }
 }
