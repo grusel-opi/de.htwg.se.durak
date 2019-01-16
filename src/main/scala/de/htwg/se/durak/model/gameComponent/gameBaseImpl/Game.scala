@@ -1,5 +1,6 @@
 package de.htwg.se.durak.model.gameComponent.gameBaseImpl
 
+import de.htwg.se.durak.controller.controllerComponent.GameOverEvent
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.GameInterface
@@ -158,11 +159,11 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
       } else if (newPlayers.size == 2) {
         copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
           currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, getRightNeighbour(active),
-            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+            attackCards = card :: currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
       } else {
         copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
           currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, currentTurn.neighbour,
-            attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+            attackCards = card :: currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
       }
     }
   } else {
@@ -171,10 +172,10 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
 
   def shove(card: Card): Game = {
     if (isShovable(card)) {
-      active.dropCards(card::Nil)
+      active.dropCards(card :: Nil)
       if (active.handCards.nonEmpty) {
         copy(currentTurn = Turn(active, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
-          attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+          attackCards = card :: currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
       } else { // active won
         val newWinners = active :: winners
         val newPlayers = players.filterNot(p => p.equals(active))
@@ -183,12 +184,12 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
             copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
           case 2 =>
             copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
-            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
-              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+              currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,
+                attackCards = card :: currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
           case _ =>
             copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
-            currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
-              attackCards = card::currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
+              currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, getNeighbour(currentTurn.neighbour),
+                attackCards = card :: currentTurn.attackCards, blockedBy = currentTurn.blockedBy))
         }
       }
     } else {
@@ -244,7 +245,7 @@ case class Game(players: List[Player], deck: Deck, trump: Card, currentTurn: Tur
   }
 
   def getRightNeighbour(player: Player): Player = players.indexOf(player) match {
-    case x if x.equals(players.size -1) => players.head
+    case x if x.equals(players.size - 1) => players.head
     case _ => players(players.indexOf(player) + 1)
   }
 

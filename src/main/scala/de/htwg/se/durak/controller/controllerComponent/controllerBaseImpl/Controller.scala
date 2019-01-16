@@ -7,6 +7,8 @@ import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
 import de.htwg.se.durak.model.fileIOComponent._
+import scalafx.application.Platform
+import de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl.FileIO
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.util.customExceptions._
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.{Game, PlayCommand}
@@ -23,91 +25,111 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   val fileIO = injector.instance[FileIOInterface]
 
   def newPlayer(name: String): Unit = {
-    if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
-      players = Player(name, Nil) :: players
-      publish(new NewPlayerEvent)
-    } else {
-      notifyUI(new PlayerAlreadyPresentException)
-    }
+    Platform.runLater(() => {
+      if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
+        players = Player(name, Nil) :: players
+        publish(new NewPlayerEvent)
+      } else {
+        notifyUI(new PlayerAlreadyPresentException)
+      }
+    })
   }
 
   def resetPlayers(): Unit = {
-    players = Nil
-    publish(new ResetPlayersEvent)
+    Platform.runLater(() => {
+      players = Nil
+      publish(new ResetPlayersEvent)
+    })
   }
 
 
   def newGame(): Unit = {
-    if (players.size > 1) {
-      game = new Game(players).start()
-      publish(new NewGameEvent)
-    } else {
-      notifyUI(new MoreThanOnePlayerNeededException)
-    }
+    Platform.runLater(() => {
+      if (players.size > 1) {
+        game = new Game(players).start()
+        publish(new NewGameEvent)
+      } else {
+        notifyUI(new MoreThanOnePlayerNeededException)
+      }
+    })
   }
 
   def playCard(firstCard: Card, secondCard: Option[Card]): Unit = {
-    try {
-      undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+    Platform.runLater(() => {
+      try {
+        undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
 
-      if (!checkIfGameIsOver) {
-        publish(new CardsChangedEvent)
+        if (!checkIfGameIsOver) {
+          publish(new CardsChangedEvent)
+        }
       }
-    }
-    catch {
-      case iTE: IllegalTurnException => notifyUI(iTE)
-      case mBCE: MissingBlockingCardException => notifyUI(mBCE)
-      case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
-    }
+      catch {
+        case iTE: IllegalTurnException => notifyUI(iTE)
+        case mBCE: MissingBlockingCardException => notifyUI(mBCE)
+        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
+      }
+    })
   }
 
   def throwCardIn(card: Card): Unit = {
-    try {
-      undoManager.doStep(new PlayCommand(card, None, this))
-      if (!checkIfGameIsOver) {
-        publish(new CardsChangedEvent)
+    Platform.runLater(() => {
+      try {
+        undoManager.doStep(new PlayCommand(card, None, this))
+        if (!checkIfGameIsOver) {
+          publish(new CardsChangedEvent)
+        }
+      } catch {
+        case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
+        case iTE: IllegalTurnException => notifyUI(iTE)
       }
-    } catch {
-      case vHNECTBE: VictimHasNotEnoughCardsToBlockException => notifyUI(vHNECTBE)
-      case iTE: IllegalTurnException => notifyUI(iTE)
-    }
+    })
 
   }
 
   def undo(): Unit = {
-    undoManager.undoStep()
-    publish(new CardsChangedEvent)
+    Platform.runLater(() => {
+      undoManager.undoStep()
+      publish(new CardsChangedEvent)
+    })
   }
 
 
   def redo(): Unit = {
-    undoManager.redoStep()
-    publish(new CardsChangedEvent)
+    Platform.runLater(() => {
+      undoManager.redoStep()
+      publish(new CardsChangedEvent)
+    })
   }
 
   def playOk(): Unit = {
-    undoManager.purgeMemento()
-    try {
-      game = game.playOk()
-      publish(new CardsChangedEvent)
-    } catch {
-      case _: LayCardFirsException => notifyUI(new LayCardFirsException)
-    }
+    Platform.runLater(() => {
+      undoManager.purgeMemento()
+      try {
+        game = game.playOk()
+        publish(new CardsChangedEvent)
+      } catch {
+        case _: LayCardFirsException => notifyUI(new LayCardFirsException)
+      }
+    })
   }
 
   def takeCards(): Unit = {
-    try {
-      undoManager.purgeMemento()
-      game = game.takeCards()
-      publish(new CardsChangedEvent)
-    } catch {
-      case nCTTE: NoCardsToTakeException => notifyUI(nCTTE)
-    }
+    Platform.runLater(() => {
+      try {
+        undoManager.purgeMemento()
+        game = game.takeCards()
+        publish(new CardsChangedEvent)
+      } catch {
+        case nCTTE: NoCardsToTakeException => notifyUI(nCTTE)
+      }
+    })
   }
 
   def checkIfGameIsOver: Boolean = {
     if (game.players.size == 1) {
-      publish(new GameOverEvent)
+      Platform.runLater(() => {
+        publish(new GameOverEvent)
+      })
       true
     } else {
       false
@@ -115,8 +137,10 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def notifyUI(exception: Exception): Unit = {
-    publish(new ExceptionEvent(exception))
-    System.err.println(exception.getMessage)
+    Platform.runLater(() => {
+      publish(new ExceptionEvent(exception))
+      System.err.println(exception.getMessage)
+    })
   }
 
   def activePlayerToString(): String = {
@@ -168,8 +192,10 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def loadGame(fileName: String): Unit = {
-    game = fileIO.load(fileName)
-    publish(new NewGameEvent)
+    Platform.runLater(() => {
+      game = fileIO.load(fileName)
+      publish(new NewGameEvent)
+    })
   }
 
 }
