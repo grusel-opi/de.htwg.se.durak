@@ -12,7 +12,8 @@ import de.htwg.se.durak.util.customExceptions._
 
 import scala.util.Random
 
-case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: CardInterface, currentTurn: TurnInterface, active: PlayerInterface, winners: List[PlayerInterface]) extends GameInterface {
+case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: CardInterface, currentTurn: TurnInterface,
+                active: PlayerInterface, winners: List[PlayerInterface]) extends GameInterface {
 
   def this(players: List[PlayerInterface], deck: DeckInterface) = this(players, deck, deck.cards.last,
     new Turn(players.head, players.head, players.head), players.head, Nil)
@@ -20,8 +21,6 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
   def this(players: List[PlayerInterface]) = this(players, new Deck().shuffle)
 
   def this() = this(List(new Player("default")))
-
-  val NUMBER_OF_HAND_CARDS = 5
 
   implicit val CardOrdering: Ordering[CardInterface] = (x: CardInterface, y: CardInterface) => {
     if (x.color.equals(y.color)) {
@@ -36,7 +35,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
   }
 
   def start(): Game = {
-    val newDeck = distributeCards(players)
+    val newDeck: DeckInterface = distributeCards(players)
     val beginner: PlayerInterface = players(math.abs(Random.nextInt()) % players.size)
     val firstVictim: PlayerInterface = getNeighbour(beginner)
     val fistNeighbor: PlayerInterface = getNeighbour(firstVictim)
@@ -46,6 +45,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
   }
 
   def distributeCards(people: List[PlayerInterface]): DeckInterface = {
+    val NUMBER_OF_HAND_CARDS = 5
     var tmpDeck = (List[CardInterface](), deck)
     people.foreach(p => {
       val missingAmount = NUMBER_OF_HAND_CARDS - p.handCards.size
