@@ -4,6 +4,7 @@ import com.google.inject.{Guice, Inject}
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent._
 import de.htwg.se.durak.model.cardComponent.Card
+import scalafx.application.Platform
 // import de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl.FileIO
 import de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl.FileIO
 import de.htwg.se.durak.model.gameComponent.GameInterface
@@ -22,12 +23,14 @@ class Controller @Inject() (var game: GameInterface) extends ControllerInterface
   // val injector = Guice.createInjector(new DurakModule)
 
   def newPlayer(name: String): Unit = {
-    if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
-      players = Player(name, Nil) :: players
-      publish(new NewPlayerEvent)
-    } else {
-      notifyUI(new PlayerAlreadyPresentException)
-    }
+    Platform.runLater(() => {
+      if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
+        players = Player(name, Nil) :: players
+        publish(new NewPlayerEvent)
+      } else {
+        notifyUI(new PlayerAlreadyPresentException)
+      }
+    })
   }
 
   def resetPlayers(): Unit = {

@@ -16,17 +16,25 @@ object Durak {
   //val controller = new Controller(new Game())
   val tui = new Tui(controller)
   val gui = Gui(controller)
+
   def main(args: Array[String]): Unit = {
 
-
+    val task = new Runnable {
+      def run() {
+        try {
+          println("Hello to durak")
+          var input: String = ""
+          do {
+            println("Please enter a command (or help for help): ")
+            input = readLine
+            tui.processInputLine(input)
+          } while (input != "q")
+        } catch {
+          case e: InterruptedException => /* Properly handle exception */
+        }
+      }
+    }
+    new Thread(task).start()
     gui.main(args)
-
-    println("Hello to durak")
-    var input: String = ""
-    do {
-      println("Please enter a command (or help for help): ")
-      input = readLine
-      tui.processInputLine(input)
-    } while (input != "q")
   }
 }
