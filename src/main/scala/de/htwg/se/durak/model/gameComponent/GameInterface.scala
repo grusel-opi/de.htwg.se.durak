@@ -4,7 +4,6 @@ import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.turnComponent.TurnInterface
-import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 
 
 trait GameInterface {

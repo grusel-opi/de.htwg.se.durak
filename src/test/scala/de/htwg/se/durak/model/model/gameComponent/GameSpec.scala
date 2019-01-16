@@ -200,14 +200,7 @@ class GameSpec extends WordSpec with Matchers {
         game.active should be(game.getNeighbour(game.currentTurn.attacker))
       }
 
-      "let the turn close if victim has blocked all cards" in {
-        val card0: CardInterface = Card(CardColor.Herz, CardValue.Acht)
-        val card1: CardInterface = Card(CardColor.Herz, CardValue.Neun)
-        val turn: TurnInterface = Turn(player1, player2, player3, Nil, Map(card0 -> card1))
-        var tmpGame: GameInterface = Game(players, new Deck(), card0, turn, player1, Nil)
-        tmpGame = tmpGame.playOk()
-        tmpGame.active should be theSameInstanceAs player2
-      }
+      
     }
 
   }
