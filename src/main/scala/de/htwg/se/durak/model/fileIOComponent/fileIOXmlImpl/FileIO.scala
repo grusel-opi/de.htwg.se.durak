@@ -145,9 +145,7 @@ class FileIO extends FileIOInterface {
       <players>
         {game.players.map(p => p.toXml)}
       </players>
-      <deck>
         {game.deck.toXml}
-      </deck>
       <trump>
         {game.trump.toXml}
       </trump>

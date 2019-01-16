@@ -26,8 +26,10 @@ case class Deck(cards: List[Card]) extends DeckInterface {
     }
   }
 
-  def toXml: List[Node] = {
+  def toXml: Node = {
+    <deck>
       {cards.map(c => c.toXml)}
+    </deck>
   }
 
   def toJson: List[JsObject] = {

@@ -5,6 +5,9 @@ import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
+import play.api.libs.json.JsObject
+
+import scala.xml.{Node, Utility}
 
 @RunWith(classOf[JUnitRunner])
 class DeckSpec extends WordSpec with Matchers {
@@ -123,6 +126,56 @@ class DeckSpec extends WordSpec with Matchers {
 
         newDeck.cards.size should be(deck.cards.size - 2)
         newDeck.cards should be(List(card3))
+      }
+    }
+
+    "pop more cards as available in deck" should {
+      val card1: Card = Card(CardColor.Herz, CardValue.Zwei)
+      val card2: Card = Card(CardColor.Karo, CardValue.Ass)
+      val card3: Card = Card(CardColor.Kreuz, CardValue.Fünf)
+
+      val cardsInDeck: List[Card] = List(card1, card2, card3)
+      val deck: Deck = Deck(cardsInDeck)
+
+      "return the left cards in deck." in {
+        deck.cards.size should be(cardsInDeck.size)
+        deck.cards should be(cardsInDeck)
+
+        val cardsDeckTuple: (List[Card], Deck) = deck.popNCards(5)
+        val returnedCards: List[Card] = cardsDeckTuple._1
+        val newDeck: Deck = cardsDeckTuple._2
+
+        returnedCards.size should be(deck.cards.size)
+        returnedCards should be(cardsInDeck)
+
+        newDeck.cards.size should be(0)
+        newDeck.cards should be(Nil)
+      }
+    }
+
+    "parsed to XML" should {
+      "return the deck as a XML structure." in {
+        val deck = new Deck()
+        val deckAsXml: Node = Utility.trim(deck.toXml)
+        val expectedXmlDeckStructure: Node =
+          Utility.trim(
+            <deck>
+            {deck.cards.map(c => c.toXml)}
+            </deck>
+          )
+
+        deckAsXml should be(expectedXmlDeckStructure)
+      }
+    }
+
+    "parsed to JSON" should {
+      "return the deck as a JSON structure." in {
+        val deck = new Deck()
+        val deckAsJson: List[JsObject] = deck.toJson
+        val expectedJsonDeckStructure: List[JsObject] =
+          deck.cards.map(c => c.toJson)
+
+        deckAsJson should be(expectedJsonDeckStructure)
       }
     }
   }
