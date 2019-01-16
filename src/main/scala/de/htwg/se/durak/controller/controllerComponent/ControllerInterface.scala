@@ -40,8 +40,6 @@ trait ControllerInterface extends Publisher {
 
   def currentTurnToString(): String
 
-  // def playersOkToString(): String
-
   def activePlayerHandCardsToString(): String
 
   def currentAttackerToString(): String
@@ -61,6 +59,8 @@ trait ControllerInterface extends Publisher {
   def saveGame(fileName: String): Unit
 
   def loadGame(fileName: String): Unit
+
+  def exitGame(): Unit
 }
 
 class CardsChangedEvent extends Event

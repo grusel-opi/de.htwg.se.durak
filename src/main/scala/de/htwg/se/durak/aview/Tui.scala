@@ -42,7 +42,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
         print("Enter a fileName: ")
         val fileName: String = readLine()
         controller.loadGame(fileName)
-      case "q" | "exit" => System.exit(0)
+      case "q" | "exit" => controller.exitGame()
       case "players" => println(controller.players.mkString(" "))
       case _ => println("Bitte was?")
     }

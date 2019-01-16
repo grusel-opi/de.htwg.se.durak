@@ -9,8 +9,10 @@ import scalafx.scene.Scene
 import scalafx.Includes._
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
+import scalafx.stage.WindowEvent
 import scalafxml.core.{FXMLView, NoDependencyResolver}
 
+import scala.compat.Platform
 import scala.swing.Reactor
 
 case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
@@ -70,7 +72,6 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
           headerText = "Warning: " + exceptionEvent.getException.getMessage
           contentText = ""
         }.showAndWait
-        // displayGameScene()
 
       case _: NoCardsToTakeException =>
         new Alert(AlertType.Warning) {
@@ -117,4 +118,7 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
       case _ => System.err.println("Unhandled Exception - FIX ME :(")
     }
   }
+
+  stage.onCloseRequest = (wE: WindowEvent) => controller.exitGame()
+
 }

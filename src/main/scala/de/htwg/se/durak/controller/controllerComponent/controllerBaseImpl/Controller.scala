@@ -224,7 +224,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def exitGame(): Unit = {
-
+    System.exit(0)
   }
 
 }
