@@ -10,7 +10,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
-import de.htwg.se.durak.util.customExceptions.{LayCardFirsException, NoCardsToTakeException}
+import de.htwg.se.durak.util.customExceptions.{LayCardFirsException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -281,7 +281,7 @@ class GameSpec extends WordSpec with Matchers {
       }
     }
 
-    "when the victim take the attack cards" should {
+    "when the victim takes the attack cards" should {
       val attackerHandCard1: CardInterface = Card(CardColor.Karo, CardValue.Zwei)
       val attackerHandCard2: CardInterface = Card(CardColor.Karo, CardValue.Drei)
       val attackerHandCard3: CardInterface = Card(CardColor.Karo, CardValue.Vier)
@@ -353,22 +353,30 @@ class GameSpec extends WordSpec with Matchers {
 
       val card1 = Card(CardColor.Herz, CardValue.Acht)
 
+      val card2 = Card(CardColor.Herz, CardValue.Zwei)
+
       val player1 = Player("1", card1::Nil)
 
-      val player2 = Player("2", Nil)
+      val player2 = Player("2", card2::Nil)
 
       val player3 = Player("4", Nil)
 
       val players = List(player1, player2, player3)
 
-      val turn = new Turn(player1, player2, player3)
+      val turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Sieben), Card(CardColor.Herz, CardValue.Sechs)), Map())
 
       val deck = new Deck()
 
       val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
 
-      "and is the attacker or the neighbour" in {
-        game.playCard(card1, None)
+      "throw an VictimHasNotEnoughCardsToBlockException if the victim has not enough cards to block" in {
+        intercept[VictimHasNotEnoughCardsToBlockException] {
+          game.playCard(card1, None)
+        }
+      }
+
+      "result in the same game if he hasnt got the card" in {
+        game.playCard(card2, None).equals(game)
       }
     }
   }
