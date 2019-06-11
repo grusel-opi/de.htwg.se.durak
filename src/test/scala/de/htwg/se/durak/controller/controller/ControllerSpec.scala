@@ -2,6 +2,7 @@ package de.htwg.se.durak.controller.controller
 
 import de.htwg.se.durak.Durak.injector
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
+import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import org.junit.runner.RunWith
@@ -136,9 +137,12 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
 
+    var last_controller_state: Option[GameInterface] = None
+
     "playing a card" should {
       "add a attack card, if the attacker lays a card" in {
         val card_to_lay = controller.game.active.handCards.head
+        last_controller_state = Some(controller.game)
         controller.playCard(controller.game.active.handCards.head, None)
 
         while (controller.gameStatus == GameStatus.NEW) {
@@ -153,6 +157,40 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.game.currentTurn.attackCards should be(List(card_to_lay))
         controller.game.currentTurn.blockedBy should be(Map.empty)
+      }
+    }
+
+    var new_controller_state: Option[GameInterface] = None
+
+    "making an undo" should {
+      "sets the game status to 'UNDO' and should undo the last step" in {
+        while (last_controller_state.isEmpty) {
+          Thread.sleep(timeToSleep)
+        }
+        new_controller_state = Some(controller.game)
+        controller.undo()
+
+        while (controller.game.currentTurn.attackCards.nonEmpty) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.game should be(last_controller_state.get)
+      }
+    }
+
+    "making a redo" should {
+      "sets the game status to 'REDO' and should redo the last step" in {
+        while (new_controller_state.isEmpty) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.redo()
+
+        while (controller.game.currentTurn.attackCards.isEmpty) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.game should be(new_controller_state.get)
       }
     }
   }
