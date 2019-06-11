@@ -135,5 +135,25 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.game.trump should be(trump_card)
       }
     }
+
+    "playing a card" should {
+      "add a attack card, if the attacker lays a card" in {
+        val card_to_lay = controller.game.active.handCards.head
+        controller.playCard(controller.game.active.handCards.head, None)
+
+        while (controller.gameStatus == GameStatus.NEW) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.CARDLAYED)
+
+        while (controller.game.currentTurn.attackCards.isEmpty) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.game.currentTurn.attackCards should be(List(card_to_lay))
+        controller.game.currentTurn.blockedBy should be(Map.empty)
+      }
+    }
   }
 }
