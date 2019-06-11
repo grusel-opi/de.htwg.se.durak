@@ -6,7 +6,6 @@ import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
 import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
-import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
@@ -28,14 +27,19 @@ class FileIOXMLSpec extends WordSpec with Matchers {
     val herz_sieben = Card(CardColor.Herz, CardValue.Sieben)
     val karo_ass = Card(CardColor.Karo, CardValue.Ass)
     val kreuz_dame = Card(CardColor.Kreuz, CardValue.Dame)
+    val karo_fünf = Card(CardColor.Karo, CardValue.Fünf)
     val player1_handcards: List[CardInterface] = List(pik_acht, herz_sieben, karo_ass, kreuz_dame)
+    val attackcards = List(karo_fünf)
 
     val herz_fünf = Card(CardColor.Herz, CardValue.Fünf)
     val kreuz_acht = Card(CardColor.Kreuz, CardValue.Acht)
     val kreuz_könig = Card(CardColor.Kreuz, CardValue.König)
     val karo_zwei = Card(CardColor.Karo, CardValue.Zwei)
     val pik_ass = Card(CardColor.Pik, CardValue.Ass)
+    val herz_zwei = Card(CardColor.Herz, CardValue.Zwei)
+    val herz_drei = Card(CardColor.Herz, CardValue.Zwei)
     val player_2_handcards: List[CardInterface] = List(herz_fünf, kreuz_acht, kreuz_könig, karo_zwei, pik_ass)
+    val blockingcards: Map[CardInterface, CardInterface] = Map(herz_zwei -> herz_drei)
 
     val player1 = Player("Abduhl", player1_handcards)
     val player2 = Player("Alfred", player_2_handcards)
@@ -46,7 +50,8 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val trump_card = Card(CardColor.Kreuz, CardValue.Drei)
 
-    val turn: TurnInterface = new Turn(player1, player2, player2)
+
+    val turn: TurnInterface = Turn(player1, player2, player2, attackcards, blockingcards)
 
     val game = Game(players_list, deck, trump_card, turn, player1, List())
 
@@ -59,88 +64,107 @@ class FileIOXMLSpec extends WordSpec with Matchers {
       <game>
         <players>
           <player>
-            <name>Abduhl</name>
+            <name> Abduhl </name>
             <handCards>
               <card>
-                <color>Pik</color>
-                <value>Acht</value>
+                <color> Pik </color>
+                <value> Acht </value>
               </card>
               <card>
-                <color>Herz</color>
-                <value>Sieben</value>
+                <color> Herz </color>
+                <value> Sieben </value>
               </card>
               <card>
-                <color>Karo</color>
-                <value>Ass</value>
+                <color> Karo </color>
+                <value> Ass </value>
               </card>
               <card>
-                <color>Kreuz</color>
-                <value>Dame</value>
+                <color> Kreuz </color>
+                <value> Dame </value>
               </card>
             </handCards>
           </player>
           <player>
-            <name>Alfred</name>
+            <name> Alfred </name>
             <handCards>
               <card>
-                <color>Herz</color>
-                <value>Fünf</value>
+                <color> Herz </color>
+                <value> Fünf </value>
               </card>
               <card>
-                <color>Kreuz</color>
-                <value>Acht</value>
+                <color> Kreuz </color>
+                <value> Acht </value>
               </card>
               <card>
-                <color>Kreuz</color>
-                <value>König</value>
+                <color> Kreuz </color>
+                <value> König </value>
               </card>
               <card>
-                <color>Karo</color>
-                <value>Zwei</value>
+                <color> Karo </color>
+                <value> Zwei </value>
               </card>
               <card>
-                <color>Pik</color>
-                <value>Ass</value>
+                <color> Pik </color>
+                <value> Ass </value>
               </card>
             </handCards>
           </player>
         </players>
         <deck>
           <card>
-            <color>Herz</color>
-            <value>Ass</value>
+            <color> Herz </color>
+            <value> Ass </value>
           </card>
         </deck>
         <trump>
           <card>
-            <color>Kreuz</color>
-            <value>Drei</value>
+            <color> Kreuz </color>
+            <value> Drei </value>
           </card>
         </trump>
         <currentTurn>
           <attacker>
             <player>
-              <name>Abduhl</name>
+              <name> Abduhl </name>
             </player>
           </attacker>
           <victim>
             <player>
-              <name>Alfred</name>
+              <name> Alfred </name>
             </player>
           </victim>
           <neighbour>
             <player>
-              <name>Alfred</name>
+              <name> Alfred </name>
             </player>
           </neighbour>
-          <attackCards></attackCards>
+          <attackCards>
+            <card>
+              <color> Karo </color>
+              <value> Fünf </value>
+            </card>
+          </attackCards>
+          <blockedBy>
+            <attackCards>
+              <card>
+                <color> Herz </color>
+                <value> Zwei </value>
+              </card>
+            </attackCards>
+            <blockingCards>
+              <card>
+                <color> Herz </color>
+                <value> Zwei </value>
+              </card>
+            </blockingCards>
+          </blockedBy>
         </currentTurn>
         <active>
           <player>
-            <name>Abduhl</name>
+            <name> Abduhl </name>
           </player>
         </active>
-        <winners></winners>
+        <winners> </winners>
       </game>
 
     "saved" should {
@@ -163,7 +187,6 @@ class FileIOXMLSpec extends WordSpec with Matchers {
         val snipped_file_content = file.get.mkString.replaceAll("\\s", "")
 
         expected_content = snipped_expected_content.equals(snipped_file_content)
-
       }
 
       "have a filename" in {
@@ -211,7 +234,7 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
       "return a valid winners list" in {
         val xml_content = fileIO.gameToXml(game_with_winner)
-        fileIO.createWinnersList(xml_content) should be (List(new_player1))
+        fileIO.createWinnersList(xml_content) should be(List(new_player1))
       }
     }
   }
