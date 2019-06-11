@@ -12,6 +12,7 @@ import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl.FileIO
+import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
@@ -200,6 +201,17 @@ class FileIOXMLSpec extends WordSpec with Matchers {
       "produce the expected durak game as xml" in {
         fileIO.gameToXml(game).toString().replaceAll("\\s", "").equals(
           expected_xml_content.toString().replaceAll("\\s", "")) should be(true)
+      }
+    }
+
+    "creating the winners list" should {
+      val new_player1 = Player("Abduhl", List())
+      val players: List[PlayerInterface] = List(new_player1, player2)
+      val game_with_winner = Game(players, deck, trump_card, turn, player1, List(player1))
+
+      "return a valid winners list" in {
+        val xml_content = fileIO.gameToXml(game_with_winner)
+        fileIO.createWinnersList(xml_content) should be (List(new_player1))
       }
     }
   }
