@@ -2,13 +2,18 @@ package de.htwg.se.durak.controller.controller
 
 import de.htwg.se.durak.Durak.injector
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
+import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
+import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
 import org.testfx.api.FxToolkit
+
+import util.control.Breaks._
+
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
@@ -163,10 +168,11 @@ class ControllerSpec extends WordSpec with Matchers {
     var new_controller_state: Option[GameInterface] = None
 
     "making an undo" should {
-      "sets the game status to 'UNDO' and should undo the last step" in {
+      "set the game status to 'UNDO' and should undo the last step" in {
         while (last_controller_state.isEmpty) {
           Thread.sleep(timeToSleep)
         }
+
         new_controller_state = Some(controller.game)
         controller.undo()
 
@@ -193,5 +199,37 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.game should be(new_controller_state.get)
       }
     }
+
+    "playing an illegal turn " should {
+      "thow an IllegalTurnException" in {
+        println(controller.game)
+        var lowerCard: Option[CardInterface] = None
+
+        breakable {
+          while (true) {
+            controller.game.deck.cards.foreach(card => {
+              if (card.color != controller.game.currentTurn.attackCards.head.color && card.value < controller.game.currentTurn.attackCards.head.value) {
+                lowerCard = Some(card)
+                break
+              } else if (card.color == controller.game.trump.color && card.value < controller.game.currentTurn.attackCards.head.value) {
+                lowerCard = Some(card)
+                break
+              }
+            })
+            break
+          }
+
+        }
+
+        try {
+          controller.playCard(controller.game.currentTurn.attackCards.head, lowerCard)
+        } catch {
+          case ite: IllegalTurnException => true
+        }
+
+        false
+      }
+    }
   }
+
 }
