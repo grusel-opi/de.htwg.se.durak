@@ -10,7 +10,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
-import de.htwg.se.durak.util.customExceptions.{LayCardFirsException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
+import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, LayCardFirsException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -378,6 +378,49 @@ class GameSpec extends WordSpec with Matchers {
       "result in the same game if he hasnt got the card" in {
         game.playCard(card2, None).equals(game)
       }
+    }
+
+    "a player is shoving a card" should {
+      var card = Card(CardColor.Karo, CardValue.Zwei)
+
+      var player1 = Player("1", Nil)
+      var player2 = Player("2", card::Nil)
+      var player3 = Player("4", Nil)
+
+      var players = List(player1, player2, player3)
+      var turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Sieben)), Map())
+      var deck = new Deck()
+
+      var game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+      "may not be able to shove" in {
+        intercept[IllegalTurnException] {
+          game.playCard(card, None)
+        }
+      }
+
+      "may be able to shove" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Karo, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+
+        val player1 = Player("1", Nil)
+        val player2 = Player("2", card::card2::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+
+        players = List(player1, player2, player3)
+        turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Zwei)), Map())
+        deck = new Deck()
+
+        game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card, None)
+        newGame.active.equals(player2)
+      }
+
+
+
     }
   }
 }
