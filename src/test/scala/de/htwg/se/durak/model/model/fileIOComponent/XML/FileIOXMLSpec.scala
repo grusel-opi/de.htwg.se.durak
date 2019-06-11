@@ -64,107 +64,107 @@ class FileIOXMLSpec extends WordSpec with Matchers {
       <game>
         <players>
           <player>
-            <name> Abduhl </name>
+            <name>Abduhl</name>
             <handCards>
               <card>
-                <color> Pik </color>
-                <value> Acht </value>
+                <color>Pik</color>
+                <value>Acht</value>
               </card>
               <card>
-                <color> Herz </color>
-                <value> Sieben </value>
+                <color>Herz</color>
+                <value>Sieben</value>
               </card>
               <card>
-                <color> Karo </color>
-                <value> Ass </value>
+                <color>Karo</color>
+                <value>Ass</value>
               </card>
               <card>
-                <color> Kreuz </color>
-                <value> Dame </value>
+                <color>Kreuz</color>
+                <value>Dame</value>
               </card>
             </handCards>
           </player>
           <player>
-            <name> Alfred </name>
+            <name>Alfred</name>
             <handCards>
               <card>
-                <color> Herz </color>
-                <value> Fünf </value>
+                <color>Herz</color>
+                <value>Fünf</value>
               </card>
               <card>
-                <color> Kreuz </color>
-                <value> Acht </value>
+                <color>Kreuz</color>
+                <value>Acht</value>
               </card>
               <card>
-                <color> Kreuz </color>
-                <value> König </value>
+                <color>Kreuz</color>
+                <value>König</value>
               </card>
               <card>
-                <color> Karo </color>
-                <value> Zwei </value>
+                <color>Karo</color>
+                <value>Zwei</value>
               </card>
               <card>
-                <color> Pik </color>
-                <value> Ass </value>
+                <color>Pik</color>
+                <value>Ass</value>
               </card>
             </handCards>
           </player>
         </players>
         <deck>
           <card>
-            <color> Herz </color>
-            <value> Ass </value>
+            <color>Herz</color>
+            <value>Ass</value>
           </card>
         </deck>
         <trump>
           <card>
-            <color> Kreuz </color>
-            <value> Drei </value>
+            <color>Kreuz</color>
+            <value>Drei</value>
           </card>
         </trump>
         <currentTurn>
           <attacker>
             <player>
-              <name> Abduhl </name>
+              <name>Abduhl</name>
             </player>
           </attacker>
           <victim>
             <player>
-              <name> Alfred </name>
+              <name>Alfred</name>
             </player>
           </victim>
           <neighbour>
             <player>
-              <name> Alfred </name>
+              <name>Alfred</name>
             </player>
           </neighbour>
           <attackCards>
             <card>
-              <color> Karo </color>
-              <value> Fünf </value>
+              <color>Karo</color>
+              <value>Fünf</value>
             </card>
           </attackCards>
           <blockedBy>
             <attackCards>
               <card>
-                <color> Herz </color>
-                <value> Zwei </value>
+                <color>Herz</color>
+                <value>Zwei</value>
               </card>
             </attackCards>
             <blockingCards>
               <card>
-                <color> Herz </color>
-                <value> Zwei </value>
+                <color>Herz</color>
+                <value>Zwei</value>
               </card>
             </blockingCards>
           </blockedBy>
         </currentTurn>
         <active>
           <player>
-            <name> Abduhl </name>
+            <name>Abduhl</name>
           </player>
         </active>
-        <winners> </winners>
+        <winners></winners>
       </game>
 
     "saved" should {
