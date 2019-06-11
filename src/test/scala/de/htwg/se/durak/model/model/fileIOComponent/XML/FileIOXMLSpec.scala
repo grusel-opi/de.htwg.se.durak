@@ -49,102 +49,102 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val game = Game(players_list, deck, trump_card, turn, player1, List())
 
-    val fileIO: FileIOInterface = new FileIO
+    val fileIO: FileIO = new FileIO()
 
     val file_name = "test"
     val file_name_with_extension = file_name + ".xml"
 
+    val expected_xml_content: Elem =
+      <game>
+        <players>
+          <player>
+            <name>Abduhl</name>
+            <handCards>
+              <card>
+                <color>Pik</color>
+                <value>Acht</value>
+              </card>
+              <card>
+                <color>Herz</color>
+                <value>Sieben</value>
+              </card>
+              <card>
+                <color>Karo</color>
+                <value>Ass</value>
+              </card>
+              <card>
+                <color>Kreuz</color>
+                <value>Dame</value>
+              </card>
+            </handCards>
+          </player>
+          <player>
+            <name>Alfred</name>
+            <handCards>
+              <card>
+                <color>Herz</color>
+                <value>Fünf</value>
+              </card>
+              <card>
+                <color>Kreuz</color>
+                <value>Acht</value>
+              </card>
+              <card>
+                <color>Kreuz</color>
+                <value>König</value>
+              </card>
+              <card>
+                <color>Karo</color>
+                <value>Zwei</value>
+              </card>
+              <card>
+                <color>Pik</color>
+                <value>Ass</value>
+              </card>
+            </handCards>
+          </player>
+        </players>
+        <deck>
+          <card>
+            <color>Herz</color>
+            <value>Ass</value>
+          </card>
+        </deck>
+        <trump>
+          <card>
+            <color>Kreuz</color>
+            <value>Drei</value>
+          </card>
+        </trump>
+        <currentTurn>
+          <attacker>
+            <player>
+              <name>Abduhl</name>
+            </player>
+          </attacker>
+          <victim>
+            <player>
+              <name>Alfred</name>
+            </player>
+          </victim>
+          <neighbour>
+            <player>
+              <name>Alfred</name>
+            </player>
+          </neighbour>
+          <attackCards></attackCards>
+        </currentTurn>
+        <active>
+          <player>
+            <name>Abduhl</name>
+          </player>
+        </active>
+        <winners></winners>
+      </game>
+
     "saved" should {
       fileIO.save(game, file_name_with_extension)
       val filename = "save/" + file_name_with_extension
-
-      val content_to_expect =
-        <game>
-          <players>
-            <player>
-              <name>Abduhl</name>
-              <handCards>
-                <card>
-                  <color>Pik</color>
-                  <value>Acht</value>
-                </card>
-                <card>
-                  <color>Herz</color>
-                  <value>Sieben</value>
-                </card>
-                <card>
-                  <color>Karo</color>
-                  <value>Ass</value>
-                </card>
-                <card>
-                  <color>Kreuz</color>
-                  <value>Dame</value>
-                </card>
-              </handCards>
-            </player>
-            <player>
-              <name>Alfred</name>
-              <handCards>
-                <card>
-                  <color>Herz</color>
-                  <value>Fünf</value>
-                </card>
-                <card>
-                  <color>Kreuz</color>
-                  <value>Acht</value>
-                </card>
-                <card>
-                  <color>Kreuz</color>
-                  <value>König</value>
-                </card>
-                <card>
-                  <color>Karo</color>
-                  <value>Zwei</value>
-                </card>
-                <card>
-                  <color>Pik</color>
-                  <value>Ass</value>
-                </card>
-              </handCards>
-            </player>
-          </players>
-          <deck>
-            <card>
-              <color>Herz</color>
-              <value>Ass</value>
-            </card>
-          </deck>
-          <trump>
-            <card>
-              <color>Kreuz</color>
-              <value>Drei</value>
-            </card>
-          </trump>
-          <currentTurn>
-            <attacker>
-              <player>
-                <name>Abduhl</name>
-              </player>
-            </attacker>
-            <victim>
-              <player>
-                <name>Alfred</name>
-              </player>
-            </victim>
-            <neighbour>
-              <player>
-                <name>Alfred</name>
-              </player>
-            </neighbour>
-            <attackCards></attackCards>
-          </currentTurn>
-          <active>
-            <player>
-              <name>Abduhl</name>
-            </player>
-          </active>
-          <winners></winners>
-        </game>
 
       var file: Option[BufferedSource] = None
 
@@ -158,7 +158,7 @@ class FileIOXMLSpec extends WordSpec with Matchers {
       var expected_content = false
 
       if (file.isDefined) {
-        val snipped_expected_content = content_to_expect.mkString.replaceAll("\\s", "")
+        val snipped_expected_content = expected_xml_content.mkString.replaceAll("\\s", "")
         val snipped_file_content = file.get.mkString.replaceAll("\\s", "")
 
         expected_content = snipped_expected_content.equals(snipped_file_content)
@@ -193,7 +193,14 @@ class FileIOXMLSpec extends WordSpec with Matchers {
         game.getNeighbour(player1) should be(player2)
         game.getNeighbour(player2) should be(player1)
       }
-      
+
+    }
+
+    "parsed to xml " should {
+      "produce the expected durak game as xml" in {
+        fileIO.gameToXml(game).toString().replaceAll("\\s", "").equals(
+          expected_xml_content.toString().replaceAll("\\s", "")) should be(true)
+      }
     }
   }
 }
