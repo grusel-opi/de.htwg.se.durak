@@ -587,7 +587,7 @@ class GameSpec extends WordSpec with Matchers {
         val player4 = Player("4", card3::card4::Nil)
         val player5 = Player("4", card3::card4::Nil)
 
-        val players = List(player1, player2, player3, player4, player5)
+        val players = List(player1, player2, player3)
         val turn = Turn(player1, player2, player3, List(), Map())
         val deck = new Deck()
 
