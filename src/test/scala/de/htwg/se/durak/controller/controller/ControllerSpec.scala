@@ -9,14 +9,14 @@ import javafx.application.Application
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
-import javafx.embed.swing.JFXPanel
+import org.testfx.api.FxToolkit
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
   val timeToSleep = 100
 
   "A controller" when {
-    new JFXPanel
+    FxToolkit.registerPrimaryStage()
     val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
 
     "created" should {
