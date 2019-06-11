@@ -4,7 +4,9 @@ import com.sun.javafx.application.PlatformImpl
 import de.htwg.se.durak.Durak.injector
 import de.htwg.se.durak.aview.gui.Gui
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
+import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import javafx.application.Application
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
@@ -20,12 +22,24 @@ class ControllerSpec extends WordSpec with Matchers {
     val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
 
     "created" should {
-      "have a IDLE game status" in {
-        controller.gameStatus should be(GameStatus.IDLE)
-      }
-
       "have an empty player list" in {
         controller.players should be(List.empty)
+      }
+
+      "have an default game" in {
+        val deck = controller.game.deck
+        val trump_card = controller.game.trump
+        val default_player = new Player("default")
+        val default_turn = new Turn(default_player, default_player, default_player)
+
+        controller.game.deck should be(deck)
+        controller.game.players should be(List(default_player))
+        controller.game.active should be(default_player)
+        controller.game.trump should be(trump_card)
+        controller.game.currentTurn should be(default_turn)
+        controller.game.winners should be(List.empty)
+
+        controller.gameStatus should be(GameStatus.IDLE)
       }
     }
 
@@ -40,6 +54,17 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.players.size should be(1)
         controller.players.head.name should be("Hans")
         controller.players.head.handCards should be(List.empty)
+        controller.gameStatus should be(GameStatus.NEWPLAYER)
+      }
+
+      "set the game status to 'PLAYERALREADYPRESENT', if the player already exists" in {
+        controller.newPlayer("Hans")
+
+        while (controller.gameStatus == GameStatus.NEWPLAYER) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.PLAYERALREADYPRESENT)
       }
     }
 
@@ -51,13 +76,59 @@ class ControllerSpec extends WordSpec with Matchers {
           Thread.sleep(timeToSleep)
         }
 
-        controller.players should be (List.empty)
+        controller.players should be(List.empty)
+        controller.gameStatus should be(GameStatus.RESETPLAYERS)
       }
     }
 
-    "creating a new game" should {
-      "" in {
+    "creating a new game with too few players " should {
+      "set the game status to 'MOREPLAYERSNEEDED'" in {
+        controller.newGame()
 
+        while (controller.gameStatus == GameStatus.RESETPLAYERS) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.MOREPLAYERSNEEDED)
+      }
+    }
+
+    "creating a new game with enough players" should {
+      "crate a new game" in {
+        var player1 = new Player("Hans")
+        var player2 = new Player("Peter")
+
+        controller.newPlayer(player1.name)
+        controller.newPlayer(player2.name)
+
+        while (controller.players.size != 2) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.newGame()
+
+        while (controller.gameStatus == GameStatus.NEWPLAYER) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.NEW)
+        controller.players.size should be(2)
+        controller.players.foreach(player => {
+          player.name should (be(player1.name) or be(player2.name))
+        })
+
+        controller.game.winners should be(List.empty)
+        controller.game.active.name should (be(player1.name) or be(player2.name))
+
+        val deck = controller.game.deck
+        val trump_card = controller.game.trump
+        val attacker = controller.game.active
+        val victim = controller.game.getNeighbour(controller.game.active)
+        val turn = Turn(attacker, victim, controller.game.getNeighbour(victim), List.empty, Map.empty)
+
+        controller.game.currentTurn should be(turn)
+        controller.game.deck should be(deck)
+        controller.game.trump should be(trump_card)
       }
     }
   }
