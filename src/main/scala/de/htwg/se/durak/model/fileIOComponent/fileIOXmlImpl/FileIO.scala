@@ -40,7 +40,7 @@ class FileIO extends FileIOInterface {
 
   override def save(game: GameInterface, fileName: String): Unit = saveString(game, fileName)
 
-  def saveString(game: GameInterface, fileName: String): Unit = {
+  def saveString(game: GameInterface, fileName: String) = {
     val WIDTH: Int = 120
     val STEP: Int = 4
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
