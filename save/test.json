@@ -1,0 +1,115 @@
+{
+  "game" : {
+    "players" : [ {
+      "player" : {
+        "name" : "Abduhl",
+        "handCards" : [ {
+          "card" : {
+            "color" : "Pik",
+            "value" : "Acht"
+          }
+        }, {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Sieben"
+          }
+        }, {
+          "card" : {
+            "color" : "Karo",
+            "value" : "Ass"
+          }
+        }, {
+          "card" : {
+            "color" : "Kreuz",
+            "value" : "Dame"
+          }
+        } ]
+      }
+    }, {
+      "player" : {
+        "name" : "Alfred",
+        "handCards" : [ {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Fünf"
+          }
+        }, {
+          "card" : {
+            "color" : "Kreuz",
+            "value" : "Acht"
+          }
+        }, {
+          "card" : {
+            "color" : "Kreuz",
+            "value" : "König"
+          }
+        }, {
+          "card" : {
+            "color" : "Karo",
+            "value" : "Zwei"
+          }
+        }, {
+          "card" : {
+            "color" : "Pik",
+            "value" : "Ass"
+          }
+        } ]
+      }
+    } ],
+    "deck" : [ {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Ass"
+      }
+    } ],
+    "trump" : {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Drei"
+      }
+    },
+    "currentTurn" : {
+      "attacker" : {
+        "player" : {
+          "name" : "Abduhl"
+        }
+      },
+      "victim" : {
+        "player" : {
+          "name" : "Alfred"
+        }
+      },
+      "neighbour" : {
+        "player" : {
+          "name" : "Alfred"
+        }
+      },
+      "attackCards" : [ {
+        "card" : {
+          "color" : "Karo",
+          "value" : "Fünf"
+        }
+      } ],
+      "blockedBy" : [ {
+        "attackCards" : {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Zwei"
+          }
+        },
+        "blockingCards" : {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Zwei"
+          }
+        }
+      } ]
+    },
+    "active" : {
+      "player" : {
+        "name" : "Abduhl"
+      }
+    },
+    "winners" : [ ]
+  }
+}
