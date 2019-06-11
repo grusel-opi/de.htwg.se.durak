@@ -230,6 +230,66 @@ class ControllerSpec extends WordSpec with Matchers {
         false
       }
     }
+
+    "trying to get the active player as string" should {
+      "return the active player as string" in {
+        controller.activePlayerToString() should be(controller.game.active.toString)
+      }
+    }
+
+    "trying to get the handcards of the active player as string" should {
+      "return the handcards of the active player as string" in {
+        controller.activePlayerHandCardsToString() should be(controller.game.active.handCards.mkString(","))
+      }
+    }
+
+    "trying to get the trump card as string" should {
+      "return the trump card as string" in {
+        controller.trumpCardToString() should be(controller.game.trump.toString)
+      }
+    }
+
+    "trying to get the current turn as string" should {
+      "return the current turn as string" in {
+        controller.currentTurnToString() should be(controller.game.currentTurn.toString)
+      }
+    }
+
+    "trying to get the current attacker as string" should {
+      "return the current attacker as string" in {
+        controller.currentAttackerToString() should be(controller.game.currentTurn.attacker.toString)
+      }
+    }
+
+    "trying to get the current victim as string" should {
+      "return the current victim as string" in {
+        controller.currentVictimToString() should be(controller.game.currentTurn.victim.toString)
+      }
+    }
+
+    "trying to get the current neighbour as string" should {
+      "return the current neighbour as string" in {
+        controller.currentNeighbourToString() should be(controller.game.currentTurn.neighbour.toString)
+      }
+    }
+
+    "trying to get the current attack cards as string" should {
+      "return the current attack cards as string" in {
+        controller.currentAttackCardsToString() should be(controller.game.currentTurn.attackCards.mkString(","))
+      }
+    }
+
+    "trying to get the current blocked by map as string" should {
+      "return the current blocked by map as string" in {
+        controller.getCurrentBlockedByMap should be(controller.game.currentTurn.blockedBy)
+      }
+    }
+
+    "trying to get the deck size as string" should {
+      "retrun the deck size as string" in {
+        controller.deckSizeToString() should be(controller.game.deck.cards.size.toString)
+      }
+    }
   }
 
 }
