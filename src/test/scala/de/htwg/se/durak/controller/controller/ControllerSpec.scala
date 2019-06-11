@@ -1,13 +1,9 @@
 package de.htwg.se.durak.controller.controller
 
-import com.sun.javafx.application.PlatformImpl
 import de.htwg.se.durak.Durak.injector
-import de.htwg.se.durak.aview.gui.Gui
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
-import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
-import javafx.application.Application
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
@@ -40,6 +36,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.game.winners should be(List.empty)
 
         controller.gameStatus should be(GameStatus.IDLE)
+        GameStatus.message(controller.gameStatus) should be("")
       }
     }
 
@@ -55,6 +52,8 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.players.head.name should be("Hans")
         controller.players.head.handCards should be(List.empty)
         controller.gameStatus should be(GameStatus.NEWPLAYER)
+        GameStatus.message(controller.gameStatus) should be("A new player was added")
+
       }
 
       "set the game status to 'PLAYERALREADYPRESENT', if the player already exists" in {
@@ -65,6 +64,7 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.gameStatus should be(GameStatus.PLAYERALREADYPRESENT)
+        GameStatus.message(controller.gameStatus) should be("The player you want to add already exists.")
       }
     }
 
@@ -78,6 +78,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.players should be(List.empty)
         controller.gameStatus should be(GameStatus.RESETPLAYERS)
+        GameStatus.message(controller.gameStatus) should be("Reset the players list.")
       }
     }
 
@@ -90,11 +91,12 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.gameStatus should be(GameStatus.MOREPLAYERSNEEDED)
+        GameStatus.message(controller.gameStatus) should be("More players required to start the game.")
       }
     }
 
     "creating a new game with enough players" should {
-      "crate a new game" in {
+      "create a new game" in {
         var player1 = new Player("Hans")
         var player2 = new Player("Peter")
 
@@ -112,6 +114,8 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.gameStatus should be(GameStatus.NEW)
+        GameStatus.message(controller.gameStatus) should be("A new game was created.")
+
         controller.players.size should be(2)
         controller.players.foreach(player => {
           player.name should (be(player1.name) or be(player2.name))
