@@ -111,7 +111,6 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     })
   }
 
-
   def redo(): Unit = {
     Platform.runLater(() => {
       undoManager.redoStep()

@@ -47,4 +47,4 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 // Fork a new JVM for 'run' and 'test:run', to avoid JavaFX double initialization problems
 fork := true
 
-coverageExcludedPackages := "//.*aview.*;.*controller.*;.*util.*;.*Durak.*;.*DurakModule.*"
+coverageExcludedPackages := "//.*aview.*;.*controller.*;.*util.*;.*Durak.*;.*DurakModule.*;.*aview"
