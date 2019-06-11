@@ -38,6 +38,7 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val player1 = Player("Abduhl", player1_handcards)
     val player2 = Player("Alfred", player_2_handcards)
+    val players_list = List(player1, player2)
 
     val deck_card = Card(CardColor.Herz, CardValue.Ass)
     val deck: DeckInterface = Deck(List(deck_card))
@@ -46,13 +47,16 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val turn: TurnInterface = new Turn(player1, player2, player2)
 
-    val game = Game(List(player1, player2), deck, trump_card, turn, player1, List())
+    val game = Game(players_list, deck, trump_card, turn, player1, List())
 
     val fileIO: FileIOInterface = new FileIO
 
+    val file_name = "test"
+    val file_name_with_extension = file_name + ".xml"
+
     "saved" should {
-      fileIO.save(game, "test.xml")
-      val filename = "save/test.xml"
+      fileIO.save(game, file_name_with_extension)
+      val filename = "save/" + file_name_with_extension
 
       val content_to_expect =
         <game>
@@ -165,9 +169,31 @@ class FileIOXMLSpec extends WordSpec with Matchers {
         file should not be None
       }
 
+      "remove extensions from file name" in {
+        fileIO.removeExtensionFromFileName(file_name) should be(file_name)
+        fileIO.removeExtensionFromFileName(file_name_with_extension) should be(file_name)
+      }
+
       "produce a savefile" in {
         expected_content should be(true)
       }
+
+    }
+
+    "loaded" should {
+      val game = fileIO.load(file_name)
+
+      "produce the expected durak game" in {
+        game.players should be(players_list)
+        game.active should be(player1)
+        game.currentTurn should be(turn)
+        game.deck should be(deck)
+        game.winners should be(List())
+        game.trump should be(trump_card)
+        game.getNeighbour(player1) should be(player2)
+        game.getNeighbour(player2) should be(player1)
+      }
+      
     }
   }
 }
