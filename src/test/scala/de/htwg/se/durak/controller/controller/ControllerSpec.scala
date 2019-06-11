@@ -2,18 +2,21 @@ package de.htwg.se.durak.controller.controller
 
 import com.sun.javafx.application.PlatformImpl
 import de.htwg.se.durak.Durak.injector
+import de.htwg.se.durak.aview.gui.Gui
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
+import javafx.application.Application
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
+import javafx.embed.swing.JFXPanel
 
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
   val timeToSleep = 100
 
   "A controller" when {
-    PlatformImpl.startup(() => {})
+    new JFXPanel
     val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
 
     "created" should {
@@ -40,7 +43,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
 
-    "reset the players list" should {
+    "reseting the players list" should {
       "have an empty player list" in {
         controller.resetPlayers()
 
@@ -49,6 +52,12 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.players should be (List.empty)
+      }
+    }
+
+    "creating a new game" should {
+      "" in {
+
       }
     }
   }
