@@ -10,7 +10,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
-import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, LayCardFirsException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
+import de.htwg.se.durak.util.customExceptions.{IllegalTurnException, LayCardFirsException, MissingBlockingCardException, NoCardsToTakeException, VictimHasNotEnoughCardsToBlockException}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -381,19 +381,19 @@ class GameSpec extends WordSpec with Matchers {
     }
 
     "a player is shoving a card" should {
-      var card = Card(CardColor.Karo, CardValue.Zwei)
-
-      var player1 = Player("1", Nil)
-      var player2 = Player("2", card::Nil)
-      var player3 = Player("4", Nil)
-
-      var players = List(player1, player2, player3)
-      var turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Sieben)), Map())
-      var deck = new Deck()
-
-      var game = Game(players, deck, deck.head, turn, turn.victim, Nil)
-
       "may not be able to shove" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+
+        val player1 = Player("1", Nil)
+        val player2 = Player("2", card::Nil)
+        val player3 = Player("4", Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Sieben)), Map())
+        val deck = new Deck()
+
+        var game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
         intercept[IllegalTurnException] {
           game.playCard(card, None)
         }
@@ -409,18 +409,233 @@ class GameSpec extends WordSpec with Matchers {
         val player2 = Player("2", card::card2::Nil)
         val player3 = Player("4", card3::card4::Nil)
 
-        players = List(player1, player2, player3)
-        turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Zwei)), Map())
-        deck = new Deck()
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Zwei)), Map())
+        val deck = new Deck()
 
-        game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
 
         val newGame = game.playCard(card, None)
         newGame.active.equals(player2)
       }
 
+      "may be able to win by doing so" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Karo, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
 
+        val player1 = Player("1", card2::Nil)
+        val player2 = Player("2", card::Nil)
+        val player3 = Player("4", card3::card4::Nil)
 
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(Card(CardColor.Herz, CardValue.Zwei)), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card, None)
+
+        newGame.winners.contains(player2)
+
+      }
+
+    }
+
+    "a player is defending" should {
+      "may be able to win by doing so with many others" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+        val card5 = Card(CardColor.Herz, CardValue.Zwei)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+        val player4 = Player("4", card3::card4::Nil)
+        val player5 = Player("4", card3::card4::Nil)
+
+        val players = List(player1, player2, player3, player4, player5)
+        val turn = Turn(player1, player2, player3, List(card5), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card2, Some(card5))
+
+        newGame.winners.contains(player2)
+      }
+
+      "may be able to win by doing so with two others" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+        val card5 = Card(CardColor.Herz, CardValue.Zwei)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(card5), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card2, Some(card5))
+
+        newGame.winners.contains(player2)
+      }
+
+      "may be able to win by doing so with one other player" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+         val card5 = Card(CardColor.Herz, CardValue.Zwei)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+
+        val players = List(player1, player2)
+        val turn = Turn(player1, player2, player1, List(card5), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card2, Some(card5))
+
+        newGame.winners.contains(player2)
+      }
+
+      "may just block the attack card" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+        val card5 = Card(CardColor.Herz, CardValue.Zwei)
+        val card6 = Card(CardColor.Herz, CardValue.Ass)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::card6::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(card5), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        val newGame = game.playCard(card2, Some(card5))
+
+        newGame.currentTurn.blockedBy.contains(card2)
+      }
+
+      "throw an exception if there is no card to block specified" in {
+        val card = Card(CardColor.Kreuz, CardValue.Fünf)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", Nil)
+        val player3 = Player("4", Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.victim, Nil)
+
+        intercept[MissingBlockingCardException] {
+          game.defend(card, None)
+        }
+      }
+    }
+
+    "a player is attacking" should {
+      "be able to win with many other players" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+        val card5 = Card(CardColor.Herz, CardValue.Zwei)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+        val player4 = Player("4", card3::card4::Nil)
+        val player5 = Player("4", card3::card4::Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
+
+        val newGame = game.attack(card)
+
+        newGame.winners.contains(player1)
+      }
+
+      "be able to win with two other players" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+        val player3 = Player("4", card3::card4::Nil)
+
+        val players = List(player1, player2, player3)
+        val turn = Turn(player1, player2, player3, List(), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
+
+        val newGame = game.attack(card)
+
+        newGame.winners.contains(player1)
+      }
+
+      "be able to win with one other player" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+
+        val players = List(player1, player2, player1)
+        val turn = Turn(player1, player2, player1, List(), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
+
+        val newGame = game.attack(card)
+
+        newGame.winners.contains(player1)
+      }
+
+      "be able to raise an exception" in {
+        val card = Card(CardColor.Karo, CardValue.Zwei)
+        val card2 = Card(CardColor.Herz, CardValue.Drei)
+        val card3 = Card(CardColor.Kreuz, CardValue.Vier)
+        val card4 = Card(CardColor.Pik, CardValue.Fünf)
+
+        val player1 = Player("1", card::Nil)
+        val player2 = Player("2", card2::Nil)
+
+        val players = List(player1, player2, player1)
+        val turn = Turn(player1, player2, player1, List(card3), Map())
+        val deck = new Deck()
+
+        val game = Game(players, deck, deck.head, turn, turn.attacker, Nil)
+
+        intercept[IllegalTurnException] {
+          game.attack(card)
+        }
+      }
     }
   }
 }
