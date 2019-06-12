@@ -95,7 +95,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
       println(controller.currentTurnToString())
       print("cards: ")
       print(controller.activePlayerHandCardsToString() + "\n")
-      print("winners: " + controller.winnerToString() + "\n")
+      print("winners: " + controller.winnersToString() + "\n")
       println("=============================================")
       println()
     }

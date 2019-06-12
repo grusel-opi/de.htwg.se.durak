@@ -35,6 +35,9 @@ libraryDependencies += "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6"
 
 libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"
 
+libraryDependencies += "org.testfx" % "testfx-core" % "4.0.1-alpha" % Test
+
+
 resourceDirectory in Compile := (scalaSource in Compile).value
 libraryDependencies ++= Seq(
   "org.scalafx" %% "scalafx" % "8.0.102-R11",
@@ -46,4 +49,4 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 // Fork a new JVM for 'run' and 'test:run', to avoid JavaFX double initialization problems
 fork := true
 
-coverageExcludedPackages := "//.*aview.*;.*controller.*;.*util.*;.*Durak.*;.*DurakModule.*;.*aview;.*Gui.*"
+coverageExcludedPackages := "//.*aview.*;.*util.*;.*Durak.*;.*DurakModule.*;.*aview;.*Gui.*"

@@ -57,7 +57,7 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val fileIO: FileIO = new FileIO()
 
-    val file_name = "test"
+    val file_name = "model_test"
     val file_name_with_extension = file_name + ".xml"
 
     val expected_xml_content: Elem =
@@ -169,15 +169,14 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     "saved" should {
       fileIO.save(game, file_name_with_extension)
-      val filename = "save/" + file_name_with_extension
+      val location = "save/" + file_name_with_extension
 
       var file: Option[BufferedSource] = None
 
       try {
-        file = Some(Source.fromFile(filename))
+        file = Some(Source.fromFile(location))
       } catch {
         case fnfe: FileNotFoundException => file = None
-
       }
 
       var expected_content = false
@@ -205,22 +204,22 @@ class FileIOXMLSpec extends WordSpec with Matchers {
     }
 
     "loaded" should {
-      val game = fileIO.load(file_name)
+      val loaded_game = fileIO.load(file_name)
 
       "produce the expected durak game" in {
-        game.players should be(players_list)
-        game.active should be(player1)
-        game.currentTurn should be(turn)
-        game.deck should be(deck)
-        game.winners should be(List())
-        game.trump should be(trump_card)
-        game.getNeighbour(player1) should be(player2)
-        game.getNeighbour(player2) should be(player1)
+        loaded_game.players should be(game.players)
+        loaded_game.active should be(game.players.head)
+        loaded_game.currentTurn should be(game.currentTurn)
+        loaded_game.deck should be(game.deck)
+        loaded_game.winners should be(game.winners)
+        loaded_game.trump should be(game.trump)
+        loaded_game.getNeighbour(player1) should be(game.players(1))
+        loaded_game.getNeighbour(player2) should be(game.players.head)
       }
 
     }
 
-    "parsed to xml " should {
+    "parsed to xml" should {
       "produce the expected durak game as xml" in {
         fileIO.gameToXml(game).toString().replaceAll("\\s", "").equals(
           expected_xml_content.toString().replaceAll("\\s", "")) should be(true)

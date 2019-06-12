@@ -135,7 +135,8 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
       } else {
         throw new IllegalTurnException()
       }
-    case None => throw new MissingBlockingCardException()
+    case None =>
+      throw new MissingBlockingCardException()
   }
 
   def winByDefence(): Game = {

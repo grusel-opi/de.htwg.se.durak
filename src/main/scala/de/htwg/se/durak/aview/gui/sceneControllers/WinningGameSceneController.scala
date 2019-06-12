@@ -19,6 +19,6 @@ class WinningGameSceneController(private val winningPlayerNameText: Text,
   }
 
   def setWinningPlayerText(): Unit = {
-    winningPlayerNameText.setText(gui.controller.winnerToString() + " has won the game.")
+    winningPlayerNameText.setText(gui.controller.winnersToString() + " has won the game.")
   }
 }
