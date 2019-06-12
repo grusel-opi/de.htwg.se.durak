@@ -6,6 +6,7 @@ import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
+import de.htwg.se.durak.controller.controllerComponent.ExceptionEvent
 import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
@@ -18,6 +19,18 @@ import util.control.Breaks._
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
   val timeToSleep = 100
+
+  "A ExceptionEvent" when {
+    "trying to get an exception" should {
+      "return an exception" in {
+        val iTE = new ExceptionEvent(new IllegalTurnException())
+        val ex = iTE.getException
+
+        ex.getClass should be(classOf[IllegalTurnException])
+        ex.getMessage should be("Illegal Turn!")
+      }
+    }
+  }
 
   "A controller" when {
     FxToolkit.registerPrimaryStage()
