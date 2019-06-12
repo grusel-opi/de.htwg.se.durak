@@ -10,10 +10,7 @@ services:
 
 before_install:
   - "export DISPLAY=:99.0"
-  - sleep 3
-
-jdk:
-  - oraclejdk11
+  - "export CLASSPATH=$CLASSPATH:/usr/share/java/openjfx/lib/"
 
 install: true
 
