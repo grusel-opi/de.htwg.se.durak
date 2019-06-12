@@ -150,18 +150,14 @@ class ControllerSpec extends WordSpec with Matchers {
         last_controller_state = Some(controller.game)
         controller.playCard(controller.game.active.handCards.head, None)
 
-        while (controller.gameStatus == GameStatus.NEW) {
-          Thread.sleep(timeToSleep)
-        }
-
-        controller.gameStatus should be(GameStatus.CARDLAYED)
-
-        while (controller.game.currentTurn.attackCards.isEmpty) {
+        while (controller.gameStatus == GameStatus.NEW && controller.game.currentTurn.attackCards.isEmpty) {
           Thread.sleep(timeToSleep)
         }
 
         controller.game.currentTurn.attackCards should be(List(card_to_lay))
         controller.game.currentTurn.blockedBy should be(Map.empty)
+        controller.gameStatus should be(GameStatus.CARDLAYED)
+        GameStatus.message(controller.gameStatus) should be("A card was layed.")
       }
     }
 
@@ -181,6 +177,8 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.game should be(last_controller_state.get)
+        controller.gameStatus should be(GameStatus.UNDO)
+        GameStatus.message(controller.gameStatus) should be("Undone one step.")
       }
     }
 
@@ -192,17 +190,33 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.redo()
 
-        while (controller.game.currentTurn.attackCards.isEmpty) {
+        while (controller.game.currentTurn.attackCards.isEmpty && controller.gameStatus == GameStatus.UNDO) {
           Thread.sleep(timeToSleep)
         }
 
         controller.game should be(new_controller_state.get)
+        controller.gameStatus should be(GameStatus.REDO)
+        GameStatus.message(controller.gameStatus) should be("Redone one step.")
+      }
+    }
+
+    "playing ok" should {
+      "set the victim as active player, if the attacker layed a valid card" in {
+        controller.playOk()
+
+        while (controller.gameStatus == GameStatus.REDO) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.game.active should be(controller.game.currentTurn.victim)
+        controller.gameStatus should be(GameStatus.OK)
+        GameStatus.message(controller.gameStatus) should be("Player is ok.")
+
       }
     }
 
     "playing an illegal turn " should {
       "thow an IllegalTurnException" in {
-        println(controller.game)
         var lowerCard: Option[CardInterface] = None
 
         breakable {
@@ -218,16 +232,26 @@ class ControllerSpec extends WordSpec with Matchers {
             })
             break
           }
-
         }
 
-        try {
-          controller.playCard(controller.game.currentTurn.attackCards.head, lowerCard)
-        } catch {
-          case ite: IllegalTurnException => true
+        controller.game.currentTurn.victim.pickCards(List(lowerCard.get))
+
+        val lastGameState = controller.game
+
+        while (controller.game.currentTurn.victim.handCards.size < 6) {
+          Thread.sleep(timeToSleep)
         }
 
-        false
+        controller.playCard(lowerCard.get, Some(controller.game.currentTurn.attackCards.head))
+
+        while (controller.gameStatus != GameStatus.ILLEGALTURN) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.ILLEGALTURN)
+        controller.game should be(lastGameState)
+
+
       }
     }
 
@@ -291,5 +315,4 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
   }
-
 }
