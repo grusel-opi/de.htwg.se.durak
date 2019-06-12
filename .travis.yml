@@ -1,9 +1,7 @@
 sudo: false
 
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+jdk:
+  - oraclejdk11
 
 language: scala
 
@@ -19,7 +17,6 @@ before_install:
 install: true
 
 script:
-  - sudo apt-get update && sudo apt-get install oracle-java8-installer
   - sbt clean coverage test coverageReport
 
 after_success:
