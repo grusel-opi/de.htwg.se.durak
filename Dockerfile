@@ -3,7 +3,7 @@
 # $ xhost +
 #
 # 2) run:
-# $ sudo docker run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY durak:v1
+# $ sudo docker run -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY gruselopi/de.htwg.se.durak:v1
 #
 # 3) disable x server access:
 # $ xhost -
