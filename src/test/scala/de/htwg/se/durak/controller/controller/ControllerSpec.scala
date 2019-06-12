@@ -1,5 +1,7 @@
 package de.htwg.se.durak.controller.controller
 
+import java.io.FileNotFoundException
+
 import de.htwg.se.durak.Durak.injector
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
 import de.htwg.se.durak.model.cardComponent.CardInterface
@@ -13,6 +15,7 @@ import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
 import org.testfx.api.FxToolkit
 
+import scala.io.{BufferedSource, Source}
 import util.control.Breaks._
 
 
@@ -400,6 +403,32 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
          controller.gameStatus should be(GameStatus.EXIT)
+      }
+    }
+
+    "saving a game" should {
+      "produce a save file with the given filename and set the game status to 'SAVED'" in {
+        val file_name_with_extension = "controller_test.json"
+
+        controller.saveGame(file_name_with_extension)
+
+        while (controller.gameStatus != GameStatus.SAVED) {
+          Thread.sleep(timeToSleep)
+        }
+
+        val location = "save/" + file_name_with_extension
+
+        var file: Option[BufferedSource] = None
+
+        try {
+          file = Some(Source.fromFile(location))
+        } catch {
+          case fnfe: FileNotFoundException => file = None
+        }
+
+        controller.gameStatus should be(GameStatus.SAVED)
+        GameStatus.message(controller.gameStatus) should be("The game was saved.")
+        file should not be None
       }
     }
   }

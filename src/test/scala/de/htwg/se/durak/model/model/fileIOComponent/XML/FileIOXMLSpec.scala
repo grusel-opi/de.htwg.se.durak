@@ -57,7 +57,7 @@ class FileIOXMLSpec extends WordSpec with Matchers {
 
     val fileIO: FileIO = new FileIO()
 
-    val file_name = "test"
+    val file_name = "model_test"
     val file_name_with_extension = file_name + ".xml"
 
     val expected_xml_content: Elem =
