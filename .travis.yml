@@ -1,32 +1,17 @@
-#sudo: false
-#
-#language: scala
-#
-#scala:
-#  - 2.12.7
-#
-#services:
-#  - xvfb
-#
-#before_install:
-#  - export DISPLAY=:99.0
-#
-#install: true
-#
-#script:
-#  - sbt clean coverage test coverageReport
-#
-#after_success:
-#  - sbt coverageReport coveralls
+sudo: false
 
 language: scala
+
 scala:
   - 2.12.7
 
-before_install:
-  - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
+services:
+  - xvfb
 
-install: true
+before_install:
+  - export DISPLAY=:99.0
+
+install: false
 
 script:
   - sbt clean coverage test coverageReport
