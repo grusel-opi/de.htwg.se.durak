@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1250.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.htwg.se.durak.aview.gui.sceneControllers.GameSceneController">
+   <children>
+      <ScrollPane fx:id="handCardScrollPane" layoutX="110.0" layoutY="504.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="1000.0" style="-fx-background: green; -fx-border-color: green;" vbarPolicy="NEVER">
+         <content>
+            <HBox fx:id="handCardBox" layoutX="100.0" prefHeight="125.0" prefWidth="996.0" />
+         </content>
+      </ScrollPane>
+      <Text layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Attacker:" />
+      <Text layoutX="14.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Victim:" />
+      <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active:" />
+      <Text fx:id="victimPlayerText" layoutX="81.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <Text fx:id="attackerPlayerText" layoutX="81.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <Text fx:id="activePlayerText" layoutX="81.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <HBox fx:id="trumpCardBox" layoutX="1120.0" layoutY="42.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="100.0" />
+      <Text layoutX="1125.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trump Card:" />
+      <Button fx:id="okayButton" disable="true" layoutX="14.0" layoutY="512.0" mnemonicParsing="false" onAction="#okayButtonPressed" prefHeight="26.0" prefWidth="66.0" text="OKAY!" />
+      <ScrollPane fx:id="attackCardsScrollPane" layoutX="100.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="1000.0" style="-fx-background: green; -fx-border-color: green;" vbarPolicy="NEVER">
+         <content>
+            <HBox fx:id="attackCardsBox" prefHeight="121.0" prefWidth="996.0" />
+         </content>
+      </ScrollPane>
+      <Button fx:id="undoButton" layoutX="14.0" layoutY="584.0" mnemonicParsing="false" onAction="#undoButtonPressed" prefHeight="26.0" prefWidth="66.0" text="Undo" />
+      <Button fx:id="takeButton" layoutX="14.0" layoutY="548.0" mnemonicParsing="false" onAction="#takeButtonPressed" text="TAKE :(" />
+      <Text fx:id="neighborText" layoutX="13.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Neighbor:" />
+      <Text fx:id="neighborTextContent" layoutX="81.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <Text layoutX="608.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cards in Deck:" />
+      <Text fx:id="cardsInDeckText" layoutX="709.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NULL" />
+      <ScrollPane fx:id="defendedCardsScrollPane" layoutX="105.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="1000.0" style="-fx-background: green; -fx-border-color: green;" vbarPolicy="NEVER">
+         <content>
+            <HBox fx:id="defendedCardsBox" prefHeight="247.0" prefWidth="996.0" />
+         </content>
+      </ScrollPane>
+      <Button fx:id="mainMenuButton" layoutX="1139.0" layoutY="603.0" mnemonicParsing="false" onAction="#mainMenuButtonPressed" prefHeight="26.0" prefWidth="95.0" text="Main Menu" />
+   </children>
+</AnchorPane>
