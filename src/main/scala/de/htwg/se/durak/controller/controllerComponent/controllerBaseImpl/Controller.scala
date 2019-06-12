@@ -207,7 +207,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     game.deck.cards.size.toString
   }
 
-  def winnerToString(): String = {
+  def winnersToString(): String = {
     game.winners.toString()
   }
 
@@ -225,7 +225,11 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   }
 
   def exitGame(): Unit = {
-    System.exit(0)
+    Platform.runLater(() => {
+      gameStatus = EXIT
+      Thread.sleep(2000)
+      System.exit(0)
+    })
   }
 
 }

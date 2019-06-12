@@ -268,7 +268,6 @@ class ControllerSpec extends WordSpec with Matchers {
           Thread.sleep(timeToSleep)
         }
 
-        print(controller.game.currentTurn)
         controller.gameStatus should be(GameStatus.TAKE)
         GameStatus.message(controller.gameStatus) should be ("Player take cards")
 
@@ -291,6 +290,25 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.gameStatus should be(GameStatus.LAYCARDFIRST)
         GameStatus.message(controller.gameStatus) should be("You have to lay a card first.")
+      }
+    }
+
+    "a attacker is trying to take the cards, but no cards were layed already" should {
+      "set the game status to 'LAYCARDFIRST'" in {
+        controller.takeCards()
+
+        while (controller.gameStatus != GameStatus.NOCARDSTOTAKE) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.NOCARDSTOTAKE)
+        GameStatus.message(controller.gameStatus) should be("There are no cards to take.")
+      }
+    }
+
+    "checking if the game is over, and the player size is only 1" should {
+      "set the game status to 'OVER" in {
+        // TODO
       }
     }
 
@@ -349,8 +367,26 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "trying to get the deck size as string" should {
-      "retrun the deck size as string" in {
+      "return the deck size as string" in {
         controller.deckSizeToString() should be(controller.game.deck.cards.size.toString)
+      }
+    }
+
+    "trying to get winners as string" should {
+      "return the winners as string" in {
+        controller.winnersToString() should be(controller.game.winners.toString())
+      }
+    }
+
+    "trying to exit the game" should {
+      "set the game status to 'EXIT' and exit the whole program" in {
+        controller.exitGame()
+
+        while (controller.gameStatus != GameStatus.EXIT) {
+          Thread.sleep(timeToSleep)
+        }
+
+         controller.gameStatus should be(GameStatus.EXIT)
       }
     }
   }
