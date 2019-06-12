@@ -12,7 +12,7 @@
 
 FROM hseeberger/scala-sbt
 RUN apt-get update && apt-get install -y --no-install-recommends openjfx && rm -rf /var/lib/apt/lists/*
-RUN export CLASSPATH=$CLASSPATH:/usr/share/java/openjfx/lib/
+# RUN export CLASSPATH=$CLASSPATH:/usr/share/java/openjfx/lib/
 WORKDIR /durak
 ADD . /durak
 CMD sbt test && sbt run

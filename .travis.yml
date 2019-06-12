@@ -1,13 +1,5 @@
 sudo: false
 
-jdk:
-  - oraclejdk11
-
-addons:
-  apt:
-    packages:
-      - oracle-java11-installer
-
 language: scala
 
 scala:
