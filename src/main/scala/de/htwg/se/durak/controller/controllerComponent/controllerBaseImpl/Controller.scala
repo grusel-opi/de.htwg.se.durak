@@ -64,7 +64,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): Unit = {
     Platform.runLater(() => {
       try {
-        undoManager.doStep(new PlayCommand(firstCard, secondCard, this))
+        undoManager.doStep(PlayCommand(firstCard, secondCard, this))
         if (!checkIfGameIsOver) {
           gameStatus = CARDLAYED
           publish(new CardsChangedEvent)
@@ -87,7 +87,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def throwCardIn(card: CardInterface): Unit = {
     Platform.runLater(() => {
       try {
-        undoManager.doStep(new PlayCommand(card, None, this))
+        undoManager.doStep(PlayCommand(card, None, this))
         if (!checkIfGameIsOver) {
           gameStatus = CARDLAYED
           publish(new CardsChangedEvent)

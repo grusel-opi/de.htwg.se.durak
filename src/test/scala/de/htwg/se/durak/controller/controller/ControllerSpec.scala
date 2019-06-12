@@ -216,16 +216,20 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "playing an illegal turn " should {
-      "thow an IllegalTurnException" in {
+      "set the game status to 'ILLEGALTURN'" in {
         var lowerCard: Option[CardInterface] = None
 
         breakable {
           while (true) {
             controller.game.deck.cards.foreach(card => {
-              if (card.color != controller.game.currentTurn.attackCards.head.color && card.value < controller.game.currentTurn.attackCards.head.value) {
+              if (card.color != controller.game.currentTurn.attackCards.head.color && card.color != controller.game.trump.color) {
                 lowerCard = Some(card)
                 break
-              } else if (card.color == controller.game.trump.color && card.value < controller.game.currentTurn.attackCards.head.value) {
+              } else if (card.color == controller.game.trump.color && card.color == controller.game.currentTurn.attackCards.head.color
+                && card.value < controller.game.currentTurn.attackCards.head.value) {
+                lowerCard = Some(card)
+                break
+              } else if (card.color == controller.game.currentTurn.attackCards.head.color && card.value < controller.game.currentTurn.attackCards.head.value) {
                 lowerCard = Some(card)
                 break
               }
@@ -249,9 +253,44 @@ class ControllerSpec extends WordSpec with Matchers {
         }
 
         controller.gameStatus should be(GameStatus.ILLEGALTURN)
+        GameStatus.message(controller.gameStatus) should be("Illegal turn.")
         controller.game should be(lastGameState)
+      }
+    }
 
+    "a player take the cards" should {
+      "start a new turn" in {
+        val new_active_player = controller.game.currentTurn.attacker
 
+        controller.takeCards()
+
+        while (controller.gameStatus != GameStatus.TAKE) {
+          Thread.sleep(timeToSleep)
+        }
+
+        print(controller.game.currentTurn)
+        controller.gameStatus should be(GameStatus.TAKE)
+        GameStatus.message(controller.gameStatus) should be ("Player take cards")
+
+        controller.game.active should be(new_active_player)
+        controller.game.currentTurn.attacker should be(new_active_player)
+        controller.game.currentTurn.victim should be(controller.game.getNeighbour(new_active_player))
+        controller.game.currentTurn.attackCards should be(List.empty)
+        controller.game.currentTurn.blockedBy should be(Map.empty)
+        controller.game.currentTurn.neighbour should be(controller.game.getNeighbour(controller.game.currentTurn.victim))
+      }
+    }
+
+    "a attacker is trying to play ok, but layed no cards already" should {
+      "set the game status to 'LAYCARDFIRST'" in {
+        controller.playOk()
+
+        while (controller.gameStatus != GameStatus.LAYCARDFIRST) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.LAYCARDFIRST)
+        GameStatus.message(controller.gameStatus) should be("You have to lay a card first.")
       }
     }
 

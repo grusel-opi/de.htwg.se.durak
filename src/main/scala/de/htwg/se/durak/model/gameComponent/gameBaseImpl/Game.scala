@@ -121,6 +121,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
 
   def defend(card: CardInterface, cardToBlock: Option[CardInterface]): Game = cardToBlock match {
     case Some(enemy) =>
+      println("enemy: " + enemy)
       if (checkBlockCard(card, enemy)) {
         active.dropCards(card :: Nil)
         if (currentTurn.addBlockCard(enemy, card).attackCards.isEmpty) {
@@ -135,7 +136,9 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
       } else {
         throw new IllegalTurnException()
       }
-    case None => throw new MissingBlockingCardException()
+    case None =>
+      println("YOO!")
+      throw new MissingBlockingCardException()
   }
 
   def winByDefence(): Game = {
