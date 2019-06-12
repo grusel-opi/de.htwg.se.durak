@@ -227,7 +227,6 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   def exitGame(): Unit = {
     Platform.runLater(() => {
       gameStatus = EXIT
-      Thread.sleep(2000)
       System.exit(0)
     })
   }

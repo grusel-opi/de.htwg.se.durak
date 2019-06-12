@@ -394,18 +394,6 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
 
-    "trying to exit the game" should {
-      "set the game status to 'EXIT' and exit the whole program" in {
-        controller.exitGame()
-
-        while (controller.gameStatus != GameStatus.EXIT) {
-          Thread.sleep(timeToSleep)
-        }
-
-         controller.gameStatus should be(GameStatus.EXIT)
-      }
-    }
-
     "saving a game" should {
       "produce a save file with the given filename and set the game status to 'SAVED'" in {
         val file_name_with_extension = "controller_test.json"
