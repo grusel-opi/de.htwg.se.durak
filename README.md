@@ -9,3 +9,5 @@
 [![](https://images.microbadger.com/badges/image/gruselopi/de.htwg.se.durak.svg)](https://microbadger.com/images/gruselopi/de.htwg.se.durak "Get your own image badge on microbadger.com")
 
 [![](https://images.microbadger.com/badges/version/gruselopi/de.htwg.se.durak.svg)](https://microbadger.com/images/gruselopi/de.htwg.se.durak "Get your own version badge on microbadger.com")
+
+see dockerfile for run instructions
