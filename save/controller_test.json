@@ -5,8 +5,23 @@
         "name" : "Peter",
         "handCards" : [ {
           "card" : {
-            "color" : "Kreuz",
+            "color" : "Pik",
             "value" : "Drei"
+          }
+        }, {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Neun"
+          }
+        }, {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Dame"
+          }
+        }, {
+          "card" : {
+            "color" : "Herz",
+            "value" : "Ass"
           }
         }, {
           "card" : {
@@ -15,18 +30,13 @@
           }
         }, {
           "card" : {
-            "color" : "Pik",
-            "value" : "Drei"
+            "color" : "Karo",
+            "value" : "Vier"
           }
         }, {
           "card" : {
-            "color" : "Pik",
-            "value" : "Neun"
-          }
-        }, {
-          "card" : {
-            "color" : "Pik",
-            "value" : "Dame"
+            "color" : "Karo",
+            "value" : "Fünf"
           }
         } ]
       }
@@ -35,38 +45,28 @@
         "name" : "Hans",
         "handCards" : [ {
           "card" : {
-            "color" : "Karo",
-            "value" : "Vier"
+            "color" : "Pik",
+            "value" : "Acht"
           }
         }, {
           "card" : {
-            "color" : "Herz",
-            "value" : "Fünf"
+            "color" : "Pik",
+            "value" : "Neun"
+          }
+        }, {
+          "card" : {
+            "color" : "Pik",
+            "value" : "Dame"
+          }
+        }, {
+          "card" : {
+            "color" : "Pik",
+            "value" : "Ass"
           }
         }, {
           "card" : {
             "color" : "Herz",
             "value" : "Dame"
-          }
-        }, {
-          "card" : {
-            "color" : "Kreuz",
-            "value" : "Sieben"
-          }
-        }, {
-          "card" : {
-            "color" : "Herz",
-            "value" : "Neun"
-          }
-        }, {
-          "card" : {
-            "color" : "Karo",
-            "value" : "Sieben"
-          }
-        }, {
-          "card" : {
-            "color" : "Pik",
-            "value" : "Acht"
           }
         } ]
       }
@@ -74,12 +74,37 @@
     "deck" : [ {
       "card" : {
         "color" : "Herz",
-        "value" : "Bube"
+        "value" : "König"
       }
     }, {
       "card" : {
         "color" : "Karo",
+        "value" : "Neun"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Vier"
+      }
+    }, {
+      "card" : {
+        "color" : "Pik",
         "value" : "Sieben"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Vier"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Zehn"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Neun"
       }
     }, {
       "card" : {
@@ -89,42 +114,27 @@
     }, {
       "card" : {
         "color" : "Pik",
+        "value" : "König"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Zehn"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
         "value" : "Sieben"
       }
     }, {
       "card" : {
         "color" : "Pik",
-        "value" : "König"
-      }
-    }, {
-      "card" : {
-        "color" : "Pik",
-        "value" : "Ass"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Vier"
+        "value" : "Sechs"
       }
     }, {
       "card" : {
         "color" : "Kreuz",
         "value" : "König"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "Drei"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Fünf"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Neun"
       }
     }, {
       "card" : {
@@ -134,17 +144,42 @@
     }, {
       "card" : {
         "color" : "Karo",
-        "value" : "Bube"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
         "value" : "Sechs"
       }
     }, {
       "card" : {
-        "color" : "Karo",
+        "color" : "Pik",
         "value" : "Zehn"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "Zwei"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Zwei"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Acht"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "Drei"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Sechs"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Sieben"
       }
     }, {
       "card" : {
@@ -153,53 +188,8 @@
       }
     }, {
       "card" : {
-        "color" : "Pik",
-        "value" : "Sechs"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "Fünf"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "Ass"
-      }
-    }, {
-      "card" : {
-        "color" : "Herz",
-        "value" : "Sechs"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Dame"
-      }
-    }, {
-      "card" : {
         "color" : "Kreuz",
         "value" : "Ass"
-      }
-    }, {
-      "card" : {
-        "color" : "Herz",
-        "value" : "Ass"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Bube"
-      }
-    }, {
-      "card" : {
-        "color" : "Herz",
-        "value" : "König"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "König"
       }
     }, {
       "card" : {
@@ -208,95 +198,105 @@
       }
     }, {
       "card" : {
+        "color" : "Kreuz",
+        "value" : "Drei"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "Acht"
+      }
+    }, {
+      "card" : {
         "color" : "Pik",
         "value" : "Fünf"
       }
     }, {
       "card" : {
         "color" : "Herz",
-        "value" : "Sieben"
-      }
-    }, {
-      "card" : {
-        "color" : "Herz",
-        "value" : "Vier"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "Acht"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
-        "value" : "Zwei"
+        "value" : "Fünf"
       }
     }, {
       "card" : {
         "color" : "Kreuz",
-        "value" : "Zwei"
-      }
-    }, {
-      "card" : {
-        "color" : "Pik",
-        "value" : "Zehn"
-      }
-    }, {
-      "card" : {
-        "color" : "Pik",
-        "value" : "Vier"
-      }
-    }, {
-      "card" : {
-        "color" : "Kreuz",
-        "value" : "Zehn"
-      }
-    }, {
-      "card" : {
-        "color" : "Herz",
-        "value" : "Acht"
-      }
-    }, {
-      "card" : {
-        "color" : "Karo",
         "value" : "Sechs"
       }
     }, {
       "card" : {
-        "color" : "Herz",
-        "value" : "Zehn"
+        "color" : "Karo",
+        "value" : "Sieben"
       }
     }, {
       "card" : {
         "color" : "Karo",
-        "value" : "Neun"
+        "value" : "Bube"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "König"
+      }
+    }, {
+      "card" : {
+        "color" : "Pik",
+        "value" : "Vier"
+      }
+    }, {
+      "card" : {
+        "color" : "Herz",
+        "value" : "Bube"
       }
     }, {
       "card" : {
         "color" : "Pik",
         "value" : "Bube"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Fünf"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Bube"
+      }
+    }, {
+      "card" : {
+        "color" : "Kreuz",
+        "value" : "Dame"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "Ass"
+      }
+    }, {
+      "card" : {
+        "color" : "Karo",
+        "value" : "Zehn"
       }
     } ],
     "trump" : {
       "card" : {
-        "color" : "Pik",
-        "value" : "Bube"
+        "color" : "Karo",
+        "value" : "Zehn"
       }
     },
     "currentTurn" : {
       "attacker" : {
         "player" : {
-          "name" : "Peter"
+          "name" : "Hans"
         }
       },
       "victim" : {
         "player" : {
-          "name" : "Hans"
+          "name" : "Peter"
         }
       },
       "neighbour" : {
         "player" : {
-          "name" : "Peter"
+          "name" : "Hans"
         }
       },
       "attackCards" : [ ],
@@ -304,7 +304,7 @@
     },
     "active" : {
       "player" : {
-        "name" : "Peter"
+        "name" : "Hans"
       }
     },
     "winners" : [ ]
