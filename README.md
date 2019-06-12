@@ -6,7 +6,7 @@
 
 ## Coveralls
 
-[![Coverage Status](https://coveralls.io/repos/github/grusel-opi/de.htwg.se.durak/badge.svg?branch=master&service=github)](https://coveralls.io/github/grusel-opi/de.htwg.se.durak?master)
+[![Coverage Status](https://coveralls.io/repos/github/grusel-opi/de.htwg.se.durak/badge.svg?branch=master&service=github)](https://coveralls.io/github/grusel-opi/de.htwg.se.durak?branch=master)
 
 ## Docker
 
