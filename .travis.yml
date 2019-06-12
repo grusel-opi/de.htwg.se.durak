@@ -1,9 +1,9 @@
 language: scala
+
 scala:
 - 2.12.7
 
-before_script:
-- "export DISPLAY=:99.0"
+
 
 install: true
 
