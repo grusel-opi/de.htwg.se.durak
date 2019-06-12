@@ -431,5 +431,20 @@ class ControllerSpec extends WordSpec with Matchers {
         file should not be None
       }
     }
+
+    "loading a game" should {
+      "load the expected save file and continue the game" in {
+        val file_name_with_extension = "controller_test.json"
+
+        controller.loadGame(file_name_with_extension)
+
+        while (controller.gameStatus != GameStatus.LOADED) {
+          Thread.sleep(timeToSleep)
+        }
+
+        controller.gameStatus should be(GameStatus.LOADED)
+        GameStatus.message(controller.gameStatus) should be("A new game was loaded.")
+      }
+    }
   }
 }
