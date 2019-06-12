@@ -1,5 +1,9 @@
 # Htwg Scala Durak Project
 
+## Travis
+
+[![Build Status](https://travis-ci.org/grusel-opi/de.htwg.se.durak.svg?branch=master)](https://travis-ci.org/grusel-opi/de.htwg.se.durak)
+
 ## Coveralls
 
 [![Coverage Status](https://coveralls.io/repos/github/grusel-opi/de.htwg.se.durak/badge.svg?branch=workingGame&service=github)](https://coveralls.io/github/grusel-opi/de.htwg.se.durak?branch=workingGame)
