@@ -18,7 +18,7 @@ trait PlayerInterface {
 
   def hasCard(card: CardInterface): Boolean
 
-  def sortHandCards(): Unit
+  def sortHandCards(implicit ordering: Ordering[CardInterface]): Unit
 
   def nameToXml: Node
 
