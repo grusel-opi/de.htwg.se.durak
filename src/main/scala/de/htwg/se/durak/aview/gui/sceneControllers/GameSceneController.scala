@@ -60,8 +60,14 @@ class GameSceneController(private val rootPane: AnchorPane,
     val activeHandCardsAsString: String = gui.controller.activePlayerHandCardsToString()
     val activeHandCardsArray: Array[String] = activeHandCardsAsString.split(",")
 
+    var i = 0;
+
     activeHandCardsArray.foreach(cardString => {
       val card = CardStringConverter.parseCardStringToCardObject(cardString)
+
+      print("card " + i + ": " + card + "\n")
+      i += 1
+
       val cardImgView = CardImgConverter.convertCardToImgView(card)
       cardImgView.setFitHeight(CARD_HEIGHT)
       cardImgView.setFitWidth(CARD_WIDTH)

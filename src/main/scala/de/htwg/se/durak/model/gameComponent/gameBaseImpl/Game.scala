@@ -52,7 +52,9 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
       if (missingAmount > 0) {
         tmpDeck = tmpDeck._2.popNCards(missingAmount)
         p.pickCards(tmpDeck._1)
+        println("unsorted handcards: " + p.handCards)
         p.sortHandCards
+        println("sorted handcards: " + p.handCards)
       }
     })
     tmpDeck._2
