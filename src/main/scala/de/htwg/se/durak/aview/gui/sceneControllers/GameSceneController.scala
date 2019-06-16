@@ -11,7 +11,6 @@ import scalafx.scene.control._
 import scalafx.scene.image.ImageView
 import de.htwg.se.durak.Durak
 import de.htwg.se.durak.model.cardComponent.CardInterface
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.util.cardConverter.{CardImgConverter, CardStringConverter}
 
 
@@ -60,12 +59,11 @@ class GameSceneController(private val rootPane: AnchorPane,
     val activeHandCardsAsString: String = gui.controller.activePlayerHandCardsToString()
     val activeHandCardsArray: Array[String] = activeHandCardsAsString.split(",")
 
-    var i = 0;
+    var i = 0
 
     activeHandCardsArray.foreach(cardString => {
       val card = CardStringConverter.parseCardStringToCardObject(cardString)
 
-      print("card " + i + ": " + card + "\n")
       i += 1
 
       val cardImgView = CardImgConverter.convertCardToImgView(card)

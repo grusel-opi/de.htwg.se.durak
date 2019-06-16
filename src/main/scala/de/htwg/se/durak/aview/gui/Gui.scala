@@ -45,7 +45,7 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
     stage.scene = new Scene(FXMLView(getClass.getResource("/scenes/rulesScene.fxml"), NoDependencyResolver))
   }
 
-  def displayLoadGameScene() : Unit = {
+  def displayLoadGameScene(): Unit = {
     stage.scene = new Scene(FXMLView(getClass.getResource("/scenes/loadGameScene.fxml"), NoDependencyResolver))
   }
 
@@ -56,8 +56,7 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
     case _: CardsChangedEvent => displayGameScene()
     case _: GameOverEvent => displayWinningGameScene()
     case _: NewPlayerEvent => displayNewGameScene()
-    case _ =>
-      System.err.println("Unhandled Event... - FIX ME :(")
+    case _ => {}
 
   }
 
@@ -112,7 +111,7 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
           contentText = ""
         }.showAndWait()
       }
-      case _ => System.err.println("Unhandled Exception - FIX ME :(")
+      case _ => {}
     }
   }
 

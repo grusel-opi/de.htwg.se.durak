@@ -3,7 +3,7 @@ package de.htwg.se.durak.aview.gui.sceneControllers
 import de.htwg.se.durak.Durak
 import de.htwg.se.durak.aview.gui.Gui
 import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.control.{Alert, Button, CheckBox, TextField}
+import scalafx.scene.control.{Alert, Button, TextField}
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 

@@ -2,10 +2,7 @@ package de.htwg.se.durak.model.fileIOComponent.fileIOXmlImpl
 
 import java.io.{File, PrintWriter}
 
-import com.google.inject.Guice
-import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.model.cardComponent.CardInterface
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.fileIOComponent.FileIOInterface
 import de.htwg.se.durak.model.gameComponent.GameInterface
@@ -13,9 +10,7 @@ import de.htwg.se.durak.model.deckComponent.deckBaseImpl.Deck
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.durak.model.turnComponent
 import de.htwg.se.durak.model.turnComponent.{TurnInterface, turnBaseImpl}
-import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 
 import scala.xml.Node
@@ -24,7 +19,6 @@ import scala.xml.{Elem, PrettyPrinter}
 class FileIO extends FileIOInterface {
 
   override def load(fileName: String): GameInterface = {
-    println("XML LOAD")
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val file: Elem = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
 

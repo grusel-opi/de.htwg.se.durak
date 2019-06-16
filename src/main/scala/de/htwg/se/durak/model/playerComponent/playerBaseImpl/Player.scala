@@ -17,7 +17,7 @@ case class Player(name: String, var handCards: List[CardInterface]) extends Play
 
   def hasCard(card: CardInterface): Boolean = handCards.contains(card)
 
-  def sortHandCards(implicit ordering: Ordering[CardInterface]): Unit = handCards = handCards.sorted
+  def sortHandCards(implicit ordering: Ordering[CardInterface]): Unit = handCards = handCards.sortBy(c => (c.color, c.value))
 
   def nameToXml: Node = {
     <player>
