@@ -1,5 +1,7 @@
 # Htwg Scala Durak Project
 
+Our implementation of the [Durak](https://en.wikipedia.org/wiki/Durak) card game. 
+
 ## Travis
 
 [![Build Status](https://travis-ci.org/grusel-opi/de.htwg.se.durak.svg?branch=master)](https://travis-ci.org/grusel-opi/de.htwg.se.durak)
@@ -14,4 +16,4 @@
 
 [![](https://images.microbadger.com/badges/version/gruselopi/de.htwg.se.durak.svg)](https://microbadger.com/images/gruselopi/de.htwg.se.durak "Get your own version badge on microbadger.com")
 
-see dockerfile for run instructions
+See dockerfile for run instructions
