@@ -17,7 +17,6 @@ import scala.xml.Node
 import scala.xml.{Elem, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
-
   override def load(fileName: String): GameInterface = {
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
     val file: Elem = xml.XML.loadFile("save/" + fileNameWithoutExtension + ".xml")
@@ -34,7 +33,7 @@ class FileIO extends FileIOInterface {
 
   override def save(game: GameInterface, fileName: String): Unit = saveString(game, fileName)
 
-  def saveString(game: GameInterface, fileName: String) = {
+  def saveString(game: GameInterface, fileName: String): Unit = {
     val WIDTH: Int = 120
     val STEP: Int = 4
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)

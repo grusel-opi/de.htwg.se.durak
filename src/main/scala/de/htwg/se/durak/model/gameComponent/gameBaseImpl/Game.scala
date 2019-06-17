@@ -143,7 +143,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     val newWinners = active :: winners
     val newPlayers = players.filterNot(p => p.equals(active))
     if (newPlayers.size == 1) {
-      copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+      copy(players = newPlayers, active = getNeighbour(active), winners = newWinners)
     } else if (newPlayers.size == 2) {
       copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
         currentTurn = new Turn(getNeighbour(active), getNeighbour(getNeighbour(active)), getNeighbour(active)))
@@ -161,7 +161,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
       val newWinners = active :: winners
       val newPlayers = players.filterNot(p => p.equals(active))
       if (newPlayers.size == 1) {
-        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+        copy(players = newPlayers, active = getNeighbour(active), winners = newWinners)
       } else if (newPlayers.size == 2) {
         copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
           currentTurn = Turn(getRightNeighbour(active), currentTurn.victim, getRightNeighbour(active),
@@ -187,7 +187,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
         val newPlayers = players.filterNot(p => p.equals(active))
         newPlayers.size match {
           case 1 =>
-            copy(players = newPlayers, active = getNeighbour(active), winners = newWinners) // TODO: game over!
+            copy(players = newPlayers, active = getNeighbour(active), winners = newWinners)
           case 2 =>
             copy(players = newPlayers, active = getNeighbour(active), winners = newWinners,
               currentTurn = Turn(currentTurn.attacker, currentTurn.neighbour, currentTurn.attacker,

@@ -11,18 +11,17 @@ import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.model.turnComponent.{TurnInterface, turnBaseImpl}
-import de.htwg.se.durak.model.turnComponent.turnBaseImpl.Turn
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import play.api.libs.json.{JsObject, JsValue, Json}
 
-import scala.io.Source
+import scala.io.{BufferedSource, Source}
 
 class FileIO extends FileIOInterface {
   override def load(fileName: String): GameInterface = {
-    println("JSON LOAD")
     val fileNameWithoutExtension: String = removeExtensionFromFileName(fileName)
-    val source: String = Source.fromFile("save/" + fileNameWithoutExtension + ".json").getLines().mkString
-    val sourceAsJson: JsValue = Json.parse(source)
+    val source: BufferedSource = Source.fromFile("save/" + fileNameWithoutExtension + ".json")
+    val sourceAsString = source.getLines().mkString
+    val sourceAsJson: JsValue = Json.parse(sourceAsString)
 
     val players: List[PlayerInterface] = createPlayersLit(sourceAsJson)
     val deck: DeckInterface = createDeck(sourceAsJson)
@@ -30,6 +29,8 @@ class FileIO extends FileIOInterface {
     val currentTurn: TurnInterface = createTurn(sourceAsJson, players)
     val active: PlayerInterface = createActivePlayer(sourceAsJson, players)
     val winners: List[PlayerInterface] = createWinnersList(sourceAsJson)
+
+    source.close()
 
     Game(players, deck, trump, currentTurn, active, winners)
   }
@@ -118,7 +119,7 @@ class FileIO extends FileIOInterface {
     val neighbour: PlayerInterface = players.filter(p => p.name.equals(neighbourName)).head
     var blockedBy: Map[CardInterface, CardInterface] = Map()
 
-    for ((attackCard, blockingCard) <- (blockedAttackCards zip blockingCards)) {
+    for ((attackCard, blockingCard) <- blockedAttackCards zip blockingCards) {
       blockedBy = blockedBy + (attackCard -> blockingCard)
     }
 

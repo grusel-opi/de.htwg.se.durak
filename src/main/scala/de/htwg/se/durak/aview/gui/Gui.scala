@@ -56,65 +56,89 @@ case class Gui(controller: ControllerInterface) extends JFXApp with Reactor {
     case _: CardsChangedEvent => displayGameScene()
     case _: GameOverEvent => displayWinningGameScene()
     case _: NewPlayerEvent => displayNewGameScene()
-    case _ => {}
-
   }
 
-  def notifyUser(exceptionEvent: ExceptionEvent): Unit = {
-    exceptionEvent.getException match {
+  def displayIllegalTurnException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = ""
+    }.showAndWait
+  }
+
+  def displayNoCardsToTakeException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = ""
+    }.showAndWait
+  }
+
+  def displayPlayerAlreadyPresentException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = "Please enter a different player name."
+    }.showAndWait
+  }
+
+  def displayMissingBlockingCardException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = "You have to specify a blocking card!"
+    }.showAndWait
+  }
+
+  def displayMoreThanOnePlayerNeededException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = "Please add another player first."
+    }.showAndWait
+  }
+
+  def displayVictimHasNotEnoughCardsToBlockException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = ""
+    }.showAndWait
+  }
+
+  def displayLayCardFirsException(eE: ExceptionEvent): Unit = {
+    new Alert(AlertType.Warning) {
+      title = "Warning Dialog"
+      headerText = "Warning: " + eE.getException.getMessage
+      contentText = ""
+    }.showAndWait()
+  }
+
+  def notifyUser(eE: ExceptionEvent): Unit = {
+    eE.getException match {
       case _: IllegalTurnException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = ""
-        }.showAndWait
+        displayIllegalTurnException(eE)
 
       case _: NoCardsToTakeException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = ""
-        }.showAndWait
+        displayNoCardsToTakeException(eE)
 
       case _: PlayerAlreadyPresentException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = "Please enter a different player name."
-        }.showAndWait
+        displayPlayerAlreadyPresentException(eE)
 
       case _: MissingBlockingCardException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = "You have to specify a blocking card!"
-        }.showAndWait
+        displayMissingBlockingCardException(eE)
 
       case _: MoreThanOnePlayerNeededException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = "Please add another player first."
-        }.showAndWait
+        displayMoreThanOnePlayerNeededException(eE)
 
       case _: VictimHasNotEnoughCardsToBlockException =>
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = ""
-        }.showAndWait
+        displayVictimHasNotEnoughCardsToBlockException(eE)
 
-      case _: LayCardFirsException => {
-        new Alert(AlertType.Warning) {
-          title = "Warning Dialog"
-          headerText = "Warning: " + exceptionEvent.getException.getMessage
-          contentText = ""
-        }.showAndWait()
-      }
-      case _ => {}
+      case _: LayCardFirsException =>
+        displayLayCardFirsException(eE)
     }
   }
 
-  stage.onCloseRequest = (wE: WindowEvent) => controller.exitGame()
+  stage.onCloseRequest = (_: WindowEvent) => controller.exitGame()
 
 }

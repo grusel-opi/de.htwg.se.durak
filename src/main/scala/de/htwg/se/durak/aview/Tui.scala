@@ -26,7 +26,6 @@ class Tui(controller: ControllerInterface) extends Reactor {
           case Success(cards) => controller.playCard(cards._1, cards._2)
           case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
         }
-
       case "player" | "p" =>
         if (tokens.size > 1) {
           controller.newPlayer(tokens.tail.mkString(" "))
@@ -69,7 +68,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
       case 2 => Try(Card(converter.parseColorString(input.head), converter.parseValueString(input.last)), None)
       case 4 => Try((Card(converter.parseColorString(input.head), converter.parseValueString(input(1))),
         Some(Card(converter.parseColorString(input(2)), converter.parseValueString(input(3))))))
-      case _ => throw new IllegalTurnException("Specify card pls..") // TODO: cannot use more than two cards at once; exception?
+      case _ => throw new IllegalTurnException("Specify card pls..")
     }
 
   }

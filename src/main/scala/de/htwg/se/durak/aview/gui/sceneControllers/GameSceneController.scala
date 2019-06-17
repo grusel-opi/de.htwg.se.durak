@@ -6,7 +6,6 @@ import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
 import scalafx.scene.input.MouseEvent
 import scalafx.Includes._
-import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.control._
 import scalafx.scene.image.ImageView
 import de.htwg.se.durak.Durak
@@ -277,11 +276,8 @@ class GameSceneController(private val rootPane: AnchorPane,
 
   def configureOkayButton(): Unit = {
     val attackerAsString: String = gui.controller.currentAttackerToString()
-    val victimAsString: String = gui.controller.currentVictimToString()
     val neighbourAsString: String = gui.controller.currentNeighbourToString()
     val activeAsString: String = gui.controller.activePlayerToString()
-    val attackCardsArray: Array[String] = gui.controller.currentAttackCardsToString().split(",")
-    val blockedBy = gui.controller.getCurrentBlockedByMap
 
     if (activeAsString.equals(neighbourAsString) || activeAsString.equals(attackerAsString)) {
       okayButton.setDisable(false)
@@ -303,9 +299,6 @@ class GameSceneController(private val rootPane: AnchorPane,
     }
 
     def mainMenuButtonPressed(): Unit = {
-      val confirmButton: ButtonType = new ButtonType("Ok", ButtonData.Apply)
-      val abortButton: ButtonType = new ButtonType("No", ButtonData.No)
-
       val res: Option[String] = new TextInputDialog("") {
         title = "Save Game"
         headerText = "Do you want to save the game before returning to Main Menu?"
