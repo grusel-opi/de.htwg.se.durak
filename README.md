@@ -17,3 +17,7 @@ Our implementation of the [Durak](https://en.wikipedia.org/wiki/Durak) card game
 [![](https://images.microbadger.com/badges/version/gruselopi/de.htwg.se.durak.svg)](https://microbadger.com/images/gruselopi/de.htwg.se.durak "Get your own version badge on microbadger.com")
 
 See dockerfile for run instructions
+
+## License
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
