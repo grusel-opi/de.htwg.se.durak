@@ -1,9 +1,5 @@
 package de.htwg.se.durak.util
 
-trait Observer {
-  def update(): Unit
-}
-
 trait Observable {
   var subscribers: Vector[Observer] = Vector()
 
@@ -11,5 +7,5 @@ trait Observable {
 
   def remove(s: Observer): Unit = subscribers.filterNot(o => o == s)
 
-  def notifyObservers(): Unit = subscribers.foreach(o => o.update)
+  def notifyObservers(): Unit = subscribers.foreach(o => o.update())
 }
